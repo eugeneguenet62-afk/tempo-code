@@ -30,6 +30,11 @@ Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieu
 - Plans d'entraînement datés du 5 km au marathon et au trail, reliés au carnet : séance du jour, séances cochées, taux de réalisation.
 - Import de sorties GPX (Strava, Garmin, Coros…) avec tracé du parcours.
 
+**Autres sports et charge d'entraînement**
+- Carnet multisport : rugby (entraînement ou match, minutes jouées), natation (distance, nage, allure aux 100 m), vélo et randonnée (import GPX), sports de combat, raquettes…
+- Charge d'entraînement globale (méthode session-RPE : durée × effort ressenti) qui additionne musculation, course et autres sports.
+- Rapport de charge aiguë / chronique (7 jours / 28 jours) avec alerte quand la charge monte trop vite, principal facteur de blessure.
+
 **Santé et partage**
 - Zones cardiaques, besoins caloriques, objectif de protéines avec équivalents en aliments.
 - Bilan de la semaine sur l'accueil.
@@ -58,7 +63,10 @@ Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieu
 | `site/muscu-guide.js` | Niveaux, programmes, séances proposées, objectif de charge, échauffement, stagnation, lexique |
 | `site/exercices.js` | Bibliothèque des 172 exercices |
 | `site/illustrations.js` | Cartes anatomiques des muscles (SVG) |
-| `site/journal.js` | Carnet de course, plan suivi, import GPX |
+| `site/journal.js` | Carnet de course et plan suivi |
+| `site/multisport.js` | Carnet multisport |
+| `site/charge.js` | Sports, calories et charge d'entraînement (session-RPE, rapport aigu / chronique) |
+| `site/gpx.js` | Lecture des fichiers GPX et tracé du parcours |
 | `site/app.js` | Calculateurs : allure, plan, zones, charges, calories, protéines |
 | `site/share.js` | Image de partage (Canvas) |
 | `site/sw.js` | Service worker |

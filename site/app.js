@@ -500,7 +500,7 @@
   const dayBox = $("#day");
   if (dayBox) {
     const LABEL = { course: "Course à pied", velo: "Vélo", muscu: "Musculation", natation: "Natation", marche: "Marche", rando: "Randonnée", rameur: "Rameur", hiit: "HIIT", yoga: "Yoga" };
-    const SRC = { course: ["var(--c-course)", "Carnet de course"], muscu: ["var(--c-muscu)", "Carnet de séances"], extra: ["var(--c-food)", "Ajout manuel"] };
+    const SRC = { course: ["var(--c-course)", "Carnet de course"], muscu: ["var(--c-muscu)", "Carnet de séances"], multi: ["var(--c-velo)", "Carnet multisport"], extra: ["var(--c-food)", "Ajout manuel"] };
     const KEY = "tempo-day-v1";
     const TS = window.TempoStore;
     const get = (k) => TS.get(k);
@@ -537,6 +537,11 @@
         const m = window.TempoKcal.muscuKcal(s, w, allMuscu);
         out.push({ src: "muscu", name: "Musculation · " + s.dayName, dur: m.dur,
           sub: human(m.dur) + " · " + m.sets + " séries · " + r1(m.tonnage / 1000) + " t soulevées · " + m.zone, kcal: m.kcal });
+      });
+      const multi = get("tempo-multi-v1"), CH = window.TempoCharge;
+      if (CH) ((multi && multi.sessions) || []).filter((s) => s.date === day).forEach((s) => {
+        const t = CH.sportOf(s.sport);
+        out.push({ src: "multi", sport: t.name, color: t.color, name: t.name, sub: human(s.dur) + " · effort " + s.rpe + "/10", dur: s.dur, kcal: CH.kcal(s, w) });
       });
       (extra[day] || []).forEach((x) => out.push({ src: "extra", id: x.id, act: x.act, name: LABEL[x.act], sub: human(x.dur) + " · " + ["facile", "modérée", "soutenue"][x.lvl], dur: x.dur, kcal: (MET[x.act][x.lvl] * w * x.dur) / 3600 }));
       return out;
@@ -576,8 +581,8 @@
       parts.forEach(([, v], i) => (bar.children[i].style.width = (v / T.all) * 100 + "%"));
       $("#d-legend").innerHTML = parts.map(([n, v, c]) => `<span><i style="background:${c}"></i>${n} <b>${r0(v)}</b></span>`).join("");
       $("#d-list").innerHTML = T.ss.length
-        ? T.ss.map((s) => `<div class="d-sess" style="--t:${SRC[s.src][0]}"><i></i><span><b>${esc(s.name)}</b><small>${esc(s.sub)} · ${SRC[s.src][1]}</small></span><strong>${r0(s.kcal)} kcal</strong>${s.id ? `<button type="button" class="d-del" data-del="${s.id}" aria-label="Retirer ${esc(s.name)}">×</button>` : ""}</div>`).join("")
-        : `<p class="hint">Aucune séance ce jour-là. Les sorties du <a href="carnet-course.html">carnet de course</a> et les séances du <a href="carnet.html">carnet de musculation</a> apparaissent ici automatiquement.</p>`;
+        ? T.ss.map((s) => `<div class="d-sess" style="--t:${s.color || SRC[s.src][0]}"><i></i><span><b>${esc(s.name)}</b><small>${esc(s.sub)} · ${SRC[s.src][1]}</small></span><strong>${r0(s.kcal)} kcal</strong>${s.id ? `<button type="button" class="d-del" data-del="${s.id}" aria-label="Retirer ${esc(s.name)}">×</button>` : ""}</div>`).join("")
+        : `<p class="hint">Aucune séance ce jour-là. Les séances du <a href="carnet.html">carnet de musculation</a>, du <a href="carnet-course.html">carnet de course</a> et du <a href="multisport.html">carnet multisport</a> apparaissent ici automatiquement.</p>`;
       const k = { cut: 0.85, keep: 1, bulk: 1.1 }[p.goal];
       $("#d-advice").textContent = p.goal === "keep"
         ? `Pour garder votre poids, mangez environ ${r0(T.all)} kcal ce jour-là.`
@@ -612,6 +617,7 @@
     TS.watch(STEPS, (v) => { steps = v || {}; render(); });
     TS.watch("tempo-course-v1", render);
     TS.watch("carnet-fonte-v1", render);
+    TS.watch("tempo-multi-v1", render);
 
     /* ---------- Total des calories dépensées en sport ---------- */
     const per = { v: "30" };
@@ -621,6 +627,8 @@
       const course = get("tempo-course-v1"), fonte = get("carnet-fonte-v1");
       ((course && course.sessions) || []).forEach((s) => s.date && set.add(s.date));
       ((fonte && fonte.sessions) || []).forEach((s) => s.date && set.add(dk(new Date(s.date))));
+      const multi = get("tempo-multi-v1");
+      ((multi && multi.sessions) || []).forEach((s) => s.date && set.add(s.date));
       return Array.from(set).sort();
     }
     function renderSport() {
@@ -636,8 +644,8 @@
       let kcal = 0, n = 0, time = 0;
       const monday = (d) => { const x = new Date(d + "T12:00"); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return dk(x); };
       days.forEach((d) => sessions(d, w).forEach((s) => {
-        const key = s.src === "extra" ? (LABEL[s.act] || "Autre") : s.src === "course" ? "Course à pied" : "Musculation";
-        const color = s.src === "extra" ? SRC.extra[0] : SRC[s.src][0];
+        const key = s.src === "extra" ? (LABEL[s.act] || "Autre") : s.src === "multi" ? s.sport : s.src === "course" ? "Course à pied" : "Musculation";
+        const color = s.src === "extra" ? SRC.extra[0] : s.color || SRC[s.src][0];
         const g = (groups[key] = groups[key] || { kcal: 0, n: 0, time: 0, color });
         g.kcal += s.kcal; g.n++; g.time += s.dur || 0;
         kcal += s.kcal; n++; time += s.dur || 0;
@@ -651,7 +659,7 @@
       const top = list.length ? list[0][1].kcal : 1;
       $("#sp-break").innerHTML = list.length
         ? list.map(([name, g]) => `<div class="sp-row" style="--t:${g.color}"><span class="sp-name"><b>${esc(name)}</b><small>${g.n} séance${g.n > 1 ? "s" : ""} · ${hm(g.time)}</small></span><span class="sp-bar"><span style="width:${(g.kcal / top) * 100}%"></span></span><strong>${r0(g.kcal)} kcal</strong></div>`).join("")
-        : `<p class="hint">Aucune séance sur cette période. Notez vos sorties dans le <a href="carnet-course.html">carnet de course</a> et vos séances dans le <a href="carnet.html">carnet de musculation</a>.</p>`;
+        : `<p class="hint">Aucune séance sur cette période. Notez vos séances dans le <a href="carnet.html">carnet de musculation</a>, le <a href="carnet-course.html">carnet de course</a> ou le <a href="multisport.html">carnet multisport</a>.</p>`;
       // 8 dernières semaines (ou moins selon la période)
       const nW = per.v === "7" ? 1 : per.v === "30" ? 5 : 8;
       const wkList = Array.from({ length: nW }, (_, i) => shift(monday(today), -7 * (nW - 1 - i)));
@@ -665,7 +673,7 @@
         : "";
     }
     renderSport();
-    [KEY, STEPS, "tempo-course-v1", "carnet-fonte-v1", "tempo-profile-v1"].forEach((k) => TS.watch(k, renderSport));
+    [KEY, STEPS, "tempo-course-v1", "carnet-fonte-v1", "tempo-multi-v1", "tempo-profile-v1"].forEach((k) => TS.watch(k, renderSport));
     dayBox.addEventListener("click", (e) => { if (e.target.closest("[data-del]")) renderSport(); });
   }
 })();

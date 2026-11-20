@@ -4,7 +4,7 @@
    en direct. Les modifications faites hors connexion sont envoyées au retour du réseau. */
 (function () {
   "use strict";
-  const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1"];
+  const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1", "tempo-multi-v1"];
   const DIRTY = "tempo-dirty", ACCOUNT = "tempo-account";
   const SDK = "https://www.gstatic.com/firebasejs/11.0.2/";
   const MAX_DOC = 900000;    // limite Firestore : 1 Mo par document (marge pour les champs)
@@ -79,7 +79,7 @@
      (programme, matériel, mesures…) et un document par mois de séances. Avantages :
        - aucune limite de taille en pratique (Firestore : 1 Mo par document, un mois de séances pèse quelques Ko) ;
        - deux appareils qui modifient des séances différentes en même temps ne s'écrasent plus : on fusionne séance par séance. */
-  const SPLIT = { "tempo-course-v1": "sessions", "carnet-fonte-v1": "sessions" };
+  const SPLIT = { "tempo-course-v1": "sessions", "carnet-fonte-v1": "sessions", "tempo-multi-v1": "sessions" };
   const SEP = "--m--", SYNCD = "tempo-synced";
   let synced = lsGet(SYNCD) || {};      // document -> { h: empreinte, ids: séances } tel que vu en ligne la dernière fois
   const saveSynced = () => lsSet(SYNCD, synced);

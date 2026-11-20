@@ -294,7 +294,7 @@ tr.enter, .week.enter { animation: rise .6s var(--ease) both; animation-delay: c
 /* ================= Couleurs par sport =================
    Course = bleu piste, cardio = rouge, vélo = vert, muscu = ambre (disque de 15 kg). */
 :root {
-  --c-course: #2350d9; --c-cardio: #b3283f; --c-velo: #0b7a53; --c-muscu: #8f5205;
+  --c-course: #2350d9; --c-cardio: #b3283f; --c-velo: #096c49; --c-muscu: #8f5205;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) { --c-course: #8aa6ff; --c-cardio: #ff7b90; --c-velo: #4fd19e; --c-muscu: #f5b04a; }

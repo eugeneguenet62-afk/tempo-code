@@ -253,3 +253,35 @@
 #j-view { min-height: calc(100vh - 140px); }
 .j-tabs .in { min-height: 61px; }
 @media (min-width: 820px) { .j-tabs .in { min-height: 44px; } }
+
+/* ---------- Carnet multisport et charge d'entraînement ---------- */
+.m-legend { margin-top: 8px; font-size: 13px; }
+.m-charge { display: grid; gap: 12px; }
+.m-ch-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.m-zone { flex: none; padding: 5px 12px; border-radius: 99px; font-size: 13px; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--z) 22%, var(--surface)); border: 1px solid color-mix(in srgb, var(--z) 55%, transparent); }
+.m-gauge { width: 100%; max-width: 420px; height: auto; display: block; }
+.m-gauge text { fill: var(--muted); font: 11px var(--body); }
+.m-gauge .m-needle { fill: var(--ink); }
+.m-gauge .m-needle-l { stroke: var(--ink); stroke-width: 2.5; }
+.m-ch-text { margin: 0; font-size: 15px; line-height: 1.5; }
+.m-by { display: grid; gap: 6px; }
+.m-by-row { display: grid; grid-template-columns: minmax(90px, 140px) 1fr auto; gap: 10px; align-items: center; font-size: 14px; }
+.m-by-bar { height: 8px; border-radius: 4px; background: var(--field); overflow: hidden; }
+.m-by-bar span { display: block; height: 100%; border-radius: 4px; background: var(--c); }
+.m-by-row b { font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; }
+.m-weeks { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; align-items: end; }
+.m-wk { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.m-wk small { font-size: 10.5px; font-variant-numeric: tabular-nums; min-height: 13px; }
+.m-wk em { font-style: normal; }
+.m-wkbar { height: 130px; width: 100%; max-width: 30px; border-radius: 6px; background: var(--field); display: flex; flex-direction: column-reverse; overflow: hidden; }
+.m-wkbar span { display: block; width: 100%; }
+.m-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--muted); }
+.m-key i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.m-explain p { margin: 0; font-size: 15px; line-height: 1.55; }
+.m-sport-h { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.m-sport-h i { width: 12px; height: 12px; border-radius: 50%; background: var(--t); }
+.m-sport-h b { font-size: 18px; }
+.m-sports { max-height: 172px; overflow-y: auto; padding: 2px; }
+.j-seg2 { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--field); gap: 2px; }
+.j-seg2 button { border: 0; background: none; font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 9px; color: inherit; cursor: pointer; }
+.j-seg2 button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }

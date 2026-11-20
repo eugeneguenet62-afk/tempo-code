@@ -35,7 +35,8 @@
           <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
           <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
         </div>
-        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Autres sports et santé</span>
+          <a href="multisport.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M5 8.5c3 1.5 4.5 4 4.5 7.5M19 15.5c-3-1.5-4.5-4-4.5-7.5M8.5 4.5c1.5 3 4 4.5 7.5 4.5"/></svg></span><span><b>Carnet multisport</b><small>Rugby, natation, vélo… et charge</small></span></a>
           <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
           <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
           <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
@@ -48,6 +49,7 @@
 
 <script src="firebase-config.js"></script>
 <script src="store.js"></script>
+<script src="charge.js"></script>
 <main class="home">
   <section class="h-hero wrap">
     <div class="h-copy">
@@ -112,10 +114,11 @@
     <div class="h-lane" style="--c:var(--c-cardio)" id="sante">
       <div class="wrap h-lane-in">
         <div class="h-lane-intro">
-          <h3>Santé</h3>
-          <p>Doser vos efforts et équilibrer ce que vous mangez avec ce que vous dépensez.</p>
+          <h3>Autres sports et santé</h3>
+          <p>Rugby, natation, vélo… : tous vos sports réunis pour doser la charge, et ce que vous mangez face à ce que vous dépensez.</p>
         </div>
         <div class="h-tools">
+          <a class="h-tool" href="multisport.html"><b>Carnet multisport</b><span>Rugby, natation, vélo : est-ce que j'en fais trop cette semaine par rapport à d'habitude ?</span></a>
           <a class="h-tool" href="calories.html"><b>Calories</b><span>Combien ai-je dépensé aujourd'hui, avec mes pas et mes séances ?</span></a>
           <a class="h-tool" href="zones-cardiaques.html"><b>Zones cardiaques</b><span>À quelle fréquence cardiaque m'entraîner en endurance ou au seuil ?</span></a>
           <a class="h-tool" href="compte.html#profil"><b>Mon profil</b><span>Âge, poids, taille : renseignés une fois, utilisés par tous les outils.</span></a>
@@ -193,7 +196,8 @@
     const box = $("#h-week"); if (!box || !window.TempoStore) return;
     const T = TempoStore, f = T.get("carnet-fonte-v1") || {}, c = T.get("tempo-course-v1") || {};
     const lifts = (f.sessions || []).slice().sort((a, b) => (a.date < b.date ? -1 : 1)), runs = (c.sessions || []).filter((r) => r.type !== "marche");
-    if (!lifts.length && !runs.length) { box.hidden = true; return; }
+    const hasMulti = ((T.get("tempo-multi-v1") || {}).sessions || []).length;
+    if (!lifts.length && !runs.length && !hasMulti) { box.hidden = true; return; }
     const mon = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
     const w0 = mon(new Date()), w1 = new Date(w0); w1.setDate(w1.getDate() - 7);
     const inW = (d, a) => { const t = new Date(d).getTime(), b = a.getTime(); return t >= b && t < b + 7 * 864e5; };
@@ -218,9 +222,11 @@
       return { lifts: L.length, sets, vol, runs: R.length, km: R.reduce((n, r) => n + (+r.dist || 0), 0), dplus: R.reduce((n, r) => n + (+r.dplus || 0), 0), recs };
     }
     const now = stats(w0), prev = stats(w1);
-    const showPrev = (new Date().getDay() === 1 && !now.lifts && !now.runs) || (!now.lifts && !now.runs);
+    const muAll = (T.get("tempo-multi-v1") || {}).sessions || [];
+    now.multi = muAll.filter((x) => inW(x.date + "T12:00", w0)).length; prev.multi = muAll.filter((x) => inW(x.date + "T12:00", w1)).length;
+    const showPrev = !now.lifts && !now.runs && !now.multi;
     const S = showPrev ? prev : now, ref = showPrev ? null : prev;
-    if (!S.lifts && !S.runs) { box.hidden = true; return; }
+    if (!S.lifts && !S.runs && !S.multi) { box.hidden = true; return; }
     const n1 = (x) => (Math.round(x * 10) / 10).toLocaleString("fr-FR");
     const delta = (a, b, unit) => { if (!ref) return ""; const d = a - b; if (Math.abs(d) < 0.05) return "comme la semaine dernière"; return (d > 0 ? "+" : "−") + n1(Math.abs(d)) + (unit ? " " + unit : "") + " vs semaine dernière"; };
     const tiles = [];
@@ -228,17 +234,23 @@
       tiles.push(["var(--c-muscu)", "Séances de muscu", S.lifts, delta(S.lifts, ref ? ref.lifts : 0)]);
       tiles.push(["var(--c-muscu)", "Séries", S.sets, S.vol ? Math.round(S.vol).toLocaleString("fr-FR") + " kg soulevés" : ""]);
     }
+    const CH = window.TempoCharge, mu = (T.get("tempo-multi-v1") || {}).sessions || [];
+    if (mu.length) {
+      const M = mu.filter((x) => inW(x.date + "T12:00", showPrev ? w1 : w0)), names = Array.from(new Set(M.map((x) => CH ? CH.sportOf(x.sport).name : ""))).slice(0, 3);
+      tiles.push(["var(--c-velo)", "Autres sports", M.length, names.join(", ") || "rugby, natation, vélo…"]);
+    }
     if (runs.length) {
       tiles.push(["var(--c-course)", "Kilomètres courus", n1(S.km), delta(S.km, ref ? ref.km : 0, "km")]);
       tiles.push(["var(--c-course)", "Sorties", S.runs, S.dplus ? Math.round(S.dplus) + " m de dénivelé" : ""]);
     }
+    if (CH && !showPrev) { const a = CH.acwr(CH.entries(T)); if (a.enough && a.zone) tiles.push([a.zone.color, "Charge : " + a.zone.label.toLowerCase(), a.ratio.toFixed(2).replace(".", ","), "rapport sur 7 jours / 28 jours"]); }
     const recs = S.recs.slice(0, 4);
     box.innerHTML = `<h3>${showPrev ? "Votre semaine dernière" : "Votre semaine"}</h3><div class="h-week-tiles">${tiles.map(([c, k, v, sub]) => `<div class="h-wt" style="--c:${c}"><b>${v}</b><span>${k}</span>${sub ? `<small>${sub}</small>` : ""}</div>`).join("")}</div>` +
       (recs.length ? `<div class="h-recs"><span>${recs.length > 1 ? "Nouveaux records" : "Nouveau record"}</span>${recs.map((r) => `<b>${r.name.replace(/[<>&]/g, "")} : ${String(r.kg).replace(".", ",")} kg × ${r.reps}</b>`).join("")}</div>` : "");
     box.hidden = false; $("#h-back").hidden = false;
   }
   back(); week();
-  if (window.TempoStore) ["carnet-fonte-v1", "tempo-course-v1"].forEach((k) => TempoStore.watch(k, week));
+  if (window.TempoStore) ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].forEach((k) => TempoStore.watch(k, week));
   if (window.TempoStore) ["carnet-fonte-v1", "tempo-course-v1", "carnet-fonte-draft", "tempo-plan-v1"].forEach((k) => TempoStore.watch(k, back));
   /* Installation */
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
@@ -255,7 +267,7 @@
     <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
     <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
     <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
-    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+    <nav aria-label="Autres sports et santé"><b>Autres sports et santé</b><a href="multisport.html">Carnet multisport</a><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
   </div>
   <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
 </footer>
