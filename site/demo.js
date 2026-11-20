@@ -61,11 +61,21 @@
       // Rugby : entraînements mardi et jeudi, match le samedi une semaine sur deux
       [2, 4].forEach((wd) => {
         const d = day(w, wd); if (!past(d)) return;
-        multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "rugby", dur: 90 * 60, rpe: deload ? 5 : pick([6, 7, 7]), kind: "train", note: "" });
+        multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "rugby", dur: 90 * 60, rpe: deload ? 5 : pick([6, 7, 7]), format: "xv", kind: "train",
+          focus: wd === 2 ? ["coll", "def"] : pick([["opp", "phys"], ["scrum", "lineout"], ["tech", "coll"]]) });
       });
-      if (w % 2 === 0) { const d = day(w, 6); if (past(d)) multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "rugby", dur: 100 * 60, rpe: pick([8, 8, 9]), kind: "match", played: pick([50, 60, 80, 80]), fc: 158 + Math.floor(rnd() * 10), note: pick(["Victoire", "Défaite de peu", "Victoire bonifiée", ""]) }); }
+      if (w % 2 === 0) {
+        const d = day(w, 6);
+        if (past(d)) {
+          const us = 10 + Math.floor(rnd() * 25), them = 8 + Math.floor(rnd() * 22), played = pick([50, 60, 80, 80]);
+          multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "rugby", dur: 100 * 60, rpe: pick([8, 8, 9]), format: "xv", kind: "match", comp: "champ", poste: "l3a",
+            role: played === 80 ? "start" : "sub", played, result: us > them ? "win" : us < them ? "loss" : "draw", scoreFor: us, scoreAg: them,
+            tries: rnd() < 0.3 ? 1 : 0, tackles: 6 + Math.floor(rnd() * 9), missed: Math.floor(rnd() * 3), carries: 4 + Math.floor(rnd() * 8), card: "none",
+            fc: 158 + Math.floor(rnd() * 10), note: pick(["Bonne défense, on a tenu en deuxième mi-temps", "Mêlée dominée", "", "Gros match en touche"]) });
+        }
+      }
       // Natation de récupération une semaine sur trois
-      if (w % 3 === 1) { const d = day(w, 7); if (past(d)) multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "natation", dur: 40 * 60, rpe: 4, dist: 1500 + 100 * Math.floor(rnd() * 5), stroke: "crawl", note: "" }); }
+      if (w % 3 === 1) { const d = day(w, 7); if (past(d)) multi.push({ id: id(), at: d.getTime(), date: dk(d), sport: "natation", dur: 40 * 60, rpe: 4, pool: "25", dist: 1500 + 100 * Math.floor(rnd() * 5), stroke: "crawl", work: "rec", gear: ["pull"] }); }
       // Course : sortie le dimanche (sauf les semaines de natation), fractionné une semaine sur trois le mercredi matin
       if (w % 3 !== 1) {
         const d = day(w, 7);

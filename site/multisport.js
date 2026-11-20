@@ -43,8 +43,13 @@
   const dLong = (k) => toDate(k).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   const pace100 = (s) => (s.dist > 0 && s.dur > 0 ? s.dur / (s.dist / 100) : null);
   const mmss = (sec) => Math.floor(sec / 60) + ":" + String(Math.round(sec % 60)).padStart(2, "0");
-  const weight = () => { try { const p = TS.profile(); return p.kg || 70; } catch (_) { return 70; } };
+  const weight = () => { try { return TS.profile().kg || null; } catch (_) { return null; } };
   const sp = (id) => CH.sportOf(id);
+  const SPX = (id) => (window.TempoSports && TempoSports.SPEC[id]) || { fields: [], sum: () => [], derive: () => [], tiles: () => [] };
+  const nameOf = (s) => (s.sport === "autre" && s.name ? s.name : sp(s.sport).name);
+  // Calories : seulement si on a de quoi les estimer (poids du profil, ou puissance mesurée)
+  const kcalTxt = (s) => { const k = CH.kcal(s, weight()); return k != null ? "≈ " + r0(k) + " kcal" : null; };
+  const NOKCAL = `<a href="compte.html#profil">Ajoutez votre poids dans votre profil</a> pour estimer les calories.`;
 
   /* ---------- Données ---------- */
   let S = Object.assign({ sessions: [], settings: {} }, TS.get(KEY) || {});
@@ -72,28 +77,23 @@
     $("#j-view").innerHTML = { home: viewHome, hist: viewHist, charge: viewCharge, stats: viewStats }[UI.tab]();
   }
 
-  function sessFacts(s) {
-    const t = sp(s.sport), f = [];
-    if (t.fields === "team" && s.kind) f.push(s.kind === "match" ? "Match" + (s.played ? " · " + s.played + " min jouées" : "") : "Entraînement");
-    if (t.fields === "swim" && s.dist) f.push(r0(s.dist) + " m" + (pace100(s) ? " · " + mmss(pace100(s)) + " /100 m" : ""));
-    if (t.fields === "dist" && s.dist) f.push(r1(s.dist) + " km" + (s.dplus ? " · " + r0(s.dplus) + " m D+" : ""));
-    return f;
-  }
+  const sessFacts = (s) => SPX(s.sport).sum(s).filter(Boolean);
   function sessRow(s) {
     const t = sp(s.sport), open = UI.open === s.id, facts = sessFacts(s);
     let h = `<article class="j-sess" style="--t:${t.color}"><button class="j-sbtn" data-a="toggle" data-id="${esc(s.id)}" aria-expanded="${open}">
       <span class="j-dot"></span>
-      <span class="j-mid"><span class="j-t1">${esc(t.name)}${facts[0] ? " · " + esc(facts[0]) : ""}</span><span class="j-sub">${esc(dShort(s.date))} · ${human(s.dur)} · effort ${s.rpe}/10</span></span>
+      <span class="j-mid"><span class="j-t1">${esc(nameOf(s))}${facts[0] ? " · " + esc(facts[0]) : ""}</span><span class="j-sub">${esc(dShort(s.date))} · ${human(s.dur)} · effort ${s.rpe}/10</span></span>
       <span class="j-right">${r0(loadOf(s))} <small>pts</small></span></button>`;
     if (open) {
-      const rows = [
+      const src = CH.kcalSrc(s, weight()), kt = kcalTxt(s);
+      const rows = SPX(s.sport).derive(s).concat([
         ["Charge", r0(loadOf(s)) + " points (" + Math.round(s.dur / 60) + " min × " + s.rpe + ")"],
         ["Effort ressenti", s.rpe + " / 10 · " + CH.RPE[s.rpe]],
-        [CH.kcalSrc(s, weight()) === "fc" ? "Calories (d'après la fréquence cardiaque)" : "Calories (estimation selon le sport)", "≈ " + r0(CH.kcal(s, weight())) + " kcal"],
-        s.stroke && ["Nage", (CH.STROKES.find((x) => x[0] === s.stroke) || [, s.stroke])[1]],
         s.fc && ["FC moyenne", r0(s.fc) + " bpm"],
-      ].concat(facts.slice(1).map((x) => ["", x])).filter(Boolean);
+        s.fcmax && ["FC max", r0(s.fcmax) + " bpm"],
+      ]).filter(Boolean);
       h += `<div class="j-detail">${rows.map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}
+        <div><span>${esc(kt ? CH.KCAL_LABEL[src] : "Calories")}</span><b>${kt ? esc(kt) : `<small class="m-nok">${NOKCAL}</small>`}</b></div>
         ${s.note ? `<p class="j-note">« ${esc(s.note)} »</p>` : ""}${s.route && window.TempoGPX ? TempoGPX.svg(s.route, t.color) : ""}
         <div class="j-row"><button class="j-btn sm" data-a="edit" data-id="${esc(s.id)}">Modifier</button>${window.TempoShare ? `<button class="j-btn sm" data-a="share" data-id="${esc(s.id)}">Partager en image</button>` : ""}<button class="j-btn sm danger" data-a="del" data-id="${esc(s.id)}">Supprimer</button></div></div>`;
     }
@@ -183,65 +183,89 @@
     S.sessions.forEach((s) => (by[s.sport] = by[s.sport] || []).push(s));
     const y0 = new Date().getFullYear() + "-01-01";
     return Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([id, L]) => {
-      const t = sp(id), year = L.filter((s) => s.date >= y0), tiles = [[L.length, "séances"], [human(sum(L, (s) => s.dur)), "au total"], [r0(sum(L, loadOf) / L.length), "points par séance"]];
-      if (t.fields === "team") { const m = L.filter((s) => s.kind === "match"); tiles.push([m.length, "matchs"], [r0(sum(m, (s) => s.played || 0)), "minutes jouées"]); }
-      if (t.fields === "swim") { const d = sum(L, (s) => s.dist); const best = L.filter((s) => s.dist >= 200).map(pace100).filter(Boolean); tiles.push([r1(d / 1000) + " km", "nagés"]); if (best.length) tiles.push([mmss(Math.min(...best)), "meilleure allure /100 m"]); }
-      if (t.fields === "dist") { tiles.push([r1(sum(L, (s) => s.dist)) + " km", "parcourus"]); const dp = sum(L, (s) => s.dplus); if (dp) tiles.push([r0(dp) + " m", "de dénivelé"]); }
+      const t = sp(id), year = L.filter((s) => s.date >= y0), tiles = [[L.length, "séances"], [human(sum(L, (s) => s.dur)), "au total"], [r0(sum(L, loadOf) / L.length), "points par séance"]].concat(SPX(id).tiles(L));
       return `<section class="j-stack m-sport" style="--t:${t.color}"><div class="m-sport-h"><i></i><b>${esc(t.name)}</b><span class="j-muted">${year.length} séance${year.length > 1 ? "s" : ""} cette année</span></div>
         <div class="j-tiles">${tiles.map(([v, k]) => `<div><div class="j-v">${v}</div><div class="j-muted">${k}</div></div>`).join("")}</div></section>`;
     }).join("");
   }
 
-  /* ---------- Formulaire ---------- */
+  /* ---------- Formulaire : les champs viennent de la description de chaque sport (sports.js) ---------- */
   let FORM = null;
+  const fid = (k) => "f-x-" + k;
+  const shown = (f) => !f.when || f.when(FORM.v);
+  const fmtNum = (v) => (v == null || v === "" ? "" : String(v).replace(".", ","));
   function openForm(s) {
-    const last = S.sessions[0];
-    const e = s || { date: dKey(new Date()), sport: (last && last.sport) || "rugby", rpe: 6, kind: "train" };
-    FORM = { id: s ? s.id : null, sport: e.sport, rpe: e.rpe || 6, kind: e.kind || "train", route: (s && s.route) || null };
+    const last = S.sessions[0], sport = s ? s.sport : (last && last.sport) || "rugby";
+    FORM = { id: s ? s.id : null, sport, rpe: (s && s.rpe) || 6, route: (s && s.route) || null, v: Object.assign(window.TempoSports ? TempoSports.defaults(sport) : {}, s ? JSON.parse(JSON.stringify(s)) : {}) };
+    const e = s || { date: dKey(new Date()) };
     sheet(`<div class="j-h2">${s ? "Modifier la séance" : "Nouvelle séance"}</div>
       <div class="j-f"><span>Sport</span><div class="j-chips m-sports" role="group" aria-label="Sport">${sportsSorted().map((t) => `<button type="button" class="j-chip" data-a="fsport" data-v="${t.id}" aria-pressed="${t.id === FORM.sport}" style="--t:${t.color}">${esc(t.name)}</button>`).join("")}</div></div>
-      <div id="f-extra"></div>
       <div class="j-grid">
         <label class="j-f" for="f-date">Date<input id="f-date" type="date" value="${e.date}"></label>
-        <label class="j-f" for="f-dur">Durée<input id="f-dur" value="${s ? human(s.dur) : ""}" placeholder="1h15 ou 45 min"></label>
+        <label class="j-f" for="f-dur">Durée totale<input id="f-dur" value="${s ? human(s.dur) : ""}" placeholder="1h15 ou 45 min"></label>
       </div>
+      <div id="f-extra" class="m-extra"></div>
       <div class="j-f"><span>Effort ressenti</span><div class="j-rpe" role="group" aria-label="Effort de 1 à 10">${Array.from({ length: 10 }, (_, i) => `<button type="button" data-a="frpe" data-v="${i + 1}" aria-pressed="${i + 1 === FORM.rpe}">${i + 1}</button>`).join("")}</div><small id="f-rpe-t">${FORM.rpe} : ${CH.RPE[FORM.rpe]}. Jugez la séance entière, 30 minutes après.</small></div>
+      <div class="j-grid"><label class="j-f" for="f-fc">FC moyenne (bpm)<input id="f-fc" inputmode="numeric" value="${e.fc || ""}" placeholder="optionnel"></label>
+        <label class="j-f" for="f-fcmax">FC max (bpm)<input id="f-fcmax" inputmode="numeric" value="${e.fcmax || ""}" placeholder="optionnel"></label></div>
       <div class="j-live" id="f-live" aria-live="polite"></div>
-      <div class="j-grid"><label class="j-f" for="f-fc">FC moyenne (bpm)<input id="f-fc" inputmode="numeric" value="${e.fc || ""}" placeholder="optionnel"></label></div>
-      <label class="j-f" for="f-note">Note<textarea id="f-note" rows="2" placeholder="Adversaire, sensations, douleurs…">${esc(e.note || "")}</textarea></label>
+      <label class="j-f" for="f-note">Note<textarea id="f-note" rows="2" placeholder="Sensations, douleurs, adversaire…">${esc(e.note || "")}</textarea></label>
       <div class="j-row end"><button class="j-btn" data-a="close">Annuler</button><button class="j-btn primary" data-a="save">Enregistrer</button></div>`);
-    drawExtra(e);
+    drawExtra();
     live();
   }
-  function drawExtra(e) {
-    const t = sp(FORM.sport), box = $("#f-extra");
-    if (!box) return;
-    e = e || {};
-    let h = "";
-    if (t.fields === "team") {
-      h = `<div class="j-f"><span>Type de séance</span><div class="j-seg2" role="group" aria-label="Type de séance"><button type="button" data-a="fkind" data-v="train" aria-pressed="${FORM.kind !== "match"}">Entraînement</button><button type="button" data-a="fkind" data-v="match" aria-pressed="${FORM.kind === "match"}">Match</button></div></div>
-        ${FORM.kind === "match" ? `<label class="j-f" for="f-played">Minutes jouées<input id="f-played" inputmode="numeric" value="${e.played || ""}" placeholder="Ex. 60"></label>` : ""}`;
-    } else if (t.fields === "swim") {
-      h = `<div class="j-grid"><label class="j-f" for="f-dist">Distance nagée (m)<input id="f-dist" inputmode="numeric" value="${e.dist || ""}" placeholder="Ex. 1500"></label>
-        <label class="j-f" for="f-stroke">Nage principale<select id="f-stroke">${CH.STROKES.map(([id, n]) => `<option value="${id}" ${e.stroke === id ? "selected" : ""}>${n}</option>`).join("")}</select></label></div>`;
-    } else if (t.fields === "dist") {
-      h = `${window.TempoGPX ? `<div class="j-gpx"><label class="j-btn sm" for="f-gpx">${FORM.route ? "Remplacer le fichier GPX" : "Importer depuis ma montre (GPX)"}</label><input type="file" id="f-gpx" accept=".gpx,application/gpx+xml,application/xml,text/xml" hidden><div id="f-route">${FORM.route ? TempoGPX.svg(FORM.route, t.color) : ""}</div></div>` : ""}
-        <div class="j-grid"><label class="j-f" for="f-dist">Distance (km)<input id="f-dist" inputmode="decimal" value="${e.dist ? String(e.dist).replace(".", ",") : ""}" placeholder="optionnel"></label>
-        <label class="j-f" for="f-dplus">Dénivelé + (m)<input id="f-dplus" inputmode="numeric" value="${e.dplus || ""}" placeholder="optionnel"></label></div>`;
-    }
+  // Lit les champs affichés dans FORM.v (avant de redessiner ou d'enregistrer)
+  function collect() {
+    SPX(FORM.sport).fields.forEach((f) => {
+      if (f.type === "num") { const el = $("#" + fid(f.k)); if (el) FORM.v[f.k] = num(el.value); }
+      else if (f.type === "text" || f.type === "select") { const el = $("#" + fid(f.k)); if (el) FORM.v[f.k] = el.value.trim(); }
+      else if (f.type === "score") { const a = $("#" + fid(f.k) + "-a"), b = $("#" + fid(f.k) + "-b"); if (a) { FORM.v[f.k + "For"] = num(a.value); FORM.v[f.k + "Ag"] = num(b.value); } }
+    });
+  }
+  function fieldHtml(f) {
+    const v = FORM.v[f.k], id = fid(f.k), hint = f.hint ? `<small>${esc(f.hint)}</small>` : "";
+    const lbl = esc(f.label) + (f.unit ? ` (${esc(f.unit)})` : "");
+    if (f.type === "seg") return `<div class="j-f"><span>${esc(f.label)}</span><div class="j-chips" role="group" aria-label="${esc(f.label)}">${f.opts.map(([k, l]) => `<button type="button" class="j-chip" data-a="fseg" data-k="${f.k}" data-v="${k}" aria-pressed="${v === k}">${esc(l)}</button>`).join("")}</div>${hint}</div>`;
+    if (f.type === "multi") return `<div class="j-f"><span>${esc(f.label)} <em class="m-opt">plusieurs choix possibles</em></span><div class="j-chips" role="group" aria-label="${esc(f.label)}">${f.opts.map(([k, l]) => `<button type="button" class="j-chip" data-a="fmulti" data-k="${f.k}" data-v="${k}" aria-pressed="${(v || []).includes(k)}">${esc(l)}</button>`).join("")}</div>${hint}</div>`;
+    if (f.type === "select") return `<label class="j-f" for="${id}">${lbl}<select id="${id}">${f.opts.map(([k, l]) => `<option value="${k}" ${v === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>${hint}</label>`;
+    if (f.type === "num") return `<label class="j-f" for="${id}">${lbl}<input id="${id}" inputmode="${f.dec ? "decimal" : "numeric"}" value="${fmtNum(v)}" placeholder="${esc(f.ph || "")}">${hint}</label>`;
+    if (f.type === "text") return `<label class="j-f wide" for="${id}">${lbl}<input id="${id}" value="${esc(v || "")}" placeholder="${esc(f.ph || "")}">${hint}</label>`;
+    if (f.type === "score") return `<div class="j-f"><span>${esc(f.label)}</span><div class="m-score"><label><small>${esc(f.sub[0])}</small><input id="${id}-a" inputmode="numeric" value="${fmtNum(FORM.v[f.k + "For"])}" aria-label="${esc(f.label + " : " + f.sub[0])}"></label><b>–</b><label><small>${esc(f.sub[1])}</small><input id="${id}-b" inputmode="numeric" value="${fmtNum(FORM.v[f.k + "Ag"])}" aria-label="${esc(f.label + " : " + f.sub[1])}"></label></div></div>`;
+    if (f.type === "gpx") return window.TempoGPX ? `<div class="j-gpx"><label class="j-btn sm" for="f-gpx">${FORM.route ? "Remplacer le fichier GPX" : "Importer depuis ma montre (GPX)"}</label><input type="file" id="f-gpx" accept=".gpx,application/gpx+xml,application/xml,text/xml" hidden><div id="f-route">${FORM.route ? TempoGPX.svg(FORM.route, sp(FORM.sport).color) : ""}</div></div>` : "";
+    return "";
+  }
+  function drawExtra() {
+    const box = $("#f-extra"); if (!box) return;
+    let h = "", grid = [];
+    const flush = () => { if (grid.length) h += `<div class="j-grid">${grid.join("")}</div>`; grid = []; };
+    SPX(FORM.sport).fields.filter(shown).forEach((f) => {
+      const x = fieldHtml(f);
+      if (f.type === "num" || f.type === "select") grid.push(x); else { flush(); h += x; }
+    });
+    flush();
     box.innerHTML = h;
   }
-  // Valeurs saisies conservées quand on change de sport
-  const keep = () => ({ dist: num(($("#f-dist") || {}).value), dplus: num(($("#f-dplus") || {}).value), played: num(($("#f-played") || {}).value), stroke: ($("#f-stroke") || {}).value });
+  // En changeant de sport : on garde ce qui a un sens, on remet les choix par défaut du nouveau sport
+  function switchSport(id) {
+    collect(); FORM.sport = id;
+    const d = window.TempoSports ? TempoSports.defaults(id) : {};
+    SPX(id).fields.forEach((f) => {
+      if ((f.type === "seg" || f.type === "select") && !f.opts.some(([k]) => k === FORM.v[f.k])) { if (d[f.k] != null) FORM.v[f.k] = d[f.k]; else delete FORM.v[f.k]; }
+      if (f.type === "multi" && !(FORM.v[f.k] || []).every((x) => f.opts.some(([k]) => k === x))) delete FORM.v[f.k];
+    });
+  }
+  function draft() {
+    collect();
+    const dur = parseDur(($("#f-dur") || {}).value || "");
+    const s = Object.assign({}, FORM.v, { sport: FORM.sport, dur, rpe: FORM.rpe, fc: num(($("#f-fc") || {}).value) });
+    return s;
+  }
   function live() {
     const el = $("#f-live"); if (!el) return;
-    const dur = parseDur(($("#f-dur") || {}).value || "");
-    if (!(dur > 0)) { el.textContent = ""; return; }
-    const s = { sport: FORM.sport, dur, rpe: FORM.rpe, stroke: ($("#f-stroke") || {}).value, dist: num(($("#f-dist") || {}).value), fc: num(($("#f-fc") || {}).value), kind: FORM.kind, played: num(($("#f-played") || {}).value) };
-    let t = `Charge : ${r0(loadOf(s))} points · ≈ ${r0(CH.kcal(s, weight()))} kcal`;
-    if (sp(FORM.sport).fields === "swim" && s.dist > 0) t += ` · ${mmss(dur / (s.dist / 100))} /100 m`;
-    if (sp(FORM.sport).fields === "dist" && s.dist > 0) t += ` · ${r1(s.dist / (dur / 3600))} km/h`;
-    el.textContent = t;
+    const s = draft();
+    if (!(s.dur > 0)) { el.innerHTML = ""; return; }
+    const k = CH.kcal(s, weight());
+    el.innerHTML = `<span><small>Charge</small>${r0(loadOf(s))} pts</span>` + (k != null ? `<span><small>Calories</small>≈ ${r0(k)} kcal</span>` : `<span class="j-muted">${NOKCAL}</span>`);
   }
 
   /* ---------- Fenêtres ---------- */
@@ -253,11 +277,11 @@
   function toast(m) { const t = $("#m-toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2800); }
 
   async function share(s) {
-    const t = sp(s.sport), facts = sessFacts(s);
+    const t = sp(s.sport), facts = sessFacts(s), kt = kcalTxt(s);
     try {
-      const r = await TempoShare.share({ color: t.color, kicker: t.name, title: facts[0] || human(s.dur), date: dLong(s.date),
+      const r = await TempoShare.share({ color: t.color, kicker: nameOf(s), title: facts[0] || human(s.dur), date: dLong(s.date),
         stats: [[human(s.dur), "durée"], [s.rpe + "/10", "effort"], [r0(loadOf(s)), "points de charge"]], route: s.route,
-        lines: [["Calories (estimation)", "≈ " + r0(CH.kcal(s, weight())) + " kcal"]].concat(s.fc ? [["Fréquence cardiaque moyenne", r0(s.fc) + " bpm"]] : [], s.note ? [[s.note, ""]] : []) }, "tempo-" + t.id + "-" + s.date);
+        lines: SPX(s.sport).derive(s).slice(0, 4).concat(kt ? [["Calories (estimation)", kt]] : [], s.fc ? [["Fréquence cardiaque moyenne", r0(s.fc) + " bpm"]] : [], s.note ? [[s.note, ""]] : []) }, "tempo-" + t.id + "-" + s.date);
       if (r === "downloaded") toast("Image enregistrée : vous pouvez la partager");
     } catch (_) { toast("Impossible de créer l'image"); }
   }
@@ -272,11 +296,12 @@
     filter(b) { UI.filter = b.dataset.v; saveUI(); render(); },
     share(b) { const s = S.sessions.find((x) => x.id === b.dataset.id); if (s) share(s); },
     fsport(b) {
-      const k = keep(); FORM.sport = b.dataset.v;
+      switchSport(b.dataset.v);
       document.querySelectorAll('[data-a="fsport"]').forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === FORM.sport));
-      drawExtra(k); live();
+      drawExtra(); live();
     },
-    fkind(b) { const k = keep(); FORM.kind = b.dataset.v; drawExtra(k); live(); },
+    fseg(b) { collect(); FORM.v[b.dataset.k] = FORM.v[b.dataset.k] === b.dataset.v && !(SPX(FORM.sport).fields.find((f) => f.k === b.dataset.k) || {}).def ? null : b.dataset.v; drawExtra(); live(); },
+    fmulti(b) { collect(); const a = new Set(FORM.v[b.dataset.k] || []); a.has(b.dataset.v) ? a.delete(b.dataset.v) : a.add(b.dataset.v); FORM.v[b.dataset.k] = Array.from(a); b.setAttribute("aria-pressed", a.has(b.dataset.v)); live(); },
     frpe(b) {
       FORM.rpe = +b.dataset.v;
       document.querySelectorAll('[data-a="frpe"]').forEach((x) => x.setAttribute("aria-pressed", +x.dataset.v === FORM.rpe));
@@ -286,17 +311,26 @@
     save() {
       const dur = parseDur($("#f-dur").value);
       if (!(dur > 0)) { toast("Indiquez la durée, par exemple 1h15 ou 45 min"); $("#f-dur").focus(); return; }
-      const t = sp(FORM.sport), old = FORM.id ? S.sessions.find((x) => x.id === FORM.id) : null, k = keep();
-      const s = { id: FORM.id || gid(), at: old ? old.at : Date.now(), date: $("#f-date").value || dKey(new Date()), sport: FORM.sport, dur, rpe: FORM.rpe,
-        fc: num($("#f-fc").value), note: $("#f-note").value.trim() };
-      if (t.fields === "team") { s.kind = FORM.kind; if (FORM.kind === "match" && k.played > 0) s.played = k.played; }
-      if (t.fields === "swim") { if (k.dist > 0) s.dist = k.dist; s.stroke = k.stroke; }
-      if (t.fields === "dist") { if (k.dist > 0) s.dist = k.dist; if (k.dplus > 0) s.dplus = k.dplus; if (FORM.route) s.route = FORM.route; }
+      collect();
+      const t = sp(FORM.sport), old = FORM.id ? S.sessions.find((x) => x.id === FORM.id) : null;
+      const s = { id: FORM.id || gid(), at: old ? old.at : Date.now(), date: $("#f-date").value || dKey(new Date()), sport: FORM.sport, dur, rpe: FORM.rpe };
+      const fc = num($("#f-fc").value), fcmax = num($("#f-fcmax").value), note = $("#f-note").value.trim();
+      if (fc > 0) s.fc = fc; if (fcmax > 0) s.fcmax = fcmax; if (note) s.note = note;
+      // Seuls les champs du sport choisi, et visibles, sont gardés
+      SPX(FORM.sport).fields.filter(shown).forEach((f) => {
+        const v = FORM.v[f.k];
+        if (f.type === "gpx") { if (FORM.route) s.route = FORM.route; return; }
+        if (f.type === "score") { const a = FORM.v[f.k + "For"], b = FORM.v[f.k + "Ag"]; if (a != null && b != null) { s[f.k + "For"] = a; s[f.k + "Ag"] = b; } return; }
+        if (f.type === "multi") { if (v && v.length) s[f.k] = v; return; }
+        if (f.type === "num") { if (v != null && v >= 0) s[f.k] = v; return; }
+        if (v != null && v !== "") s[f.k] = v;
+      });
       S.sessions = S.sessions.filter((x) => x.id !== s.id).concat(s); sortS(); save(); closeSheet(); UI.open = null; render();
       if (old) { toast("Séance modifiée"); return; }
-      const a = CH.acwr(CH.entries(TS));
-      sheet(`<div class="j-h2">Séance de ${esc(t.name.toLowerCase())} enregistrée</div>
-        <div class="j-end"><span>Charge de la séance</span><b>${r0(loadOf(s))} points</b><small>${Math.round(dur / 60)} min × effort ${s.rpe} · ≈ ${r0(CH.kcal(s, weight()))} kcal</small></div>
+      const a = CH.acwr(CH.entries(TS)), kt = kcalTxt(s);
+      sheet(`<div class="j-h2">Séance de ${esc(nameOf(s).toLowerCase())} enregistrée</div>
+        <div class="j-end"><span>Charge de la séance</span><b>${r0(loadOf(s))} points</b><small>${Math.round(dur / 60)} min × effort ${s.rpe}${kt ? " · " + esc(kt) : ""}</small></div>
+        ${kt ? "" : `<p class="j-muted">${NOKCAL}</p>`}
         ${a.enough && a.zone && a.zone.id !== "ok" ? `<div class="j-alert"><b>${a.zone.label} : rapport ${a.ratio.toFixed(2).replace(".", ",")}</b><span>${esc(a.zone.text)}</span></div>` : ""}
         <div class="j-row end">${window.TempoShare ? `<button class="j-btn" data-a="share" data-id="${esc(s.id)}">Partager en image</button>` : ""}<button class="j-btn primary" data-a="close">Fermer</button></div>`);
     },
@@ -304,19 +338,20 @@
     "del-ok"(b) { S.sessions = S.sessions.filter((s) => s.id !== b.dataset.id); save(); closeSheet(); UI.open = null; render(); toast("Séance supprimée"); },
   };
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (!b || !A[b.dataset.a] || !b.closest(".j-app, #m-sheet")) return; e.preventDefault(); A[b.dataset.a](b, e); });
-  document.addEventListener("input", (e) => { if (["f-dur", "f-dist", "f-fc", "f-played"].includes(e.target.id)) live(); });
+  document.addEventListener("input", (e) => { if (e.target.closest && e.target.closest("#m-sheet") && e.target.tagName === "INPUT") live(); });
   document.addEventListener("change", async (e) => {
-    if (e.target.id === "f-stroke") live();
+    if (e.target.tagName === "SELECT" && e.target.closest("#m-sheet")) { collect(); live(); }
     if (e.target.id !== "f-gpx" || !e.target.files || !e.target.files[0]) return;
     try {
       const g = TempoGPX.parse(await e.target.files[0].text());
       if (!(g.km > 0)) throw new Error("vide");
-      $("#f-dist").value = String(g.km).replace(".", ",");
+      collect();
+      FORM.v.dist = Math.round(g.km * 100) / 100;
+      if (g.dplus) FORM.v.dplus = g.dplus;
       if (g.dur > 0) $("#f-dur").value = human(g.dur);
       if (g.date) $("#f-date").value = g.date;
-      if (g.dplus) $("#f-dplus").value = g.dplus;
       if (g.fc) $("#f-fc").value = g.fc;
-      FORM.route = g.route; $("#f-route").innerHTML = TempoGPX.svg(g.route, sp(FORM.sport).color); live();
+      FORM.route = g.route; drawExtra(); live();
       toast(`Activité importée : ${r1(g.km)} km`);
     } catch (_) { toast("Fichier GPX illisible : exportez l'activité au format GPX"); }
     e.target.value = "";
@@ -324,7 +359,7 @@
 
   render();
   TS.watch(KEY, (v) => { S = Object.assign({ sessions: [], settings: {} }, v || {}); sortS(); if ($("#m-sheet").hidden) render(); });
-  ["carnet-fonte-v1", "tempo-course-v1"].forEach((k) => TS.watch(k, () => { if ($("#m-sheet").hidden) render(); }));
+  ["carnet-fonte-v1", "tempo-course-v1", "tempo-profile-v1"].forEach((k) => TS.watch(k, () => { if ($("#m-sheet").hidden) render(); }));
   const syncEl = $("#m-sync");
   if (syncEl && TS.onStatus) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Mode essai"); });
 })();

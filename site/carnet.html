@@ -791,9 +791,9 @@ $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()})
 function bodyKg(){try{const p=TempoStore.profile();if(p.kg)return{kg:p.kg,src:"votre profil"}}catch(e){}
   const b=S.body.filter(x=>x.kg).sort((x,y)=>x.date<y.date?-1:1).pop();if(b)return{kg:b.kg,src:"mesure du "+dShort(b.date+"T12:00")};
   try{const c=TempoStore.get("tempo-course-v1");if(c&&c.settings&&c.settings.weight)return{kg:c.settings.weight,src:"carnet de course"}}catch(e){}
-  return{kg:70,src:"par défaut, à renseigner dans votre profil (page Compte)"}}
-function sessKcal(s,extra){if(!window.TempoKcal)return null;const all=S.sessions.concat(extra?[s]:[]);return TempoKcal.muscuKcal(s,bodyKg().kg,all)}
-function kcalBlock(k){if(!k)return"";const w=bodyKg();return`<div class="kcal-end"><span>Calories dépensées</span><b>≈ ${fmt(k.kcal,0)} kcal</b><small>${esc(k.zone)} · ${fmt(k.tonnage/1000,1)} t soulevées · poids ${fmt(w.kg,1)} kg (${esc(w.src)})</small></div>`}
+  return null}
+function sessKcal(s,extra){if(!window.TempoKcal||!bodyKg())return null;const all=S.sessions.concat(extra?[s]:[]);return TempoKcal.muscuKcal(s,bodyKg().kg,all)}
+function kcalBlock(k){if(!k)return bodyKg()?"":`<p class="muted small"><a href="compte.html#profil">Ajoutez votre poids dans votre profil</a> pour estimer les calories de vos séances.</p>`;const w=bodyKg();return`<div class="kcal-end"><span>Calories dépensées</span><b>≈ ${fmt(k.kcal,0)} kcal</b><small>${esc(k.zone)} · ${fmt(k.tonnage/1000,1)} t soulevées · poids ${fmt(w.kg,1)} kg (${esc(w.src)})</small></div>`}
 
 /* ---------- actions ---------- */
 function newDraftEx(e,lpSets){const n=Math.max(1,parseInt(e.sets)||3);return{exId:e.id,name:e.name,muscle:e.muscle,target:e.sets&&e.reps?`${e.sets} × ${e.reps}`:"",reps:e.reps||"",sets:Array.from({length:n},()=>({kg:"",reps:"",done:false}))}}

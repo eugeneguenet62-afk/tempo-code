@@ -144,7 +144,7 @@
 .j-live { display: flex; gap: 24px; min-height: 44px; align-items: center; padding: 8px 14px; border-radius: 12px; background: var(--accent-soft); }
 .j-live span { display: grid; gap: 2px; font: 600 20px/1 var(--display); font-variant-numeric: tabular-nums; }
 .j-live small { font: 500 12px var(--body); color: var(--muted); }
-.j-live .j-muted { margin: 0; font: 400 13.5px var(--body); }
+.j-live .j-muted { display: block; margin: 0; font: 400 13.5px/1.4 var(--body); }
 
 /* Onglets */
 .j-tabs {
@@ -285,3 +285,19 @@
 .j-seg2 { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--field); gap: 2px; }
 .j-seg2 button { border: 0; background: none; font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 9px; color: inherit; cursor: pointer; }
 .j-seg2 button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+/* Carnet multisport : champs propres à chaque sport */
+.m-extra { display: grid; gap: 14px; }
+.m-extra:empty { display: none; }
+.m-opt { font-style: normal; font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 4px; }
+.m-score { display: flex; align-items: flex-end; gap: 10px; }
+.m-score label { display: grid; gap: 4px; flex: 1; max-width: 140px; }
+.m-score small { color: var(--muted); font-size: 12px; }
+.m-score b { padding-bottom: 12px; color: var(--muted); }
+.m-nok, .m-nok a { font-weight: 400; }
+.j-detail .m-nok { font-size: 13px; color: var(--muted); }
+.j-f.wide { grid-column: 1 / -1; }
+/* Choix d'un champ (pas un sport) : pas de pastille de couleur, contour à la couleur de la page */
+.m-extra .j-chip { --t: var(--accent); }
+.m-extra .j-chip::before { display: none; }
+.j-live span:not(.j-muted) { white-space: nowrap; }

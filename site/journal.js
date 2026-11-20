@@ -76,12 +76,14 @@
   const rate = (s) => (C.speed ? r1(speedOf(s)) + " km/h" : human(s.dur / s.dist) + "/km");
   /* Calories estimées. Course : ~1 kcal par kg et par km. Vélo : puissance (kJ ≈ kcal) ou MET selon la vitesse. */
   const profKg = () => { try { return window.TempoStore.profile().kg; } catch (e) { return null; } };
-  const weight = () => profKg() || S.settings.weight || 70;
+  const weight = () => profKg() || S.settings.weight || null;   // pas de poids par défaut : sans poids, pas de calories
+  const NOKCAL = `<a href="compte.html#profil">Ajoutez votre poids dans votre profil</a> pour estimer les calories.`;
   function kcal(s) {
-    if (!(s.dist > 0 && s.dur > 0)) return 0;
+    if (!(s.dist > 0 && s.dur > 0)) return null;
+    if (C.speed && s.watts) return (s.watts * s.dur) / 1000;
     const w = weight();
+    if (!w) return null;
     if (!C.speed) return w * s.dist * (s.type === "trail" ? 1.1 : 1) + (s.dplus || 0) * w * 0.0015;
-    if (s.watts) return (s.watts * s.dur) / 1000;
     const v = speedOf(s), met = s.type === "ht" ? 7 : v < 16 ? 4.5 : v < 19 ? 5.8 : v < 22 ? 6.8 : v < 25 ? 8 : v < 28 ? 9 : v < 32 ? 10.3 : 12;
     return (met * w * s.dur) / 3600;
   }
@@ -126,7 +128,7 @@
       const facts = [
         s.fc && ["FC moyenne", r0(s.fc) + " bpm"],
         s.watts && ["Puissance moyenne", r0(s.watts) + " W"],
-        ["Calories (estimation)", "≈ " + r0(kcal(s)) + " kcal"],
+        kcal(s) != null && ["Calories (estimation)", "≈ " + r0(kcal(s)) + " kcal"],
         s.rpe && ["Ressenti", s.rpe + " / 10"],
         g && [C.gearName, g.name],
         !C.speed && ["Vitesse", r1(speedOf(s)) + " km/h"],
@@ -206,7 +208,7 @@
       <section class="j-goal"><div class="j-eyebrow">Cette semaine</div>
         <div class="j-big"><b>${r1(km)}</b> <span>/ ${r0(goal)} km</span></div>
         <div class="j-bar"><span style="width:${Math.min(100, (km / goal) * 100)}%"></span></div>
-        <div class="j-muted">${wk.length} ${C.word}${wk.length > 1 ? "s" : ""} · ${wk.length ? human(sum(wk, (s) => s.dur)) : "0 min"} · ${r0(sum(wk, (s) => s.dplus))} m D+ · ${r0(sum(wk, kcal))} kcal${km >= goal ? " · objectif atteint" : ""}</div></section>
+        <div class="j-muted">${wk.length} ${C.word}${wk.length > 1 ? "s" : ""} · ${wk.length ? human(sum(wk, (s) => s.dur)) : "0 min"} · ${r0(sum(wk, (s) => s.dplus))} m D+ ${weight() ? " · " + r0(sum(wk, kcal)) + " kcal" : ""}${km >= goal ? " · objectif atteint" : ""}</div></section>
       <button class="j-btn primary big" data-a="add">Ajouter une ${C.word}</button>`;
     const worn = S.gear.filter((g) => !g.retired && gearKm(g.id) >= g.limit * 0.85);
     worn.forEach((g) => { h += `<section class="j-alert"><b>${esc(g.name)} : ${r0(gearKm(g.id))} km</b><span>${gearKm(g.id) >= g.limit ? "Durée de vie conseillée dépassée" : "Bientôt en fin de vie"} (${r0(g.limit)} km). Pensez à ${SPORT === "course" ? "les remplacer" : "vérifier la chaîne"}.</span></section>`; });
@@ -237,7 +239,7 @@
     let h = `<section class="j-tiles">
       <div><div class="j-eyebrow">Semaine</div><div class="j-v">${r1(sum(wk, (s) => s.dist))}<small> / ${r0(goal)} km</small></div></div>
       <div><div class="j-eyebrow">30 jours</div><div class="j-v">${r0(sum(m30, (s) => s.dist))}<small> km</small></div><div class="j-muted">${m30.length} ${C.word}${m30.length > 1 ? "s" : ""}</div></div>
-      <div><div class="j-eyebrow">Temps 30 j</div><div class="j-v">${human(sum(m30, (s) => s.dur)).replace(/ \d+ s$/, "")}</div><div class="j-muted">≈ ${r0(sum(m30, kcal))} kcal</div></div></section>`;
+      <div><div class="j-eyebrow">Temps 30 j</div><div class="j-v">${human(sum(m30, (s) => s.dur)).replace(/ \d+ s$/, "")}</div>${weight() ? `<div class="j-muted">≈ ${r0(sum(m30, kcal))} kcal</div>` : ""}</div></section>`;
     // 12 semaines
     const weeks = [];
     for (let i = 11; i >= 0; i--) { const a = addDays(ws, -7 * i); weeks.push({ a, km: sum(inRange(a, addDays(a, 7)), (s) => s.dist) }); }
@@ -313,7 +315,7 @@
         <div class="j-row"><button class="j-btn sm" data-a="gear-retire" data-id="${esc(g.id)}">${g.retired ? "Remettre en service" : "Mettre à la retraite"}</button><button class="j-btn sm danger" data-a="gear-del" data-id="${esc(g.id)}">Supprimer</button></div></div>`; };
     return `<section class="j-stack"><div class="j-h3">Objectif et poids</div>
         <div class="j-grid"><label class="j-f" for="j-goal">Kilomètres par semaine<input id="j-goal" type="number" inputmode="numeric" min="1" step="${C.goalStep}" value="${S.settings.goal}" data-f="goal"></label>
-        <label class="j-f" for="j-weight">Votre poids (kg)<input id="j-weight" type="number" inputmode="decimal" min="30" max="250" value="${profKg() || S.settings.weight || ""}" placeholder="70" data-f="weight"></label></div>
+        <label class="j-f" for="j-weight">Votre poids (kg)<input id="j-weight" type="number" inputmode="decimal" min="30" max="250" value="${profKg() || S.settings.weight || ""}" placeholder="Ex. 70" data-f="weight"></label></div>
         <div class="j-muted">Le poids sert à estimer les calories de chaque sortie. <a href="calories.html">Calculer mes besoins journaliers →</a></div></section>
       <section class="j-stack"><div class="j-h3">${C.gearName}</div><div class="j-muted">${C.gearHint}</div>
         ${active.map(gearRow).join("") || `<div class="j-muted">Aucun matériel. Ajoutez votre ${C.gearOne} pour suivre ses kilomètres.</div>`}
@@ -339,10 +341,10 @@
   async function shareRun(s) {
     if (!window.TempoShare) return;
     const t = typeOf(s.type);
-    const facts = [s.fc && ["Fréquence cardiaque moyenne", r0(s.fc) + " bpm"], s.dplus && ["Calories (estimation)", "≈ " + r0(kcal(s)) + " kcal"], s.note && [s.note, ""]].filter(Boolean);
+    const facts = [s.fc && ["Fréquence cardiaque moyenne", r0(s.fc) + " bpm"], s.dplus && kcal(s) != null && ["Calories (estimation)", "≈ " + r0(kcal(s)) + " kcal"], s.note && [s.note, ""]].filter(Boolean);
     try {
       const r = await TempoShare.share({ color: "#2350d9", kicker: t[1], title: r1(s.dist) + " km", date: toDate(s.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }),
-        stats: [[human(s.dur), "durée"], [rate(s), C.speed ? "vitesse" : "allure"], [s.dplus ? r0(s.dplus) + " m" : r0(kcal(s)) + " kcal", s.dplus ? "dénivelé" : "dépensées"]],
+        stats: [[human(s.dur), "durée"], [rate(s), C.speed ? "vitesse" : "allure"], (s.dplus || kcal(s) == null ? [s.dplus ? r0(s.dplus) + " m" : s.rpe ? s.rpe + "/10" : "", s.dplus ? "dénivelé" : s.rpe ? "effort" : ""] : [r0(kcal(s)) + " kcal", "dépensées"])].filter((x) => x[0]),
         route: s.route, lines: facts }, "tempo-" + s.date);
       if (r === "downloaded") toast("Image enregistrée : vous pouvez la partager");
     } catch (_) { toast("Impossible de créer l'image"); }
@@ -381,7 +383,7 @@
     const d = num($("#f-dist").value), t = parseDur($("#f-dur").value);
     el.innerHTML = d > 0 && t > 0
       ? (C.speed ? "" : `<span><small>Allure</small>${human(t / d)}/km</span>`) + `<span><small>Vitesse moyenne</small>${r1(d / (t / 3600))} km/h</span>` +
-        `<span><small>Calories</small>≈ ${r0(kcal({ dist: d, dur: t, type: FORM.type, dplus: num(($("#f-dplus") || {}).value), watts: C.power ? num(($("#f-watts") || {}).value) : null }))} kcal</span>`
+        ((k) => (k != null ? `<span><small>Calories</small>≈ ${r0(k)} kcal</span>` : `<span class="j-muted">${NOKCAL}</span>`))(kcal({ dist: d, dur: t, type: FORM.type, dplus: num(($("#f-dplus") || {}).value), watts: C.power ? num(($("#f-watts") || {}).value) : null }))
       : `<span class="j-muted">Distance et durée : l'${C.speed ? "vitesse" : "allure"} se calcule ici.</span>`;
   }
 
@@ -421,9 +423,10 @@
       // Récapitulatif de fin de sortie avec les calories
       const k = kcal(s), isRec = S.sessions.length > 1 && dist > prevMax;
       sheet(`<div class="j-h2">${C.word[0].toUpperCase() + C.word.slice(1)} enregistrée</div>
-        <div class="j-end"><span>Calories dépensées</span><b>≈ ${r0(k)} kcal</b>
+        ${k != null ? `<div class="j-end"><span>Calories dépensées</span><b>≈ ${r0(k)} kcal</b>
           <small>${r1(dist)} km · ${human(dur)} · ${rate(s)} · soit ≈ ${r1(k / 285)} parts de pizza</small>
-          <small>Poids utilisé : ${r1(weight())} kg${profKg() ? " (votre profil)" : S.settings.weight ? "" : " (par défaut : renseignez votre profil dans Compte)"}</small></div>
+          ${s.watts && C.speed ? "<small>D'après la puissance mesurée</small>" : `<small>Poids utilisé : ${r1(weight())} kg${profKg() ? " (votre profil)" : ""}</small>`}</div>`
+          : `<div class="j-end"><span>${r1(dist)} km</span><b>${human(dur)}</b><small>${rate(s)}</small></div><p class="j-muted">${NOKCAL}</p>`}
         ${isRec ? `<div class="j-alert"><b>Nouveau record</b><span>${C.word[0].toUpperCase() + C.word.slice(1)} la plus longue : ${r1(dist)} km</span></div>` : ""}
         <div class="j-row end">${window.TempoShare ? `<button class="j-btn" data-a="share" data-id="${esc(s.id)}">Partager en image</button>` : ""}<button class="j-btn primary" data-a="close">Fermer</button></div>`);
     },

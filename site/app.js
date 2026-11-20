@@ -633,10 +633,16 @@
     }
     function renderSport() {
       const prof = window.TempoStore && TempoStore.profile ? TempoStore.profile() : {};
-      const w = prof.kg || 70;
-      $("#s-weight").innerHTML = prof.kg
+      const w = prof.kg;
+      $("#s-weight").innerHTML = w
         ? `Calculé pour ${r1(w)} kg, d'après <a href="compte.html#profil">votre profil</a>.`
-        : `Poids par défaut : 70 kg. Renseignez <a href="compte.html#profil">votre profil</a> pour un calcul juste.`;
+        : `<b>Ajoutez votre poids dans <a href="compte.html#profil">votre profil</a></b> : sans lui, Tempo n'estime pas les calories.`;
+      if (!w) {
+        // Pas d'estimation au hasard : on n'affiche rien tant que le poids manque
+        ["#r-sp-kcal", "#r-sp-n", "#r-sp-time"].forEach((q) => { const el = $(q); cancelAnimationFrame(el._raf); el._cur = 0; el.textContent = "–"; });
+        $("#sp-break").innerHTML = ""; $("#sp-weeks").innerHTML = ""; $("#sp-eq").textContent = "";
+        return;
+      }
       const today = dk(new Date());
       const from = per.v === "all" ? "0000" : shift(today, -(+per.v - 1));
       const days = allDays().filter((d) => d >= from && d <= today);

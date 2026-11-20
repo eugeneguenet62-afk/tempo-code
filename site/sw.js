@@ -4,7 +4,7 @@ const VERSION = "tempo-v12";
 const CORE = [
   "./", "index.html", "allure.html", "plan-entrainement.html", "carnet-course.html", "musculation.html", "carnet.html",
   "zones-cardiaques.html", "calories.html", "compte.html", "confidentialite.html", "mentions-legales.html", "apropos.html", "multisport.html", "404.html",
-  "style.css", "journal.css", "app.js", "journal.js", "kcal.js", "exercices.js", "illustrations.js", "guides.js", "muscu-guide.js", "share.js", "gpx.js", "charge.js", "multisport.js", "demo.js", "fx.js", "store.js", "firebase-config.js",
+  "style.css", "journal.css", "app.js", "journal.js", "kcal.js", "exercices.js", "illustrations.js", "guides.js", "muscu-guide.js", "share.js", "gpx.js", "sports.js", "charge.js", "multisport.js", "demo.js", "fx.js", "store.js", "firebase-config.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/favicon-48.png", "icons/logo.svg", "fonts/barlow-latin-400-normal.woff2", "fonts/barlow-latin-500-normal.woff2", "fonts/barlow-latin-600-normal.woff2", "fonts/barlow-condensed-latin-600-normal.woff2", "fonts/barlow-condensed-latin-700-normal.woff2", "img/home/running-main.webp", "img/home/squat-peak.webp",
 ];
 

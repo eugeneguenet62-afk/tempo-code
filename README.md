@@ -31,7 +31,8 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 - Import de sorties GPX (Strava, Garmin, Coros…) avec tracé du parcours.
 
 **Autres sports et charge d'entraînement**
-- Carnet multisport : rugby (entraînement ou match, minutes jouées), natation (distance, nage, allure aux 100 m), vélo et randonnée (import GPX), sports de combat, raquettes…
+- Carnet multisport : 21 sports, chacun avec ses propres champs. Rugby (poste, score, essais, plaquages réussis et manqués), football, basket, handball, volley, natation (bassin, nage, matériel, allure aux 100 m), vélo (puissance, cadence, GPX), escalade (cotation), sports de combat (rounds, résultat), tennis (surface, score)…
+- Calories estimées seulement à partir de données réelles : puissance mesurée, sinon fréquence cardiaque (formule de Keytel), sinon intensité de la pratique, et jamais sans le poids.
 - Charge d'entraînement globale (méthode session-RPE : durée × effort ressenti) qui additionne musculation, course et autres sports.
 - Rapport de charge aiguë / chronique (7 jours / 28 jours) avec alerte quand la charge monte trop vite, principal facteur de blessure.
 
@@ -68,6 +69,7 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 | `site/illustrations.js` | Cartes anatomiques des muscles (SVG) |
 | `site/journal.js` | Carnet de course et plan suivi |
 | `site/multisport.js` | Carnet multisport |
+| `site/sports.js` | Champs, résumés et statistiques propres à chaque sport |
 | `site/charge.js` | Sports, calories et charge d'entraînement (session-RPE, rapport aigu / chronique) |
 | `site/gpx.js` | Lecture des fichiers GPX et tracé du parcours |
 | `site/app.js` | Calculateurs : allure, plan, zones, charges, calories, protéines |

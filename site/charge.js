@@ -28,38 +28,52 @@
     ["autre", "Autre sport", "#6b7280", 5, "basic"],
   ].map(([id, name, color, met, fields]) => ({ id, name, color, met, fields }));
   const sportOf = (id) => SPORTS.find((s) => s.id === id) || SPORTS[SPORTS.length - 1];
-  const STROKES = [["crawl", "Crawl", 8.3], ["brasse", "Brasse", 8], ["dos", "Dos", 7], ["papillon", "Papillon", 11], ["4n", "4 nages", 8.5], ["educ", "Éducatifs / palmes", 6]];
+  const SP = () => (window.TempoSports && window.TempoSports.SPEC) || {};
+  const STROKES = (window.TempoSports && window.TempoSports.STROKES) || [["crawl", "Crawl", 8.3], ["brasse", "Brasse", 8], ["dos", "Dos", 7], ["papillon", "Papillon", 11], ["4n", "4 nages", 8.5], ["educ", "Éducatifs / palmes", 6]];
 
   // Échelle d'effort ressenti (CR-10 de Borg, en mots simples)
   const RPE = ["", "Très, très facile", "Très facile", "Facile", "Modéré", "Un peu dur", "Dur", "Dur", "Très dur", "Très, très dur", "Maximal"];
 
   /* Calories : l'effort ressenti n'entre pas dans le calcul (il dépend de la forme du jour, pas de l'énergie dépensée).
-     1. Fréquence cardiaque moyenne notée + âge et sexe du profil : formule de Keytel (2005), la plus fiable sans capteur de gaz.
-     2. Sinon : MET du sport (ou de la nage) × poids × durée. En match, seules les minutes jouées comptent à pleine intensité. */
+     Par ordre de fiabilité :
+     1. Puissance mesurée (vélo, rameur) : le travail réel, sans besoin du poids.
+     2. Fréquence cardiaque moyenne + poids, âge et sexe du profil : formule de Keytel (2005).
+     3. Sinon : MET de la pratique précise (nage, discipline, match ou entraînement…) × poids × durée.
+        En match, seules les minutes jouées comptent à pleine intensité.
+     Sans poids dans le profil, pas d'estimation : on ne devine pas. */
   const prof = () => { try { return window.TempoStore.profile(); } catch (_) { return {}; } };
+  function kcalPower(s) {
+    const sp = SP()[s.sport] || {};
+    if (!(s.watts > 0 && s.dur > 0)) return null;
+    if (sp.power) return (s.watts * s.dur) / 1000;                       // kJ de travail ≈ kcal dépensées (rendement ~24 %)
+    if (sp.rowPower) return ((s.watts * 4 * 0.8604 + 300) * s.dur) / 3600; // formule Concept2
+    return null;
+  }
   function kcalHR(s, w, p) {
     const hr = s.fc, a = p.age, sex = p.sex;
-    if (!(hr >= 90 && hr <= 220 && a > 0 && (sex === "h" || sex === "f" || sex === "m"))) return null;
+    if (!(w > 0 && hr >= 90 && hr <= 220 && a > 0 && (sex === "h" || sex === "f" || sex === "m"))) return null;
     const perMin = sex === "f" ? (-20.4022 + 0.4472 * hr - 0.1263 * w + 0.074 * a) / 4.184
                                : (-55.0969 + 0.6309 * hr + 0.1988 * w + 0.2017 * a) / 4.184;
     return perMin > 0 ? (perMin * (s.dur || 0)) / 60 : null;
   }
+  function metOf(s) { const sp = sportOf(s.sport), x = SP()[s.sport]; return x && x.met ? x.met(s, sp.met) : sp.met; }
   function kcalMET(s, w) {
-    const sp = sportOf(s.sport);
-    let met = sp.met;
-    if (s.sport === "natation" && s.stroke) { const st = STROKES.find((x) => x[0] === s.stroke); if (st) met = st[2]; }
-    const dur = s.dur || 0;
+    if (!(w > 0)) return null;
+    const sp = sportOf(s.sport), x = SP()[s.sport] || {};
+    const W = w + (x.extraKg ? x.extraKg(s) : 0), dur = s.dur || 0;
     let active = dur;
     if (sp.fields === "team" && s.kind === "match" && s.played > 0) active = Math.min(dur, s.played * 60);
-    return (met * w * active + 1.5 * w * (dur - active)) / 3600;   // 1,5 MET sur le banc
+    return (metOf(s) * W * active + 1.5 * W * (dur - active)) / 3600;   // 1,5 MET sur le banc
   }
   function kcal(s, w, p) {
     p = p || prof();
-    w = w || p.kg || 70;
-    const h = kcalHR(s, w, p);
-    return h != null ? h : kcalMET(s, w);
+    w = w || p.kg || null;
+    const pw = kcalPower(s); if (pw != null) return pw;
+    const h = kcalHR(s, w, p); if (h != null) return h;
+    return kcalMET(s, w);
   }
-  const kcalSrc = (s, w, p) => { p = p || prof(); return kcalHR(s, w || p.kg || 70, p) != null ? "fc" : "met"; };
+  const kcalSrc = (s, w, p) => { p = p || prof(); w = w || p.kg || null; return kcalPower(s) != null ? "power" : kcalHR(s, w, p) != null ? "fc" : w ? "met" : null; };
+  const KCAL_LABEL = { power: "Calories (d'après la puissance)", fc: "Calories (d'après la fréquence cardiaque)", met: "Calories (estimation selon le sport)" };
 
   /* Toutes les activités des carnets, au même format : { date, src, name, color, min, rpe, load } */
   const dk = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -113,5 +127,5 @@
     return { acute, chronic, ratio, zone, enough, days };
   }
 
-  window.TempoCharge = { SPORTS, sportOf, STROKES, RPE, kcal, kcalSrc, entries, weekly, acwr, ZONES, MUSCU_RPE };
+  window.TempoCharge = { SPORTS, sportOf, STROKES, RPE, kcal, kcalSrc, KCAL_LABEL, entries, weekly, acwr, ZONES, MUSCU_RPE };
 })();
