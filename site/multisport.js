@@ -81,7 +81,7 @@
   function sessRow(s) {
     const t = sp(s.sport), open = UI.open === s.id, facts = sessFacts(s);
     let h = `<article class="j-sess" style="--t:${t.color}"><button class="j-sbtn" data-a="toggle" data-id="${esc(s.id)}" aria-expanded="${open}">
-      <span class="j-dot"></span>
+      <span class="m-ic">${ICON(s.sport, 20)}</span>
       <span class="j-mid"><span class="j-t1">${esc(nameOf(s))}${facts[0] ? " · " + esc(facts[0]) : ""}</span><span class="j-sub">${esc(dShort(s.date))} · ${human(s.dur)} · effort ${s.rpe}/10</span></span>
       <span class="j-right">${r0(loadOf(s))} <small>pts</small></span></button>`;
     if (open) {
@@ -194,16 +194,44 @@
   const fid = (k) => "f-x-" + k;
   const shown = (f) => !f.when || f.when(FORM.v);
   const fmtNum = (v) => (v == null || v === "" ? "" : String(v).replace(".", ","));
-  function openForm(s) {
-    const last = S.sessions[0], sport = s ? s.sport : (last && last.sport) || "rugby";
-    FORM = { id: s ? s.id : null, sport, rpe: (s && s.rpe) || 6, route: (s && s.route) || null, v: Object.assign(window.TempoSports ? TempoSports.defaults(sport) : {}, s ? JSON.parse(JSON.stringify(s)) : {}) };
-    const e = s || { date: dKey(new Date()) };
-    sheet(`<div class="j-h2">${s ? "Modifier la séance" : "Nouvelle séance"}</div>
-      <div class="j-f"><span>Sport</span><div class="j-chips m-sports" role="group" aria-label="Sport">${sportsSorted().map((t) => `<button type="button" class="j-chip" data-a="fsport" data-v="${t.id}" aria-pressed="${t.id === FORM.sport}" style="--t:${t.color}">${esc(t.name)}</button>`).join("")}</div></div>
-      <div class="j-grid">
-        <label class="j-f" for="f-date">Date<input id="f-date" type="date" value="${e.date}"></label>
-        <label class="j-f" for="f-dur">Durée totale<input id="f-dur" value="${s ? human(s.dur) : ""}" placeholder="1h15 ou 45 min"></label>
-      </div>
+  const ICON = (id, n) => (window.TempoSportIcons ? TempoSportIcons.icon(id, n) : "");
+  const lastOf = (id) => S.sessions.find((x) => x.sport === id) || null;
+  const NOCOPY = new Set(["result", "how", "card", "sets", "score", "wod", "name"]);
+  // Choix du sport : grandes tuiles, vos sports habituels en premier
+  function pickSport(keep) {
+    const u = usage(), all = sportsSorted(), mine = all.filter((x) => u[x.id]).slice(0, 6), rest = all.filter((x) => !mine.includes(x));
+    const cur = keep && FORM ? FORM.sport : null;
+    const tile = (x) => `<button type="button" class="m-tile${x.id === cur ? " on" : ""}" data-a="pick-sport" data-v="${x.id}" style="--t:${x.color}"><span class="m-tile-ic">${ICON(x.id, 30)}</span><span>${esc(x.name)}</span></button>`;
+    if (keep && FORM) collect();
+    PICK_KEEP = !!keep;
+    sheet(`<div class="j-h2">Quel sport ?</div>
+      ${mine.length ? `<p class="m-gl">Vos sports</p><div class="m-grid">${mine.map(tile).join("")}</div><p class="m-gl">Tous les sports</p>` : ""}
+      <div class="m-grid">${(mine.length ? rest : all).map(tile).join("")}</div>
+      <div class="j-row end"><button class="j-btn" data-a="${keep ? "back-form" : "close"}">${keep ? "Retour" : "Annuler"}</button></div>`);
+  }
+  let PICK_KEEP = false, FORM_HTML_STATE = null;
+  function openForm(s, sportId) {
+    if (!s && !sportId) { FORM = null; pickSport(false); return; }
+    const sport = s ? s.sport : sportId, prev = s ? null : lastOf(sport);
+    // Une nouvelle séance reprend vos réglages habituels pour ce sport (format, poste, bassin…), pas les résultats
+    const carry = {};
+    if (prev) SPX(sport).fields.forEach((f) => { if ((f.type === "seg" || f.type === "select" || f.type === "multi") && !NOCOPY.has(f.k) && prev[f.k] != null) carry[f.k] = prev[f.k]; });
+    FORM = { id: s ? s.id : null, sport, rpe: (s && s.rpe) || (prev && prev.rpe) || 6, route: (s && s.route) || null, prevDur: prev ? prev.dur : null,
+      v: Object.assign(window.TempoSports ? TempoSports.defaults(sport) : {}, carry, s ? JSON.parse(JSON.stringify(s)) : {}) };
+    drawForm(s || { date: dKey(new Date()) }, !!s);
+  }
+  function drawForm(e, editing) {
+    const t = sp(FORM.sport), today = dKey(new Date()), yest = dKey(new Date(Date.now() - 864e5));
+    const durs = [["30 min", 1800], ["45 min", 2700], ["1 h", 3600], ["1 h 30", 5400], ["2 h", 7200]];
+    if (FORM.prevDur && !durs.some((d) => d[1] === FORM.prevDur)) durs.unshift([human(FORM.prevDur), FORM.prevDur]);
+    sheet(`<div class="j-h2">${editing ? "Modifier la séance" : "Nouvelle séance"}</div>
+      <button type="button" class="m-pick" data-a="change-sport" style="--t:${t.color}"><span class="m-tile-ic">${ICON(t.id, 28)}</span><b>${esc(t.name)}</b><small>Changer de sport</small></button>
+      <div class="j-f"><span>Date</span><div class="m-q">
+        <button type="button" class="j-chip" data-a="fdate" data-v="${today}" aria-pressed="${e.date === today}">Aujourd'hui</button>
+        <button type="button" class="j-chip" data-a="fdate" data-v="${yest}" aria-pressed="${e.date === yest}">Hier</button>
+        <input id="f-date" type="date" value="${e.date}" aria-label="Autre date"></div></div>
+      <div class="j-f"><span>Durée totale</span><div class="m-q">${durs.map(([l, v]) => `<button type="button" class="j-chip" data-a="fdur" data-v="${v}" aria-pressed="${editing ? e.dur === v : false}">${l}</button>`).join("")}</div>
+        <input id="f-dur" value="${editing ? human(e.dur) : ""}" placeholder="ou tapez : 1h15, 50 min…" aria-label="Durée totale"></div>
       <div id="f-extra" class="m-extra"></div>
       <div class="j-f"><span>Effort ressenti</span><div class="j-rpe" role="group" aria-label="Effort de 1 à 10">${Array.from({ length: 10 }, (_, i) => `<button type="button" data-a="frpe" data-v="${i + 1}" aria-pressed="${i + 1 === FORM.rpe}">${i + 1}</button>`).join("")}</div><small id="f-rpe-t">${FORM.rpe} : ${CH.RPE[FORM.rpe]}. Jugez la séance entière, 30 minutes après.</small></div>
       <div class="j-grid"><label class="j-f" for="f-fc">FC moyenne (bpm)<input id="f-fc" inputmode="numeric" value="${e.fc || ""}" placeholder="optionnel"></label>
@@ -214,6 +242,9 @@
     drawExtra();
     live();
   }
+  // Valeurs du haut du formulaire, gardées quand on passe par le choix du sport
+  const topState = () => ({ date: ($("#f-date") || {}).value, dur: parseDur(($("#f-dur") || {}).value || ""), durTxt: ($("#f-dur") || {}).value, fc: num(($("#f-fc") || {}).value), fcmax: num(($("#f-fcmax") || {}).value), note: ($("#f-note") || {}).value });
+
   // Lit les champs affichés dans FORM.v (avant de redessiner ou d'enregistrer)
   function collect() {
     SPX(FORM.sport).fields.forEach((f) => {
@@ -295,11 +326,14 @@
     toggle(b) { UI.open = UI.open === b.dataset.id ? null : b.dataset.id; render(); },
     filter(b) { UI.filter = b.dataset.v; saveUI(); render(); },
     share(b) { const s = S.sessions.find((x) => x.id === b.dataset.id); if (s) share(s); },
-    fsport(b) {
-      switchSport(b.dataset.v);
-      document.querySelectorAll('[data-a="fsport"]').forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === FORM.sport));
-      drawExtra(); live();
+    "pick-sport"(b) {
+      if (PICK_KEEP && FORM && FORM_HTML_STATE) { switchSport(b.dataset.v); const st = FORM_HTML_STATE; FORM_HTML_STATE = null; drawForm({ date: st.date, dur: st.dur, fc: st.fc, fcmax: st.fcmax, note: st.note }, !!FORM.id); if (st.durTxt) $("#f-dur").value = st.durTxt; live(); }
+      else openForm(null, b.dataset.v);
     },
+    "change-sport"() { FORM_HTML_STATE = topState(); pickSport(true); },
+    "back-form"() { const st = FORM_HTML_STATE; FORM_HTML_STATE = null; drawForm({ date: st.date, dur: st.dur, fc: st.fc, fcmax: st.fcmax, note: st.note }, !!FORM.id); if (st.durTxt) $("#f-dur").value = st.durTxt; live(); },
+    fdate(b) { $("#f-date").value = b.dataset.v; document.querySelectorAll('[data-a="fdate"]').forEach((x) => x.setAttribute("aria-pressed", x === b)); },
+    fdur(b) { $("#f-dur").value = human(+b.dataset.v); document.querySelectorAll('[data-a="fdur"]').forEach((x) => x.setAttribute("aria-pressed", x === b)); live(); },
     fseg(b) { collect(); FORM.v[b.dataset.k] = FORM.v[b.dataset.k] === b.dataset.v && !(SPX(FORM.sport).fields.find((f) => f.k === b.dataset.k) || {}).def ? null : b.dataset.v; drawExtra(); live(); },
     fmulti(b) { collect(); const a = new Set(FORM.v[b.dataset.k] || []); a.has(b.dataset.v) ? a.delete(b.dataset.v) : a.add(b.dataset.v); FORM.v[b.dataset.k] = Array.from(a); b.setAttribute("aria-pressed", a.has(b.dataset.v)); live(); },
     frpe(b) {
@@ -338,7 +372,12 @@
     "del-ok"(b) { S.sessions = S.sessions.filter((s) => s.id !== b.dataset.id); save(); closeSheet(); UI.open = null; render(); toast("Séance supprimée"); },
   };
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (!b || !A[b.dataset.a] || !b.closest(".j-app, #m-sheet")) return; e.preventDefault(); A[b.dataset.a](b, e); });
-  document.addEventListener("input", (e) => { if (e.target.closest && e.target.closest("#m-sheet") && e.target.tagName === "INPUT") live(); });
+  document.addEventListener("input", (e) => {
+    if (!(e.target.closest && e.target.closest("#m-sheet"))) return;
+    if (e.target.id === "f-dur") document.querySelectorAll('[data-a="fdur"]').forEach((x) => x.setAttribute("aria-pressed", "false"));
+    if (e.target.id === "f-date") document.querySelectorAll('[data-a="fdate"]').forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === e.target.value));
+    if (e.target.tagName === "INPUT") live();
+  });
   document.addEventListener("change", async (e) => {
     if (e.target.tagName === "SELECT" && e.target.closest("#m-sheet")) { collect(); live(); }
     if (e.target.id !== "f-gpx" || !e.target.files || !e.target.files[0]) return;

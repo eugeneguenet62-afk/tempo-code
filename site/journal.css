@@ -306,3 +306,50 @@
 .j-v { font-size: 25px; letter-spacing: -.03em; }
 .j-rec b { font-size: 21px; letter-spacing: -.02em; }
 .j-live span { font-size: 17px; }
+
+/* ---------- Choix du sport : grandes tuiles avec pictogramme ---------- */
+.m-gl { margin: 4px 0 -4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.m-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(98px, 1fr)); gap: 8px; }
+.m-tile {
+  display: grid; justify-items: center; align-content: center; gap: 8px; min-height: 100px; padding: 12px 6px;
+  border: 0; border-radius: 16px; cursor: pointer; text-align: center;
+  background: color-mix(in srgb, var(--t) 9%, var(--surface)); color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t) 18%, transparent);
+  font: 600 13.5px/1.2 var(--body);
+  transition: transform .15s var(--ease), box-shadow .2s var(--ease), background .2s;
+}
+.m-tile-ic { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; color: var(--t); background: color-mix(in srgb, var(--t) 16%, transparent); }
+.m-tile:hover { background: color-mix(in srgb, var(--t) 15%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t) 45%, transparent), 0 10px 26px -14px var(--t); }
+.m-tile:active { transform: scale(.95); }
+.m-tile.on { box-shadow: inset 0 0 0 2px var(--t); }
+.m-tile:focus-visible, .m-pick:focus-visible { outline: 3px solid var(--t); outline-offset: 2px; }
+@media (max-width: 420px) { .m-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* En-tête du formulaire : le sport choisi */
+.m-pick {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center; text-align: left;
+  width: 100%; padding: 10px 14px 10px 10px; border: 0; border-radius: 16px; cursor: pointer; color: var(--ink);
+  background: color-mix(in srgb, var(--t) 12%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t) 30%, transparent);
+}
+.m-pick .m-tile-ic { grid-row: 1 / 3; width: 48px; height: 48px; }
+.m-pick b { font: 800 19px/1.1 var(--display); letter-spacing: -.02em; }
+.m-pick small { font-size: 13px; color: var(--t); font-weight: 600; }
+/* Raccourcis date et durée */
+.m-q { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.m-q .j-chip { --t: var(--accent); }
+.m-q .j-chip::before { display: none; }
+.m-q input[type="date"] { flex: 1 1 140px; min-width: 0; }
+.m-q + input { margin-top: 8px; }
+/* Pictogramme dans la liste des séances */
+.m-ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: var(--t); background: color-mix(in srgb, var(--t) 15%, transparent); align-self: start; }
+/* Bouton « + » toujours à portée de pouce sur téléphone */
+.j-fab { display: none; }
+@media (max-width: 759px) {
+  .j-fab {
+    display: grid; place-items: center; position: fixed; z-index: 10; right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)); width: 58px; height: 58px; border: 0; border-radius: 20px; cursor: pointer;
+    background: var(--grad); color: var(--accent-ink); box-shadow: 0 14px 30px -10px rgba(255, 107, 149, .7);
+    transition: transform .15s var(--ease);
+  }
+  .j-fab:active { transform: scale(.92); }
+  body:has(.j-sheet:not([hidden])) .j-fab { display: none; }
+}

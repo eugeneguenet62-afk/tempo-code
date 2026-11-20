@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="journal.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
+<script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*.html"},{"not":{"href_matches":"/compte.html*"}}]},"eagerness":"moderate"}]}</script>
 </head>
 <body data-bg="piste" data-journal="course">
 <header class="top"><div class="wrap">
@@ -58,6 +59,7 @@
   <main id="j-view" aria-live="polite"></main>
   <div class="j-sheet" id="j-sheet" hidden></div>
   <div class="j-toast" id="j-toast" hidden></div>
+  <button class="j-fab" data-a="add" aria-label="Ajouter une sortie"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 </div>
 
 <footer class="foot">

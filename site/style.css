@@ -879,3 +879,11 @@ h2 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spac
 .h-tool:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 60%, transparent), 0 14px 30px -18px var(--c); }
 .foot { background: transparent; }
 .card { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+
+/* ================= Fluidité ================= */
+/* Toucher : pas de délai, pas de flash gris, un léger enfoncement visible */
+a, button, label, summary, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:active, .h-tool:active, .h-btn:active, .card:active, .menu-panel a:active { transform: scale(.97); }
+/* Passage d'une page à l'autre : rapide */
+::view-transition-old(root) { animation: vt-out .14s ease-out both; }
+::view-transition-new(root) { animation: vt-in .22s var(--ease) both; }
