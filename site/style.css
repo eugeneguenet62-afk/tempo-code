@@ -1,41 +1,31 @@
-/* Polices Barlow et Barlow Condensed (SIL Open Font License, voir fonts/OFL.txt), hébergées avec le site */
-/* Police de secours aux mêmes proportions que Barlow : le texte ne bouge pas quand la vraie police arrive */
-@font-face { font-family: "Barlow Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 91%; ascent-override: 103%; descent-override: 21%; line-gap-override: 0%; }
-@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/barlow-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "Barlow"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/barlow-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "Barlow"; font-weight: 600 700; font-style: normal; font-display: swap; src: url("fonts/barlow-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Barlow Condensed"; font-weight: 600; font-style: normal; font-display: swap; src: url("fonts/barlow-condensed-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/barlow-condensed-latin-700-normal.woff2") format("woff2"); }
-/* Layout épuré : en-tête transparent, beaucoup d'air, aucun cadre autour des blocs ;
-   chaque outil = réglages à gauche, résultats à droite (empilés sur mobile). */
+/* Polices Unbounded (titres) et Manrope (texte), SIL Open Font License (voir fonts/OFL.txt), hébergées avec le site */
+/* Polices de secours aux mêmes proportions : le texte ne bouge pas quand la vraie police arrive */
+@font-face { font-family: "Manrope Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 102%; ascent-override: 105%; descent-override: 29%; line-gap-override: 0%; }
+@font-face { font-family: "Unbounded Fallback"; src: local("Arial Black"), local("Arial"), local("Helvetica"); size-adjust: 120%; ascent-override: 82%; descent-override: 20%; line-gap-override: 0%; }
+@font-face { font-family: "Manrope"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/manrope-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Manrope"; font-weight: 500 600; font-style: normal; font-display: swap; src: url("fonts/manrope-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Manrope"; font-weight: 700 800; font-style: normal; font-display: swap; src: url("fonts/manrope-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Unbounded"; font-weight: 500 600; font-style: normal; font-display: swap; src: url("fonts/unbounded-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Unbounded"; font-weight: 700 900; font-style: normal; font-display: swap; src: url("fonts/unbounded-latin-800-normal.woff2") format("woff2"); }
+/* Direction artistique « Néon nuit » : bleu nuit, halos violet et rose, dégradé violet → rose → orange pour l'énergie,
+   une couleur vive par sport. Le site est toujours sombre, quel que soit le réglage de l'appareil. */
 :root {
-  --bg: #f6f8f7;
-  --surface: #ffffff;
-  --field: #ebefed;
-  --ink: #111a17;
-  --muted: #56625e;
-  --line: #e2e7e5;
-  --accent: #2350d9;
-  --accent-ink: #ffffff;
-  --accent-soft: #e9eefc;
-  --motif: #d3dcd9;
-  --z1: #9cc0ea; --z2: #63a77c; --z3: #e3bb4f; --z4: #e58a45; --z5: #d4524f;
-  --glass: rgba(246, 248, 247, .82);
-  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --body: "Barlow", "Barlow Fallback", "Segoe UI", system-ui, sans-serif;
+  --bg: #0d1024;
+  --surface: #161a36;
+  --field: #1e2344;
+  --ink: #f1f2fa;
+  --muted: #a3a8c3;
+  --line: #2a3058;
+  --accent: #ff6b95;
+  --accent-ink: #0d1024;
+  --accent-soft: #2a1d3f;
+  --motif: #232850;
+  --grad: linear-gradient(120deg, #9a83ff, #ff6b95 55%, #ffa557);
+  --z1: #7fb2ff; --z2: #4fd19e; --z3: #ffd166; --z4: #ff9f45; --z5: #ff5e7a;
+  --glass: rgba(13, 16, 36, .72);
+  --display: "Unbounded", "Unbounded Fallback", system-ui, sans-serif;
+  --body: "Manrope", "Manrope Fallback", "Segoe UI", system-ui, sans-serif;
   --ease: cubic-bezier(.22, 1, .36, 1);
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0e1312; --surface: #151c1a; --field: #1c2522; --ink: #e8efec; --muted: #8f9c97; --line: #232d2a;
-    --accent: #8aa6ff; --accent-ink: #0e1312; --accent-soft: #1b2440; --motif: #24302c; --glass: rgba(14, 19, 18, .82);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0e1312; --surface: #151c1a; --field: #1c2522; --ink: #e8efec; --muted: #8f9c97; --line: #232d2a;
-  --accent: #8aa6ff; --accent-ink: #0e1312; --accent-soft: #1b2440; --motif: #24302c; --glass: rgba(14, 19, 18, .82);
   color-scheme: dark;
 }
 
@@ -294,12 +284,8 @@ tr.enter, .week.enter { animation: rise .6s var(--ease) both; animation-delay: c
 /* ================= Couleurs par sport =================
    Course = bleu piste, cardio = rouge, vélo = vert, muscu = ambre (disque de 15 kg). */
 :root {
-  --c-course: #2350d9; --c-cardio: #b3283f; --c-velo: #096c49; --c-muscu: #8f5205;
+  --c-course: #53b8ff; --c-cardio: #b18cff; --c-velo: #4fd19e; --c-muscu: #ff7a45;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --c-course: #8aa6ff; --c-cardio: #ff7b90; --c-velo: #4fd19e; --c-muscu: #f5b04a; }
-}
-:root[data-theme="dark"] { --c-course: #8aa6ff; --c-cardio: #ff7b90; --c-velo: #4fd19e; --c-muscu: #f5b04a; }
 
 /* Chaque page prend la teinte de son sport : fond, champs, accent */
 body[data-bg="piste"], body[data-bg="accueil"] { --accent: var(--c-course); }
@@ -307,34 +293,11 @@ body[data-bg="coeur"] { --accent: var(--c-cardio); }
 body[data-bg="velo"] { --accent: var(--c-velo); }
 body[data-bg="fonte"] { --accent: var(--c-muscu); }
 body[data-bg] {
-  --bg: color-mix(in srgb, var(--accent) 7%, #f7f8f8);
-  --field: color-mix(in srgb, var(--accent) 10%, #ffffff);
-  --accent-soft: color-mix(in srgb, var(--accent) 14%, #ffffff);
-  --line: color-mix(in srgb, var(--accent) 14%, #e6eae8);
-  --motif: color-mix(in srgb, var(--accent) 28%, #e2e7e5);
-  --glass: color-mix(in srgb, var(--bg) 82%, transparent);
+  --field: color-mix(in srgb, var(--accent) 9%, #1a1f3e);
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, #151935);
+  --line: color-mix(in srgb, var(--accent) 12%, #272d55);
+  --motif: color-mix(in srgb, var(--accent) 20%, #20254a);
 }
-body[data-bg="accueil"] { --bg: #f4f6fb; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body[data-bg] {
-    --bg: color-mix(in srgb, var(--accent) 7%, #0d1111);
-    --field: color-mix(in srgb, var(--accent) 11%, #161c1b);
-    --accent-soft: color-mix(in srgb, var(--accent) 18%, #141a19);
-    --line: color-mix(in srgb, var(--accent) 14%, #222a28);
-    --motif: color-mix(in srgb, var(--accent) 22%, #1e2624);
-    --accent-ink: #0d1111;
-  }
-  :root:not([data-theme="light"]) body[data-bg="accueil"] { --bg: #0e1118; }
-}
-:root[data-theme="dark"] body[data-bg] {
-  --bg: color-mix(in srgb, var(--accent) 7%, #0d1111);
-  --field: color-mix(in srgb, var(--accent) 11%, #161c1b);
-  --accent-soft: color-mix(in srgb, var(--accent) 18%, #141a19);
-  --line: color-mix(in srgb, var(--accent) 14%, #222a28);
-  --motif: color-mix(in srgb, var(--accent) 22%, #1e2624);
-  --accent-ink: #0d1111;
-}
-:root[data-theme="dark"] body[data-bg="accueil"] { --bg: #0e1118; }
 
 /* Halo coloré derrière le haut de page */
 .bg::before {
@@ -379,9 +342,7 @@ body[data-bg="accueil"] { --bg: #f4f6fb; }
 .menu-panel a[href="carnet-course.html"], .card[href="carnet-course.html"] { --c: var(--c-course); }
 
 /* ================= Calories ================= */
-:root { --c-food: #6a3cc8; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c-food: #b79cff; } }
-:root[data-theme="dark"] { --c-food: #b79cff; }
+:root { --c-food: #ffc94d; }
 body[data-bg="jauge"] { --accent: var(--c-food); }
 .menu-panel a[href="calories.html"], .card[href="calories.html"] { --c: var(--c-food); }
 .tool + .tool { border-top: 1px solid var(--line); padding-top: 56px; }
@@ -424,7 +385,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .d-sess small { color: var(--muted); font-size: 13px; }
 .d-sess strong { font: 600 22px/1 var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .d-del { border: 0; background: var(--field); color: var(--muted); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; transition: background .25s, color .25s; }
-.d-del:hover { background: var(--z5); color: #fff; }
+.d-del:hover { background: var(--z5); color: var(--accent-ink); }
 .d-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; height: 150px; margin: 14px 0 10px; }
 .d-col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; border: 0; background: none; cursor: pointer; padding: 0; color: var(--muted); font: 500 12px var(--body); }
 .d-col small { font-size: 11px; font-variant-numeric: tabular-nums; }
@@ -437,8 +398,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 
 /* ================= Habillage v2 : cartes douces, icônes, accueil par thème, pied de page ================= */
 :root { --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 14px 34px -18px rgba(16, 24, 40, .22); --radius: 22px; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 14px 34px -18px rgba(0, 0, 0, .7); } }
-:root[data-theme="dark"] { --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 14px 34px -18px rgba(0, 0, 0, .7); }
+:root { --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 14px 34px -18px rgba(0, 0, 0, .7); }
 
 /* Intro des outils : pastille avec l'icône de l'outil */
 .eyebrow svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
@@ -561,8 +521,8 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .sync { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); white-space: nowrap; }
 .sync::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
 .sync[data-s="ok"]::before { background: #2f9e5b; }
-.sync[data-s="saving"]::before { background: #d9a400; }
-.sync[data-s="err"]::before { background: #d14343; }
+.sync[data-s="saving"]::before { background: var(--z3); }
+.sync[data-s="err"]::before { background: var(--z5); }
 .tempo-toast { position: fixed; left: 50%; top: calc(76px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); z-index: 60; max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 12px; background: var(--ink); color: var(--bg); font-size: 14px; box-shadow: var(--shadow); }
 
 /* ---------- Compte ---------- */
@@ -572,10 +532,10 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .acct svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .acct::after { content: ""; position: absolute; top: 6px; left: 26px; width: 7px; height: 7px; border-radius: 50%; border: 2px solid var(--bg); background: transparent; }
 .acct[data-s="ok"]::after { background: #2f9e5b; }
-.acct[data-s="saving"]::after { background: #d9a400; }
-.acct[data-s="offline"]::after, .acct[data-s="err"]::after { background: #d14343; }
+.acct[data-s="saving"]::after { background: var(--z3); }
+.acct[data-s="offline"]::after, .acct[data-s="err"]::after { background: var(--z5); }
 @media (max-width: 520px) { .acct span { display: none; } .acct { padding: 9px; } .acct::after { left: 20px; } .top .wrap { gap: 8px; } }
-.sync[data-s="offline"]::before { background: #d14343; }
+.sync[data-s="offline"]::before { background: var(--z5); }
 
 .acc { display: grid; gap: 28px; max-width: 520px; padding-bottom: 72px; }
 .acc-card { display: grid; gap: 18px; padding: 24px; border-radius: var(--radius, 20px); background: var(--surface); box-shadow: var(--shadow); }
@@ -586,7 +546,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .acc-ok { color: #23824a; font-size: 14px; margin: 0; }
 .acc-check { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); }
 .acc-check input { width: 18px; height: 18px; padding: 0; }
-.btn.danger { background: #c03434; color: #fff; }
+.btn.danger { background: var(--z5); color: var(--accent-ink); }
 .acc-email { font-weight: 600; word-break: break-all; }
 .acc details summary { cursor: pointer; font-weight: 500; }
 .acc details[open] summary { margin-bottom: 14px; }
@@ -701,7 +661,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 @media (prefers-reduced-motion: reduce) { .js .menu-panel .mp-col a, .js .menu-panel .mp-foot a { transition: none; } }
 
 /* ---------- Page d'accueil ---------- */
-.home { --sky: #dff0fb; }
+.home { --sky: #cfe6f8; }
 .h-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center; padding-top: clamp(28px, 6vw, 72px); padding-bottom: clamp(40px, 7vw, 88px); }
 .h-title { font: 700 clamp(64px, 10.5vw, 132px)/.86 var(--display); letter-spacing: -.02em; text-transform: none; margin: 0 0 28px; }
 .h-lead { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; max-width: 34em; margin: 0 0 30px; color: var(--ink); }
@@ -709,7 +669,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .h-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px; border-radius: 999px; border: 0; font: 600 16.5px/1.1 var(--body); text-decoration: none; cursor: pointer; transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .2s; }
 .h-btn:hover { transform: translateY(-2px); }
 .h-btn:focus-visible, .h-tool:focus-visible, .h-back-item:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.h-btn-muscu { background: var(--c-muscu); color: #fff; box-shadow: 0 10px 24px -12px var(--c-muscu); }
+.h-btn-muscu { background: var(--grad); color: var(--accent-ink); box-shadow: 0 12px 30px -12px #ff6b95; }
 .h-btn-run { background: var(--surface); color: var(--c-course); box-shadow: inset 0 0 0 2px var(--c-course); }
 .h-btn-ink { background: var(--ink); color: var(--bg); }
 .h-btn-ghost { background: var(--field); color: var(--ink); }
@@ -848,7 +808,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 
 /* ---------- À propos ---------- */
 .about-me { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; }
-.about-av { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font: 700 32px/1 var(--display); letter-spacing: .02em; }
+.about-av { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: var(--accent-ink); font: 700 32px/1 var(--display); letter-spacing: .02em; }
 .about-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .about-links .btn { text-decoration: none; display: inline-flex; align-items: center; }
 .about-feats, .about-tech { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 14px; }
@@ -876,3 +836,46 @@ html.guest .guest-bar { display: block; }
 .g-btn svg { flex: none; }
 .acc-or { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 13px; color: var(--muted); }
 .acc-or::before, .acc-or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* ================= Néon nuit : couche de composants ================= */
+body {
+  background:
+    radial-gradient(60% 46% at 88% 4%, rgba(123, 92, 255, .30), transparent 70%),
+    radial-gradient(46% 38% at 6% 96%, rgba(255, 94, 138, .16), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+.bg { display: none; }
+::selection { background: rgba(255, 107, 149, .35); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.08; letter-spacing: -.03em; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -.02em; }
+/* En-tête : verre dépoli, toujours */
+.top, .top.scrolled { background: var(--glass); border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.brand { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: -.02em; }
+.menu-panel { background: #151936; box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -16px rgba(0, 0, 0, .7); }
+/* Boutons principaux : le dégradé, texte nuit pour rester lisible */
+.btn:not(.ghost):not(.danger), .h-btn-muscu { background: var(--grad); color: var(--accent-ink); font-weight: 800; }
+.btn.ghost { background: rgba(255, 255, 255, .07); color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); }
+.h-btn { font-weight: 800; }
+.h-btn-run { background: rgba(255, 255, 255, .06); color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); }
+.h-btn-ghost { background: rgba(255, 255, 255, .07); color: var(--ink); }
+.guest-bar { background: rgba(255, 255, 255, .035); border-bottom: 1px solid var(--line); }
+/* Accueil */
+.h-title {
+  font: 800 clamp(40px, 5.5vw, 74px)/1.02 var(--display); letter-spacing: -.035em;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.h-lead, .h-small { color: var(--muted); }
+.h-tile { box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .65); }
+.h-tile-lift { border-color: var(--bg); }
+.h-chip { background: rgba(20, 24, 52, .78); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 14px 30px -14px rgba(0, 0, 0, .6); }
+.h-chip b { font: 800 24px/1 var(--display); letter-spacing: -.02em; }
+.h-lane { background: transparent; border-top: 1px solid var(--line); }
+.h-lane:last-of-type { border-bottom: 1px solid var(--line); }
+.h-lane::before { width: 4px; box-shadow: 0 0 24px var(--c); }
+.h-lane-intro h3 { color: var(--ink); font-family: var(--display); font-weight: 800; font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.03em; }
+.h-tool { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.h-tool span { color: var(--muted); opacity: 1; }
+.h-tool:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 60%, transparent), 0 14px 30px -18px var(--c); }
+.foot { background: transparent; }
+.card { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }

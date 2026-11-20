@@ -30,12 +30,12 @@
 }
 .j-btn:hover { background: color-mix(in srgb, var(--accent) 16%, var(--field)); }
 .j-btn:active { transform: scale(.97); }
-.j-btn.primary { background: color-mix(in srgb, var(--accent) 88%, #000); color: #fff; }
+.j-btn.primary { background: var(--accent); color: var(--accent-ink); }
 .j-btn.primary:hover { background: color-mix(in srgb, var(--accent) 75%, #000); }
 .j-btn.big { width: 100%; min-height: 54px; font-size: 16px; }
 .j-btn.sm { min-height: 34px; padding: 8px 12px; font-size: 14px; border-radius: 10px; }
 .j-btn.danger { background: transparent; color: var(--z5); }
-.j-btn.danger.solid { background: var(--z5); color: #fff; }
+.j-btn.danger.solid { background: var(--z5); color: var(--accent-ink); }
 
 /* Semaine */
 .j-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
@@ -140,7 +140,7 @@
   border: 0; cursor: pointer; height: 38px; border-radius: 9px; font: 500 14px/1 var(--body); color: var(--ink);
   background: var(--field); transition: background .25s var(--ease), color .25s;
 }
-.j-rpe button[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 88%, #000); color: #fff; }
+.j-rpe button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
 .j-live { display: flex; gap: 24px; min-height: 44px; align-items: center; padding: 8px 14px; border-radius: 12px; background: var(--accent-soft); }
 .j-live span { display: grid; gap: 2px; font: 600 20px/1 var(--display); font-variant-numeric: tabular-nums; }
 .j-live small { font: 500 12px var(--body); color: var(--muted); }
@@ -221,7 +221,7 @@
 .j-prow.missed em { color: var(--z4); }
 .j-prow.today .j-prow-top > span { color: var(--accent); }
 .j-pcheck { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center; cursor: pointer; padding: 0; transition: background .2s, border-color .2s, transform .15s; }
-.j-pcheck svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.j-pcheck svg { width: 16px; height: 16px; fill: none; stroke: var(--accent-ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
 .j-pcheck[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
 .j-pcheck[aria-pressed="true"] svg { opacity: 1; }
 .j-pcheck:disabled { cursor: default; opacity: .75; }
@@ -301,3 +301,8 @@
 .m-extra .j-chip { --t: var(--accent); }
 .m-extra .j-chip::before { display: none; }
 .j-live span:not(.j-muted) { white-space: nowrap; }
+/* Néon nuit : Unbounded est large, les grands chiffres sont un peu réduits */
+.j-big { font-size: clamp(40px, 11vw, 56px); letter-spacing: -.04em; }
+.j-v { font-size: 25px; letter-spacing: -.03em; }
+.j-rec b { font-size: 21px; letter-spacing: -.02em; }
+.j-live span { font-size: 17px; }

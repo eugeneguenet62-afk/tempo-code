@@ -6,37 +6,29 @@
 <title>Carnet de musculation gratuit : suivi des séances, records, progression | Tempo</title>
 <meta name="description" content="Notez vos séances de musculation, chronométrez vos repos, battez vos records et suivez votre progression exercice par exercice. Essai gratuit sans inscription, fonctionne sur téléphone.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0d1024">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
 <link rel="icon" type="image/png" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tempo">
-<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/unbounded-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 <style>
 /* Jetons du carnet, branchés sur ceux de Tempo (teinte ambre de la page muscu) */
 #carnet {
-  --surface-2: var(--field); --on-accent: #ffffff;
-  --accent: color-mix(in srgb, var(--c-muscu) 82%, #000);
-  --red: #e05263; --blue: #4c7bd9; --yellow: #d9a520; --green: #3fa46a; --steel: #9aa1aa;
-  --good: #2f9461; --bad: #d04455; --pr: #a87b00; --pr-bg: #fbf3dc;
+  --surface-2: var(--field); --on-accent: var(--accent-ink);
+  --accent: var(--c-muscu);
+  --red: #ff6b7d; --blue: #7da2ee; --yellow: #ffcf5c; --green: #4fd19e; --steel: #a3a8c3;
+  --good: #4fd19e; --bad: #ff6b7d; --pr: #ffcf5c; --pr-bg: #2c2638;
   --f-display: var(--body); --f-body: var(--body); --f-num: var(--body);
   --r: 16px;
   font-size: 15px; line-height: 1.5;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #carnet {
-  --accent: var(--c-muscu); --on-accent: #111113;
-  --red: #f0707e; --blue: #7da2ee; --yellow: #e8be4a; --green: #5cc08a; --steel: #a1a1aa;
-  --good: #5cc08a; --bad: #f0707e; --pr: #e8be4a; --pr-bg: #2e2817; } }
-:root[data-theme="dark"] #carnet {
-  --accent: var(--c-muscu); --on-accent: #111113;
-  --red: #f0707e; --blue: #7da2ee; --yellow: #e8be4a; --green: #5cc08a; --steel: #a1a1aa;
-  --good: #5cc08a; --bad: #f0707e; --pr: #e8be4a; --pr-bg: #2e2817; }
 #carnet *{box-sizing:border-box}
 #carnet .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 #carnet .muted{color:var(--muted)}
@@ -926,7 +918,7 @@ const A={
     const st=sStats(s),recs=[];
     s.exercises.forEach(e=>{let prev=0;S.sessions.forEach(o=>{if(o.date>=s.date)return;const x=o.exercises.find(y=>sameEx(y,e.exId,e.name));if(x)x.sets.forEach(z=>{prev=Math.max(prev,e1rm(z.kg,z.reps))})});let top=null;e.sets.forEach(x=>{if(!top||e1rm(x.kg,x.reps)>e1rm(top.kg,top.reps))top=x});if(top&&prev>0&&e1rm(top.kg,top.reps)>prev+0.01)recs.push(e.name+" "+setStr(top))});
     const best=e=>{const w=Math.max(...e.sets.map(x=>x.kg||0));const n=e.sets.length;return w>0?n+" × "+fmt(w,2)+" kg":n+" série"+(n>1?"s":"")};
-    try{const r=await TempoShare.share({color:"#c9780a",kicker:"Séance de musculation",title:s.dayName,date:dLong(s.date)+(s.duration?" · "+s.duration+" min":""),
+    try{const r=await TempoShare.share({color:"#ff7a45",kicker:"Séance de musculation",title:s.dayName,date:dLong(s.date)+(s.duration?" · "+s.duration+" min":""),
       stats:[[st.sets,"séries"],[kgs(st.vol),"soulevés"],[s.exercises.length,"exercices"]],highlight:recs.length?(recs.length>1?recs.length+" records : ":"Nouveau record : ")+recs.slice(0,2).join(", "):"",
       lines:s.exercises.map(e=>[e.name,best(e)])},"tempo-"+s.dayName.toLowerCase().replace(/[^a-z0-9]+/g,"-"));
       if(r==="downloaded")toast("Image enregistrée : vous pouvez la partager")}catch(_){toast("Impossible de créer l'image")}b.disabled=false},

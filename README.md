@@ -54,6 +54,7 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 | Comptes | Firebase Authentication : e-mail et mot de passe, ou connexion avec Google |
 | Synchronisation | Firestore, un document par clé dans `users/{uid}/kv`. Les carnets sont découpés par mois pour rester loin de la limite de 1 Mo par document. Chaque écriture passe par une transaction qui relit le serveur et fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre. |
 | Sécurité | Règles Firestore : chaque utilisateur ne lit et n'écrit que ses données, avec validation du format (`firestore.rules`) |
+| Design | Direction artistique « Néon nuit » : thème sombre bleu nuit, dégradé violet → rose → orange, polices Unbounded et Manrope hébergées avec le site, polices de secours calibrées pour éviter tout décalage au chargement |
 | Graphiques et images | SVG générés à la main, image de partage dessinée en Canvas |
 | Hébergement | Cloudflare Pages, déploiement continu à chaque `git push`, version du service worker estampillée au build (`scripts/build.sh`) |
 | Qualité | Tests de bout en bout avec Playwright (parcours débutant et confirmé, synchronisation entre deux appareils simulés), audits Lighthouse : 100 en accessibilité, bonnes pratiques et SEO, 95 à 100 en performance |
@@ -90,4 +91,4 @@ Les illustrations des exercices et leurs consignes d'origine proviennent de [Exe
 
 ## Licence
 
-© Eugène Guenet. Code publié pour consultation : tous droits réservés. Polices Barlow et Barlow Condensed sous licence SIL Open Font License (`site/fonts/OFL.txt`).
+© Eugène Guenet. Code publié pour consultation : tous droits réservés. Polices Unbounded et Manrope sous licence SIL Open Font License (`site/fonts/OFL.txt`).

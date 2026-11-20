@@ -343,7 +343,7 @@
     const t = typeOf(s.type);
     const facts = [s.fc && ["Fréquence cardiaque moyenne", r0(s.fc) + " bpm"], s.dplus && kcal(s) != null && ["Calories (estimation)", "≈ " + r0(kcal(s)) + " kcal"], s.note && [s.note, ""]].filter(Boolean);
     try {
-      const r = await TempoShare.share({ color: "#2350d9", kicker: t[1], title: r1(s.dist) + " km", date: toDate(s.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }),
+      const r = await TempoShare.share({ color: "#53b8ff", kicker: t[1], title: r1(s.dist) + " km", date: toDate(s.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }),
         stats: [[human(s.dur), "durée"], [rate(s), C.speed ? "vitesse" : "allure"], (s.dplus || kcal(s) == null ? [s.dplus ? r0(s.dplus) + " m" : s.rpe ? s.rpe + "/10" : "", s.dplus ? "dénivelé" : s.rpe ? "effort" : ""] : [r0(kcal(s)) + " kcal", "dépensées"])].filter((x) => x[0]),
         route: s.route, lines: facts }, "tempo-" + s.date);
       if (r === "downloaded") toast("Image enregistrée : vous pouvez la partager");
