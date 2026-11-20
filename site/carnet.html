@@ -295,7 +295,7 @@
 /* Changement d'onglet en fondu */
 #carnet main.swap { animation: rise .5s var(--ease) both; }
 #carnet .sheet { animation: fade .25s var(--ease); }
-#carnet .toast { animation: rise .4s var(--ease); }
+#carnet .toast { animation: rise .4s var(--ease); border-radius: 16px; padding: 10px 16px; line-height: 1.4; text-align: center; box-shadow: 0 14px 30px -12px rgba(0,0,0,.6); }
 
 /* ---------- Aide aux débutants : conseils, lexique, guide, programmes ---------- */
 #carnet .term{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,currentColor 55%,transparent);cursor:help}
@@ -750,6 +750,8 @@ function viewPlan(){
     <div class="row"><label class="f" for="set-rest">Repos entre séries<select id="set-rest" data-f="rest" data-describe>${[[30,"Circuit, gainage, abdos : on garde le cœur haut."],[45,"Isolation légère et superséries (bras, mollets, épaules)."],[60,"Hypertrophie sur exercices d'isolation (12-15 reps)."],[75,"Compromis hypertrophie, séries de 10 à 12 répétitions."],[90,"Hypertrophie classique (8-12 reps) : le réglage le plus courant."],[120,"Exercices de base en hypertrophie (squat, développé, rowing)."],[150,"Séries lourdes de 5 à 8 répétitions."],[180,"Force : séries de 3 à 6 répétitions sur les gros mouvements."],[240,"Force maximale (1 à 3 reps) : récupération nerveuse complète."],[300,"Records et charges maximales, haltérophilie."]].map(([s,d])=>`<option value="${s}" data-desc="${d}" ${S.settings.rest==s?"selected":""}>${s<60?s+" s":Math.floor(s/60)+" min"+(s%60?" "+s%60+" s":"")}</option>`).join("")}</select></label>
     <label class="f" for="set-goal">Objectif hebdo<select id="set-goal" data-f="goal" data-describe>${[[1,"Entretien minimal : une séance complète du corps entier."],[2,"Débutant ou emploi du temps chargé : 2 séances corps entier."],[3,"Idéal pour débuter : corps entier ou haut / bas / corps entier."],[4,"Classique : haut / bas du corps deux fois par semaine."],[5,"Programme divisé (push / pull / legs + 2 séances)."],[6,"Avancé : push / pull / legs deux fois par semaine."],[7,"Tous les jours : alternez bien les groupes musculaires et gardez des séances légères."]].map(([n,d])=>`<option value="${n}" data-desc="${d}" ${S.settings.goal==n?"selected":""}>${n} séance${n>1?"s":""}</option>`).join("")}</select></label></div>
     <label class="f" for="set-bar">Poids de votre barre<select id="set-bar" data-f="bar" data-describe>${[[20,"Barre olympique standard (2,20 m) : la plus courante en salle."],[15,"Barre olympique femme ou barre technique (2,01 m)."],[10,"Barre courte ou barre EZ."],[7,"Petite barre de musculation à domicile."]].map(([n,d])=>`<option value="${n}" data-desc="${d}" ${(S.settings.bar||20)==n?"selected":""}>${n} kg</option>`).join("")}</select></label></section>
+  <section class="card stack"><h3 class="h3" style="margin:0">Pendant la séance</h3>
+    <label class="tgl"><input type="checkbox" data-f="autorest" ${autoOn()?"checked":""}><span>Lancer le repos tout seul dès que la charge et les répétitions d'une série sont notées</span></label></section>
   <section class="card stack"><h3 class="h3" style="margin:0">Sauvegarde</h3>
     <div class="muted small">Sans compte (mode essai), rien n'est gardé après la visite ; avec un compte, vos séances sont enregistrées et vous les retrouvez sur tous vos appareils. Vous pouvez aussi copier une sauvegarde complète et la réimporter plus tard.</div>
     <div class="row"><button class="btn sm" data-a="export">Copier la sauvegarde</button><button class="btn sm" data-a="import-open">Importer</button></div>
@@ -763,6 +765,27 @@ function emptyState(t,s){return`<section class="card empty"><div class="h2">${es
 let rest=null,restInt=null,audio=null;
 function tickElapsed(){const el=$("#elapsed");if(!el||!D)return;const s=Math.floor((Date.now()-D.start)/1000);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;el.textContent=(h?h+":"+String(m).padStart(2,"0"):m)+":"+String(ss).padStart(2,"0")}
 setInterval(tickElapsed,1000);
+/* Repos automatique : dès que la charge et les répétitions d'une série sont notées, la série est validée et le repos démarre.
+   On attend une courte pause dans la saisie (pour « 10 » reps, ne pas partir sur le « 1 »), ou que l'on quitte la ligne. */
+let autoT=null;
+const autoOn=()=>S.settings.autoRest!==false;
+function autoCheck(ei,si,now){clearTimeout(autoT);if(!autoOn()||!D)return;const e=D.exercises[ei],s=e&&e.sets[si];if(!s||s.done)return;
+  const reps=num(s.reps);if(!(reps>0))return;
+  if(num(s.kg)==null){if(!now)return;if(placeholder(e,si).kg!=="")return}   // poids du corps : validé en quittant la ligne
+  if(now)autoDone(ei,si);else autoT=setTimeout(()=>autoDone(ei,si),1300)}
+function autoDone(ei,si){const e=D&&D.exercises[ei],s=e&&e.sets[si];if(!s||s.done)return;
+  if(num(s.kg)==null)s.kg="0";s.done=true;startRest();saveDraft();
+  const inp=document.getElementById(`s-${ei}-${si}-reps`),row=inp&&inp.closest(".setrow");
+  if(row){row.classList.add("done");const c=row.querySelector(".check");if(c)c.setAttribute("aria-pressed","true");
+    const a=document.activeElement;if(a&&row.contains(a))a.blur()}   // le clavier se ferme : le compte à rebours est visible
+  try{navigator.vibrate&&navigator.vibrate(30)}catch(_){}
+  let first=false;try{first=!localStorage.getItem("tempo-autorest-seen");localStorage.setItem("tempo-autorest-seen","1")}catch(_){}
+  if(first)toast("Série validée, repos lancé : plus besoin de cocher. Réglable dans Programme → Réglages.",5000);
+  const fb=coachOn()?MG.feedback(e,{kg:num(s.kg),reps:num(s.reps)},LV()):"";if(fb)setTimeout(()=>toast(fb,5000),50);
+  softRender()}
+// Quitter la ligne d'une série (autre champ, touche Entrée) valide aussi
+document.addEventListener("focusout",ev=>{const t=ev.target;if(!t.dataset||t.dataset.f!=="set")return;const row=t.closest(".setrow");if(ev.relatedTarget&&row&&row.contains(ev.relatedTarget))return;autoCheck(+t.dataset.ei,+t.dataset.si,true)});
+document.addEventListener("keydown",ev=>{const t=ev.target;if(ev.key==="Enter"&&t.dataset&&t.dataset.f==="set"&&t.dataset.k==="reps"){ev.preventDefault();t.blur()}});
 function startRest(){rest={end:Date.now()+S.settings.rest*1000,total:S.settings.rest};clearInterval(restInt);restInt=setInterval(drawRest,250);drawRest()}
 function drawRest(){const el=$("#rest");if(!rest){el.hidden=true;clearInterval(restInt);return}
   const left=Math.max(0,Math.ceil((rest.end-Date.now())/1000));
@@ -953,7 +976,7 @@ function mv(b,dir){const d=S.program.days[+b.dataset.di],i=+b.dataset.xi,j=i+dir
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const f=A[b.dataset.a];if(f){e.preventDefault();f(b,e)}});
 document.addEventListener("toggle",e=>{const d=e.target;if(d.matches&&d.matches("details.pday")&&d.open)UI.openDay=d.dataset.day},true);
 const F={
-  set(t){const s=D.exercises[+t.dataset.ei].sets[+t.dataset.si];s[t.dataset.k]=t.value;saveDraft()},
+  set(t){const s=D.exercises[+t.dataset.ei].sets[+t.dataset.si];s[t.dataset.k]=t.value;saveDraft();autoCheck(+t.dataset.ei,+t.dataset.si,false)},
   note(t){D.note=t.value;saveDraft()},
   pday(t){S.program.days[+t.dataset.di].name=t.value;saveProfile()},
   pex(t){const e=S.program.days[+t.dataset.di].exercises[+t.dataset.xi];const k=t.dataset.k;e[k]=k==="sets"?(parseInt(t.value)||""):t.value;saveProfile()},
@@ -961,6 +984,7 @@ const F={
   goal(t){S.settings.goal=+t.value;saveProfile()},
   bar(t){S.settings.bar=+t.value;saveProfile()},
   coach(t){S.settings.coach=t.checked;saveProfile();toast(t.checked?"Conseils activés":"Conseils désactivés")},
+  autorest(t){S.settings.autoRest=t.checked;saveProfile();toast(t.checked?"Le repos démarrera tout seul":"Validez chaque série avec la coche")},
   pick(t){UI.pick=t.value;saveUI();render()}
 };
 document.addEventListener("input",e=>{const t=e.target;if(t.dataset&&F[t.dataset.f]&&t.tagName!=="SELECT"&&t.type!=="checkbox")F[t.dataset.f](t)});
