@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculateur d'allure course à pied : temps, allure, vitesse | Tempo</title>
+<meta name="description" content="Calculez votre allure au km, votre temps de course ou la distance parcourue. Temps de passage, vitesse en km/h et prédiction 5 km, 10 km, semi et marathon. Gratuit.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Calculateur d'allure","applicationCategory":"SportsApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Comment calculer son allure au kilomètre ?","acceptedAnswer":{"@type":"Answer","text":"Divisez le temps total par la distance en kilomètres. Par exemple, 50 minutes sur 10 km donnent 5 minutes par kilomètre."}},
+{"@type":"Question","name":"Comment convertir une allure en vitesse km/h ?","acceptedAnswer":{"@type":"Answer","text":"Divisez 60 par l'allure en minutes. Une allure de 5:00/km correspond à 12 km/h."}},
+{"@type":"Question","name":"La prédiction de temps est-elle fiable ?","acceptedAnswer":{"@type":"Answer","text":"La formule de Riegel donne une bonne estimation si vous êtes entraîné pour la distance visée. Pour le marathon, elle est souvent optimiste sans sorties longues régulières."}}
+]}]}
+</script>
+</head>
+<body data-bg="piste">
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html" aria-current="page"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Course à pied</span>
+    <h1>Calculateur d'allure</h1>
+    <p>Entrez deux valeurs parmi distance, temps et allure : la troisième se calcule seule, avec vos temps de passage et une estimation sur les autres distances.</p>
+    <a class="cta" href="carnet-course.html">Noter mes sorties dans le carnet →</a>
+  </div>
+
+  <div class="tool">
+    <form class="panel" id="pace-form" onsubmit="return false">
+      <div class="field">
+        <span class="label">Je cherche</span>
+        <div class="seg" id="p-mode">
+          <button type="button" data-v="time" aria-pressed="true">Mon temps</button>
+          <button type="button" data-v="pace" aria-pressed="false">Mon allure</button>
+          <button type="button" data-v="dist" aria-pressed="false">La distance</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="p-dist">Distance (km)</label>
+        <input id="p-dist" type="text" inputmode="decimal" value="10">
+        <div class="chips">
+          <button type="button" class="chip" data-dist="5">5 km</button>
+          <button type="button" class="chip" data-dist="10">10 km</button>
+          <button type="button" class="chip" data-dist="21.0975">Semi</button>
+          <button type="button" class="chip" data-dist="42.195">Marathon</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="p-time">Temps</label>
+          <input id="p-time" type="text" inputmode="numeric" value="50 min">
+        </div>
+        <div class="field">
+          <label for="p-pace">Allure au km</label>
+          <input id="p-pace" type="text" inputmode="numeric" value="5 min">
+        </div>
+      </div>
+      <p class="hint">Exemples : 45 min, 4 min 30 s, 1h45 ou 1:45:30.</p>
+    </form>
+
+    <section class="result" aria-live="polite">
+      <p id="p-err" class="hint" hidden>Vérifiez les valeurs saisies : il faut deux champs remplis avec des nombres positifs.</p>
+      <div id="p-out" class="result">
+        <div class="big">
+          <div class="stat main"><div class="v" id="r-time"></div><div class="k">Temps</div></div>
+          <div class="stat"><div class="v" id="r-pace"></div><div class="k">Allure</div></div>
+          <div class="stat"><div class="v" id="r-speed"></div><div class="k">Vitesse</div></div>
+        </div>
+        <div>
+          <h2>Temps de passage</h2>
+          <div class="tablewrap" style="margin-top:10px"><table><thead><tr><th>Point</th><th class="num">Chrono</th></tr></thead><tbody id="r-splits"></tbody></table></div>
+        </div>
+        <div>
+          <h2>Équivalences de performance</h2>
+          <p class="hint" style="margin-top:6px">Estimation par la formule de Riegel, à niveau d'entraînement égal.</p>
+          <div class="tablewrap" style="margin-top:10px"><table><thead><tr><th>Distance</th><th class="num">Temps estimé</th><th class="num">Allure</th></tr></thead><tbody id="r-pred"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <article class="content">
+    <section>
+      <h2>Comment calculer son allure de course</h2>
+      <p>L'allure est le temps mis pour parcourir un kilomètre. On l'obtient en divisant le temps total par la distance : 50 minutes sur 10 km donnent une allure de 5:00/km. La vitesse en km/h se déduit en divisant 60 par l'allure en minutes, soit 12 km/h dans cet exemple.</p>
+      <p>Connaître son allure permet de tenir un rythme régulier en course, de préparer ses temps de passage et de doser les séances d'entraînement.</p>
+    </section>
+    <section>
+      <h2>Table des allures pour les objectifs courants</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Objectif</th><th class="num">Allure</th><th class="num">Vitesse</th></tr></thead>
+        <tbody>
+          <tr><td>10 km en 1 h</td><td class="num">6:00/km</td><td class="num">10 km/h</td></tr>
+          <tr><td>10 km en 50 min</td><td class="num">5:00/km</td><td class="num">12 km/h</td></tr>
+          <tr><td>10 km en 45 min</td><td class="num">4:30/km</td><td class="num">13,3 km/h</td></tr>
+          <tr><td>Semi en 2 h</td><td class="num">5:41/km</td><td class="num">10,5 km/h</td></tr>
+          <tr><td>Semi en 1 h 45</td><td class="num">4:59/km</td><td class="num">12,1 km/h</td></tr>
+          <tr><td>Marathon en 4 h</td><td class="num">5:41/km</td><td class="num">10,5 km/h</td></tr>
+          <tr><td>Marathon en 3 h 30</td><td class="num">4:59/km</td><td class="num">12,1 km/h</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2>Questions fréquentes</h2>
+      <div>
+        <details><summary>Comment convertir une allure en vitesse ?</summary><p>Divisez 60 par l'allure exprimée en minutes décimales. 5:30/km = 5,5 min, donc 60 ÷ 5,5 = 10,9 km/h.</p></details>
+        <details><summary>La prédiction de temps est-elle fiable ?</summary><p>La formule de Riegel (T2 = T1 × (D2/D1)^1,06) donne une bonne estimation si vous êtes entraîné pour la distance visée. Pour le marathon, elle est souvent optimiste sans sorties longues régulières.</p></details>
+        <details><summary>Quelle allure pour un premier marathon ?</summary><p>Partez sur une allure 10 à 15 secondes plus lente que celle prédite à partir de votre semi, et gardez-la jusqu'au 30e km.</p></details>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="fx.js"></script>
+</body>
+</html>

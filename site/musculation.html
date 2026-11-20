@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculateur 1RM musculation : charge max et pourcentages | Tempo</title>
+<meta name="description" content="Estimez votre 1RM (charge maximale) au développé couché, squat ou soulevé de terre, obtenez vos charges de travail par nombre de répétitions et les disques à mettre sur la barre.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Calculateur de 1RM","applicationCategory":"SportsApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Comment calculer son 1RM sans le tester ?","acceptedAnswer":{"@type":"Answer","text":"Faites une série à l'échec de 3 à 10 répétitions et appliquez une formule comme Epley (charge × (1 + répétitions/30)) ou Brzycki (charge × 36 / (37 − répétitions))."}},
+{"@type":"Question","name":"Quel pourcentage du 1RM pour prendre du muscle ?","acceptedAnswer":{"@type":"Answer","text":"Entre 65 et 85 % du 1RM, soit environ 6 à 12 répétitions par série, est la plage la plus utilisée pour l'hypertrophie."}}
+]}]}
+</script>
+</head>
+<body data-bg="fonte">
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html" aria-current="page"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Musculation · force</span>
+    <h1>Calculateur de 1RM</h1>
+    <p>À partir d'une série récente, estimez votre charge maximale sur une répétition et vos charges de travail pour la force ou la prise de muscle.</p>
+    <p class="hint">Vous débutez ? Inutile de calculer votre 1RM les premiers mois : le <a href="carnet.html">carnet de séances</a> vous indique la charge à viser à chaque séance.</p>
+    <a class="cta" href="carnet.html">Suivre mes séances dans le carnet →</a>
+  </div>
+
+  <div class="tool">
+    <form class="panel" id="lift-form" onsubmit="return false">
+      <div class="row">
+        <div class="field"><label for="l-w">Charge soulevée (kg)</label><input id="l-w" type="number" inputmode="decimal" min="1" step="0.5" value="80"></div>
+        <div class="field"><label for="l-reps">Répétitions faites</label><input id="l-reps" type="number" inputmode="numeric" min="1" max="15" value="6"></div>
+      </div>
+      <p class="hint">Prenez une série menée proche de l'échec, entre 2 et 10 répétitions : l'estimation est plus fiable.</p>
+      <hr style="border:0;border-top:1px solid var(--line);margin:0;width:100%">
+      <span class="label">Charger la barre</span>
+      <div class="row">
+        <div class="field"><label for="l-target">Charge visée (kg)</label><input id="l-target" type="number" inputmode="decimal" min="0" step="1.25"></div>
+        <div class="field">
+          <label for="l-bar">Barre</label>
+          <select id="l-bar" data-describe>
+            <optgroup label="Barres olympiques (disques Ø 50 mm)">
+              <option value="20" selected data-desc="La barre standard des salles : 2,20 m, manchons Ø 50 mm, prise Ø 28 à 29 mm. Squat, développé couché, soulevé de terre.">Olympique homme · 20 kg</option>
+              <option value="15" data-desc="2,01 m, prise plus fine (Ø 25 mm), plus agréable pour les petites mains. Norme des compétitions féminines.">Olympique femme · 15 kg</option>
+              <option value="10" data-desc="Barre d'apprentissage légère pour travailler la technique (souvent en aluminium). Vérifiez le poids gravé : 5 à 10 kg.">Technique / apprentissage · 10 kg</option>
+              <option value="25" data-desc="Barre de force rigide (powerlifting, prise Ø 29 mm, peu de flexion). Certaines barres de squat spécialisées pèsent 25 kg.">Barre de force lourde · 25 kg</option>
+            </optgroup>
+            <optgroup label="Barres spéciales">
+              <option value="25" data-desc="Barre hexagonale : on se place au centre. Plus facile pour le dos au soulevé de terre et aux shrugs. Selon le modèle : 20 à 30 kg.">Trap bar (hexagonale) · 25 kg</option>
+              <option value="30" data-desc="Barre de squat à poignées avant et coussin d'épaules. Buste plus droit, moins de contrainte aux épaules. Selon le modèle : 25 à 32 kg.">Safety squat bar · 30 kg</option>
+              <option value="12" data-desc="Barre courbée en Z pour les curls et la barre au front. Ménage les poignets. Version olympique (manchons 50 mm).">EZ olympique · 12 kg</option>
+              <option value="10" data-desc="Barre à prises neutres (parallèles) pour développés et rowings, plus douce pour les épaules. 10 à 20 kg selon le modèle.">Swiss bar / multi-prises · 10 kg</option>
+              <option value="11" data-desc="La barre est guidée et souvent équilibrée par un contrepoids : son poids « ressenti » varie de 0 à 15 kg. Demandez à la salle ou utilisez 7 à 11 kg.">Smith machine · 11 kg</option>
+            </optgroup>
+            <optgroup label="Barres standard (disques Ø 25-30 mm)">
+              <option value="7" data-desc="EZ standard à disques Ø 30 mm, courante à la maison. 6 à 8 kg selon le modèle.">EZ standard · 7 kg</option>
+              <option value="10" data-desc="Barre droite courte de 1,5 à 1,8 m, fréquente dans les salles municipales et à la maison.">Barre droite courte · 10 kg</option>
+              <option value="5" data-desc="Barre fixe ou courte légère (cours collectifs type body pump : 2 à 5 kg).">Barre légère / cours collectifs · 5 kg</option>
+              <option value="2" data-desc="Barre d'haltère courte : indiquez la charge visée pour UN haltère.">Barre d'haltère courte · 2 kg</option>
+            </optgroup>
+            <optgroup label="Sans barre">
+              <option value="0" data-desc="Machine à disques (presse, hack squat…) ou ceinture de lest : calcul des disques sans barre. Le chariot de la machine a souvent son propre poids, à ajouter.">Machine à disques / lest · 0 kg</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="l-plates">Disques disponibles</label>
+        <select id="l-plates" data-describe>
+          <option value="25,20,15,10,5,2.5,1.25" selected data-desc="Le jeu le plus courant en salle : 25, 20, 15, 10, 5, 2,5 et 1,25 kg.">Salle classique</option>
+          <option value="25,20,15,10,5,2.5,1.25,0.5,0.25" data-desc="Avec micro-disques de 0,5 et 0,25 kg pour progresser de 0,5 kg à la fois (utile au développé militaire).">Salle + micro-disques</option>
+          <option value="25,20,15,10,5,2.5,2,1.5,1,0.5" data-desc="Disques calibrés de compétition (couleurs : 25 rouge, 20 bleu, 15 jaune, 10 vert) et petits disques chromés.">Compétition (powerlifting)</option>
+          <option value="20,15,10,5,2.5,1.25" data-desc="Disques bumper en caoutchouc (lâchables) : en général pas de 25 kg.">Bumpers (haltérophilie, CrossFit)</option>
+          <option value="20,10,5,2.5,1.25" data-desc="Kit maison typique : paires de 20, 10, 5, 2,5 et 1,25 kg.">Kit maison</option>
+          <option value="10,5,2.5,1.25,0.5" data-desc="Petits disques Ø 30 mm pour barres et haltères standard.">Disques légers (Ø 30 mm)</option>
+        </select>
+      </div>
+      <p class="hint" id="r-plates" aria-live="polite"></p>
+    </form>
+
+    <section class="result" aria-live="polite">
+      <p id="l-err" class="hint" hidden>Entrez une charge positive et un nombre de répétitions entre 1 et 15.</p>
+      <div id="l-out" class="result">
+        <div class="big">
+          <div class="stat main"><div class="v" id="r-1rm"></div><div class="k">1RM estimé</div></div>
+          <div class="stat"><div class="v" id="r-ep"></div><div class="k">Formule d'Epley</div></div>
+          <div class="stat"><div class="v" id="r-br"></div><div class="k">Formule de Brzycki</div></div>
+        </div>
+        <div>
+          <h2>Vos charges de travail</h2>
+          <p class="hint" style="margin-top:6px">Arrondies à 1,25 kg près. La ligne surlignée correspond à votre série.</p>
+          <div class="tablewrap" style="margin-top:10px"><table><thead><tr><th>Répétitions max</th><th class="num">% du 1RM</th><th class="num">Charge</th><th>Objectif</th></tr></thead><tbody id="r-pct"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <article class="content">
+    <section>
+      <h2>Qu'est-ce que le 1RM</h2>
+      <p>Le 1RM (une répétition maximale) est la charge la plus lourde que vous pouvez soulever une seule fois avec une bonne technique. Il sert de référence pour programmer : on exprime les charges de travail en pourcentage du 1RM.</p>
+      <p>Tester son vrai 1RM est fatigant et risqué sans pareur. Les formules d'Epley et de Brzycki l'estiment à partir d'une série de plusieurs répétitions ; ce calculateur affiche leur moyenne.</p>
+    </section>
+    <section>
+      <h2>Questions fréquentes</h2>
+      <div>
+        <details><summary>Combien de répétitions pour prendre du muscle ?</summary><p>De 6 à 12 répétitions par série, soit 65 à 85 % du 1RM, avec 10 à 20 séries par muscle et par semaine.</p></details>
+        <details><summary>Et pour gagner en force ?</summary><p>De 1 à 5 répétitions à 85 % du 1RM ou plus, avec des repos de 2 à 5 minutes entre les séries.</p></details>
+        <details><summary>L'estimation marche-t-elle pour tous les exercices ?</summary><p>Elle est fiable sur les mouvements polyarticulaires (squat, développé couché, soulevé de terre). Sur les exercices d'isolation, elle surestime souvent la charge maximale.</p></details>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="fx.js"></script>
+</body>
+</html>

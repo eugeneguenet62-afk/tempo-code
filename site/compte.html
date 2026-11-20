@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon compte | Tempo</title>
+<meta name="description" content="Créez un compte Tempo gratuit pour retrouver vos carnets de course et de musculation sur tous vos appareils.">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Votre compte</span>
+    <h1 id="acc-title">Retrouvez vos carnets partout</h1>
+    <p id="acc-lead">Sans compte, Tempo fonctionne déjà : vos carnets restent sur cet appareil. Avec un compte gratuit, ils sont enregistrés et vous les retrouvez sur votre téléphone, votre ordinateur, même après avoir vidé le navigateur.</p>
+  </div>
+
+  <div class="acc">
+    <!-- Profil : utilisé par tous les outils -->
+    <section class="acc-card" id="profil">
+      <div>
+        <h2>Mon profil</h2>
+        <p class="hint" id="pf-where">Renseignez-le une fois : les calories, les zones cardiaques et les carnets s'adaptent à vous.</p>
+      </div>
+      <form id="pf-form" class="pf" onsubmit="return false" novalidate>
+        <div class="field">
+          <span class="label">Sexe</span>
+          <div class="seg" id="pf-sex" data-k="n-sex">
+            <button type="button" data-v="h" aria-pressed="false">Homme</button>
+            <button type="button" data-v="f" aria-pressed="false">Femme</button>
+          </div>
+        </div>
+        <div class="row pf-3">
+          <div class="field"><label for="pf-age">Âge</label><input id="pf-age" data-k="n-age" type="number" inputmode="numeric" min="14" max="99" placeholder="ans"></div>
+          <div class="field"><label for="pf-cm">Taille</label><input id="pf-cm" data-k="n-cm" type="number" inputmode="numeric" min="120" max="230" placeholder="cm"></div>
+          <div class="field"><label for="pf-kg">Poids</label><input id="pf-kg" data-k="n-kg" type="number" inputmode="decimal" min="30" max="250" step="0.1" placeholder="kg"></div>
+        </div>
+        <div class="field">
+          <label for="pf-act">Activité au quotidien</label>
+          <select id="pf-act" data-k="n-act" data-describe>
+            <option value="">À choisir</option>
+            <option value="1.2" data-desc="Travail assis, déplacements en voiture ou transports, moins de 5 000 pas par jour, pas ou très peu de sport.">Sédentaire : bureau, peu de sport</option>
+            <option value="1.3" data-desc="Travail assis mais vous marchez au quotidien (5 000 à 7 500 pas), une activité sportive occasionnelle.">Peu actif : je marche un peu, sport rare</option>
+            <option value="1.375" data-desc="1 à 2 séances de sport par semaine (course, salle, vélo…) ou un métier où l'on reste debout.">Légère : 1 à 2 séances par semaine</option>
+            <option value="1.55" data-desc="3 à 4 séances d'environ 1 heure par semaine, ou un métier actif avec du sport régulier.">Modérée : 3 à 4 séances par semaine</option>
+            <option value="1.725" data-desc="5 à 6 séances intenses par semaine, ou entraînement quotidien de sport collectif.">Élevée : 5 à 6 séances par semaine</option>
+            <option value="1.9" data-desc="Athlète qui s'entraîne deux fois par jour, ou métier très physique (BTP, déménagement, agriculture) en plus du sport.">Très élevée : 2 séances par jour ou métier physique</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="label">Objectif</span>
+          <div class="seg" id="pf-goal" data-k="n-goal">
+            <button type="button" data-v="cut" aria-pressed="false">Perdre du poids</button>
+            <button type="button" data-v="keep" aria-pressed="false">Maintenir</button>
+            <button type="button" data-v="bulk" aria-pressed="false">Prendre du muscle</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="pf-rest">FC au repos <small>(facultatif)</small></label><input id="pf-rest" data-k="h-rest" type="number" inputmode="numeric" min="30" max="120" placeholder="bpm"></div>
+          <div class="field"><label for="pf-max">FC max <small>(facultatif)</small></label><input id="pf-max" data-k="h-max" type="number" inputmode="numeric" min="100" max="230" placeholder="estimée"></div>
+        </div>
+      </form>
+      <div class="pf-sum" id="pf-sum" aria-live="polite"></div>
+    </section>
+
+    <!-- Comptes pas encore activés -->
+    <section class="acc-card" id="acc-off" hidden>
+      <h2>Comptes bientôt disponibles</h2>
+      <p class="hint">Pour l'instant, Tempo garde vos carnets sur cet appareil. Utilisez « Copier une sauvegarde » dans les réglages des carnets pour les transférer ailleurs.</p>
+    </section>
+
+    <!-- Non connecté -->
+    <section class="acc-card" id="acc-out" hidden>
+      <div class="seg" id="acc-mode">
+        <button type="button" data-v="signup" aria-pressed="true">Créer un compte</button>
+        <button type="button" data-v="login" aria-pressed="false">Se connecter</button>
+      </div>
+      <form id="acc-form" novalidate>
+        <div class="field"><label for="acc-email">E-mail</label><input id="acc-email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="acc-pw">Mot de passe</label><input id="acc-pw" type="password" autocomplete="new-password" minlength="8" required><p class="hint" id="acc-pw-hint">8 caractères minimum.</p></div>
+        <p class="acc-err" id="acc-err" hidden></p>
+        <button class="btn" type="submit" id="acc-submit">Créer mon compte</button>
+        <button type="button" class="acc-link" id="acc-forgot" hidden>Mot de passe oublié ?</button>
+        <p class="acc-ok" id="acc-sent" hidden></p>
+        <p class="hint" id="acc-merge">Les séances déjà notées sur cet appareil seront ajoutées à votre compte.</p>
+        <p class="hint">En créant un compte, vous acceptez la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+      </form>
+    </section>
+
+    <!-- Connecté -->
+    <section class="acc-card" id="acc-in" hidden>
+      <h2>Connecté</h2>
+      <p class="acc-email" id="acc-me"></p>
+      <p class="hint" id="acc-state"></p>
+      <div class="acc-row">
+        <button type="button" class="btn ghost" id="acc-export">Télécharger mes données</button>
+      </div>
+      <details>
+        <summary>Changer de mot de passe</summary>
+        <form id="pw-form" novalidate>
+          <div class="field"><label for="pw-cur">Mot de passe actuel</label><input id="pw-cur" type="password" autocomplete="current-password" required></div>
+          <div class="field"><label for="pw-new">Nouveau mot de passe</label><input id="pw-new" type="password" autocomplete="new-password" minlength="8" required></div>
+          <p class="acc-err" id="pw-err" hidden></p><p class="acc-ok" id="pw-ok" hidden>Mot de passe changé. Vos autres appareils devront se reconnecter.</p>
+          <button class="btn" type="submit">Changer</button>
+        </form>
+      </details>
+      <form id="out-form">
+        <label class="acc-check"><input type="checkbox" id="out-forget"> Effacer aussi les carnets de cet appareil (appareil partagé)</label>
+        <button class="btn ghost" type="submit">Se déconnecter</button>
+      </form>
+      <details>
+        <summary>Supprimer mon compte</summary>
+        <form id="del-form" novalidate>
+          <p class="hint">Votre compte et tout ce qui est enregistré sur le serveur sont supprimés définitivement. Les carnets restent sur cet appareil.</p>
+          <div class="field"><label for="del-pw">Mot de passe</label><input id="del-pw" type="password" autocomplete="current-password" required></div>
+          <p class="acc-err" id="del-err" hidden></p>
+          <button class="btn danger" type="submit">Supprimer définitivement</button>
+        </form>
+      </details>
+    </section>
+
+    <!-- Installer -->
+    <section class="acc-card" id="install">
+      <h2>Installer l'application</h2>
+      <p class="hint" id="inst-text">Ajoutez Tempo à votre écran d'accueil : elle s'ouvre comme une application et fonctionne même sans réseau.</p>
+      <button class="btn" type="button" id="inst-btn" hidden>Installer Tempo</button>
+      <p class="hint" id="inst-ios" hidden>Sur iPhone : touchez le bouton Partager <b>⎋</b> de Safari, puis « Sur l'écran d'accueil ».</p>
+      <p class="hint" id="inst-done" hidden>Tempo est installée sur cet appareil.</p>
+    </section>
+  </div>
+</main>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const TS = window.TempoStore, A = TS.account;
+  const MSG = {
+    bad_email: "Cette adresse e-mail n'est pas valide.",
+    weak_password: "Le mot de passe doit faire au moins 8 caractères.",
+    email_taken: "Un compte existe déjà avec cette adresse. Connectez-vous plutôt.",
+    bad_credentials: "E-mail ou mot de passe incorrect.",
+    too_many: "Trop d'essais. Réessayez dans un quart d'heure.",
+    offline: "Pas de connexion internet. Réessayez une fois en ligne.",
+    unavailable: "Le service de comptes ne répond pas. Réessayez dans un instant.",
+    not_configured: "Les comptes ne sont pas encore activés sur ce site.",
+    unauthorized_domain: "Cette adresse n'est pas encore autorisée dans Firebase (Authentication › Settings › Authorized domains).",
+  };
+  const msg = (e) => MSG[e && e.code] || (navigator.onLine ? "Une erreur est survenue. Réessayez." : "Pas de connexion internet.");
+  const show = (el, text) => { el.textContent = text; el.hidden = !text; };
+
+  let mode = "signup";
+  function view() {
+    const acc = A.current();
+    if (!A.configured) { $("#acc-off").hidden = false; $("#acc-out").hidden = $("#acc-in").hidden = true; return; }
+    $("#acc-out").hidden = !!acc; $("#acc-in").hidden = !acc;
+    $("#acc-title").textContent = acc ? "Mon compte" : "Retrouvez vos carnets partout";
+    $("#acc-lead").hidden = !!acc;
+    if (acc) $("#acc-me").textContent = acc.email;
+    // Le sélecteur glissant de fx.js se place une fois visible
+    window.dispatchEvent(new Event("resize"));
+  }
+  document.querySelectorAll("#acc-mode button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("#acc-mode button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    mode = b.dataset.v;
+    $("#acc-submit").textContent = mode === "signup" ? "Créer mon compte" : "Me connecter";
+    $("#acc-pw").autocomplete = mode === "signup" ? "new-password" : "current-password";
+    $("#acc-pw-hint").hidden = mode !== "signup";
+    $("#acc-merge").hidden = false;
+    $("#acc-forgot").hidden = mode !== "login";
+    $("#acc-sent").hidden = true;
+    show($("#acc-err"), "");
+  }));
+  $("#acc-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("#acc-submit"); btn.disabled = true; show($("#acc-err"), "");
+    try {
+      await A[mode]($("#acc-email").value, $("#acc-pw").value);
+      $("#acc-pw").value = ""; view();
+      TS.notify(mode === "signup" ? "Compte créé : vos carnets sont enregistrés." : "Connecté : vos carnets sont à jour.");
+    } catch (err) { show($("#acc-err"), msg(err)); }
+    btn.disabled = false;
+  });
+  $("#acc-forgot").addEventListener("click", async () => {
+    const email = $("#acc-email").value.trim();
+    show($("#acc-err"), ""); $("#acc-sent").hidden = true;
+    if (!email) { show($("#acc-err"), "Indiquez d'abord votre adresse e-mail ci-dessus."); $("#acc-email").focus(); return; }
+    try { await A.reset(email); show($("#acc-sent"), "Si un compte existe pour " + email + ", un e-mail vient d'être envoyé pour choisir un nouveau mot de passe. Pensez à regarder dans les spams."); }
+    catch (err) { show($("#acc-err"), msg(err)); }
+  });
+  $("#acc-export").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(A.exportData(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "tempo-export.json";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $("#pw-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); show($("#pw-err"), ""); $("#pw-ok").hidden = true;
+    try { await A.password($("#pw-cur").value, $("#pw-new").value); $("#pw-cur").value = $("#pw-new").value = ""; $("#pw-ok").hidden = false; }
+    catch (err) { show($("#pw-err"), msg(err)); }
+  });
+  $("#out-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); await A.logout($("#out-forget").checked); view(); TS.notify("Vous êtes déconnecté.");
+  });
+  $("#del-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); show($("#del-err"), "");
+    try { await A.remove($("#del-pw").value); view(); TS.notify("Compte supprimé."); }
+    catch (err) { show($("#del-err"), msg(err)); }
+  });
+  TS.onStatus((s) => {
+    $("#acc-state").textContent = { ok: "Vos carnets sont enregistrés et à jour.", saving: "Enregistrement en cours…", offline: "Hors connexion : vos modifications seront envoyées au retour du réseau.", err: "Un carnet n'a pas pu être enregistré.", anon: "" }[s] || "";
+    view();
+  });
+  if (A.current()) A.me().then(view, view);
+  view();
+
+
+  /* Profil */
+  const PF = $("#pf-form");
+  const fillProfile = () => {
+    const raw = TS.profile().raw;
+    PF.querySelectorAll("input[data-k], select[data-k]").forEach((el) => { if (el !== document.activeElement) el.value = raw[el.dataset.k] == null ? "" : raw[el.dataset.k]; });
+    PF.querySelectorAll(".seg[data-k]").forEach((box) => box.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(raw[box.dataset.k] === b.dataset.v))));
+    window.dispatchEvent(new Event("resize"));
+    summary();
+  };
+  const r0 = (x) => Math.round(x).toLocaleString("fr-FR");
+  function summary() {
+    const p = TS.profile(), out = [];
+    if (p.age && p.cm && p.kg && p.sex) {
+      const bmr = 10 * p.kg + 6.25 * p.cm - 5 * p.age + (p.sex === "h" ? 5 : -161);
+      out.push(["Métabolisme de base", r0(bmr) + " kcal"]);
+      if (p.act) out.push(["Besoins par jour", r0(bmr * p.act * ({ cut: 0.85, bulk: 1.1 }[p.goal] || 1)) + " kcal"]);
+      out.push(["IMC", (p.kg / Math.pow(p.cm / 100, 2)).toFixed(1).replace(".", ",")]);
+    }
+    if (p.age || p.hrMax) out.push([p.hrMax ? "FC max" : "FC max estimée", r0(p.hrMax || 208 - 0.7 * p.age) + " bpm"]);
+    const missing = [["n-sex", "le sexe"], ["n-age", "l'âge"], ["n-cm", "la taille"], ["n-kg", "le poids"], ["n-act", "l'activité"]].filter(([k]) => !p.raw[k]).map(([, n]) => n);
+    $("#pf-sum").innerHTML = out.map(([k, v]) => `<div><small>${k}</small><b>${v}</b></div>`).join("") +
+      `<p class="hint">${missing.length ? "Il manque " + missing.join(", ") + " pour des calculs complets." : "Profil complet : les outils utilisent ces valeurs."}</p>`;
+  }
+  PF.addEventListener("input", (e) => { const k = e.target.dataset.k; if (k) { TS.setProfile({ [k]: e.target.value }); summary(); } });
+  PF.addEventListener("click", (e) => {
+    const b = e.target.closest(".seg[data-k] button"); if (!b) return;
+    const box = b.parentElement;
+    box.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    TS.setProfile({ [box.dataset.k]: b.dataset.v }); summary();
+  });
+  TS.watch("tempo-profile-v1", fillProfile);
+  TS.onStatus(() => { $("#pf-where").textContent = (A.current() ? "Enregistré dans votre compte. " : "Enregistré sur cet appareil. ") + "Les calories, les zones cardiaques et les carnets s'adaptent à vous."; });
+  fillProfile();
+  if (location.hash === "#profil") setTimeout(() => { const f = $("#pf-age"); f && f.focus({ preventScroll: true }); }, 300);
+  /* Installation */
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  let prompt = null;
+  if (standalone) { $("#inst-done").hidden = false; $("#inst-text").hidden = true; }
+  else if (ios) $("#inst-ios").hidden = false;
+  window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); prompt = e; $("#inst-btn").hidden = false; });
+  $("#inst-btn").addEventListener("click", async () => { if (!prompt) return; prompt.prompt(); await prompt.userChoice; prompt = null; $("#inst-btn").hidden = true; });
+  window.addEventListener("appinstalled", () => { $("#inst-btn").hidden = true; $("#inst-done").hidden = false; });
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="fx.js"></script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan d'entraînement course à pied gratuit : 5 km, 10 km, semi, marathon | Tempo</title>
+<meta name="description" content="Générez un plan d'entraînement gratuit pour le 5 km, 10 km, semi-marathon ou marathon, adapté à votre niveau, votre objectif de temps et votre nombre de séances par semaine.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Générateur de plan d'entraînement","applicationCategory":"SportsApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Combien de semaines pour préparer un semi-marathon ?","acceptedAnswer":{"@type":"Answer","text":"10 à 12 semaines pour un coureur qui court déjà régulièrement 2 à 3 fois par semaine. Comptez plutôt 16 semaines pour un premier marathon."}},
+{"@type":"Question","name":"Combien de séances par semaine ?","acceptedAnswer":{"@type":"Answer","text":"Trois séances suffisent pour progresser : une séance de fractionné, un footing et une sortie longue. Quatre à cinq séances permettent de viser un chrono."}}
+]}]}
+</script>
+</head>
+<body data-bg="piste">
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html" aria-current="page"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Course à pied</span>
+    <h1>Plan d'entraînement</h1>
+    <p>Un plan semaine par semaine, avec vos allures cibles, construit à partir de votre objectif de temps. Fondation, développement, affûtage : chaque phase a son rôle.</p>
+    <a class="cta" href="carnet-course.html">Suivre mes sorties dans le carnet →</a>
+  </div>
+
+  <div class="tool">
+    <form class="panel" id="plan-form" onsubmit="return false">
+      <div class="field">
+        <label for="t-goal">Objectif</label>
+        <select id="t-goal" data-describe>
+          <optgroup label="Route">
+            <option value="5" data-desc="Course courte et rapide : idéale pour un premier objectif ou pour gagner en vitesse. Séances de fractionné court, sortie longue de 6 à 10 km.">5 km</option>
+            <option value="10" selected data-desc="La distance reine des courses sur route : mélange d'endurance et de vitesse. Sortie longue de 8 à 14 km.">10 km</option>
+            <option value="15" data-desc="Format des « 15 km » et des courses de ville : un bon tremplin vers le semi. Sortie longue de 10 à 16 km.">15 km</option>
+            <option value="16" data-desc="10 miles = 16,09 km, distance classique des courses anglo-saxonnes. Sortie longue jusqu'à 17 km.">10 miles</option>
+            <option value="20" data-desc="Format de courses comme les 20 km de Paris : endurance sur près de 2 heures pour beaucoup de coureurs.">20 km</option>
+            <option value="21" data-desc="21,1 km : demande une vraie base d'endurance. Sortie longue jusqu'à 20 km, travail à l'allure objectif en fin de plan.">Semi-marathon</option>
+            <option value="30" data-desc="Distance intermédiaire (Marseille-Cassis…) ou étape avant le marathon. Sortie longue jusqu'à 26 km.">30 km</option>
+            <option value="42" data-desc="42,195 km : comptez au moins 12 semaines et 4 séances par semaine. Sortie longue jusqu'à 32 km, affûtage de 3 semaines.">Marathon</option>
+          </optgroup>
+          <optgroup label="Trail (allures indicatives, le dénivelé ralentit)">
+            <option value="trail20" data-desc="Trail court de 15 à 25 km avec dénivelé. Ajoutez des côtes le mardi et faites vos sorties longues sur sentier.">Trail court (≈ 20 km)</option>
+            <option value="trail40" data-desc="Trail de 30 à 45 km : priorité à l'endurance, aux sorties longues sur sentier et au renforcement des jambes.">Trail long (≈ 40 km)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label for="t-level">Niveau</label>
+        <select id="t-level" data-describe>
+          <option value="rep" data-desc="Vous reprenez après une pause ou vous courez depuis peu : volumes réduits et séances plus douces. Commencez par 3 séances par semaine.">Reprise : je recommence à courir</option>
+          <option value="deb" data-desc="Vous courez 1 à 2 fois par semaine depuis quelques mois, sans objectif chronométré. Le plan reste prudent sur la vitesse.">Débutant : je cours 1 à 2 fois par semaine</option>
+          <option value="int" selected data-desc="Vous courez 2 à 3 fois par semaine et avez déjà fait quelques courses. Volumes et intensités standard.">Intermédiaire : 2 à 3 sorties, quelques courses</option>
+          <option value="conf" data-desc="4 sorties ou plus par semaine, vous visez un chrono précis : volumes plus élevés, fractionné plus long.">Confirmé : 4 sorties ou plus, je vise un chrono</option>
+          <option value="exp" data-desc="Plus de 5 séances par semaine et plusieurs années de pratique : volumes élevés et sorties longues allongées.">Expert : 5 à 6 sorties, compétiteur</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="t-target">Temps visé</label>
+        <input id="t-target" type="text" inputmode="numeric" placeholder="52 min">
+        <p class="hint">Laissez vide pour un objectif réaliste selon votre niveau.</p>
+      </div>
+      <div class="field">
+        <label for="t-date">Date de la course</label>
+        <input id="t-date" type="date">
+        <p class="hint">Le nombre de semaines s'ajuste à la date choisie.</p>
+      </div>
+      <div class="row">
+        <div class="field"><label for="t-weeks">Semaines</label><input id="t-weeks" type="number" inputmode="numeric" min="6" max="24" value="10"></div>
+        <div class="field"><label for="t-days">Séances / sem.</label><input id="t-days" type="number" inputmode="numeric" min="3" max="6" value="4"></div>
+      </div>
+      <button type="button" class="btn ghost noprint" id="t-print">Imprimer le plan</button>
+    </form>
+
+    <section class="result" aria-live="polite">
+      <p id="t-err" class="hint" hidden>Choisissez entre 6 et 24 semaines, 3 à 6 séances, et un temps comme 52 min ou 1h45.</p>
+      <div id="t-out" class="result">
+        <div>
+          <span class="eyebrow">Votre plan</span>
+          <h2 id="r-goal" style="margin-top:6px"></h2>
+          <p id="r-dates" class="hint" style="margin-top:6px"></p>
+        </div>
+        <div id="t-follow" class="follow noprint" hidden></div>
+        <div>
+          <h3>Vos allures</h3>
+          <div class="tablewrap" style="margin-top:10px"><table><tbody id="r-paces"></tbody></table></div>
+        </div>
+        <details class="lexique noprint" id="lexique">
+          <summary>Comprendre les termes du plan</summary>
+          <dl>
+            <dt>EF : endurance fondamentale</dt><dd>Une allure facile où vous pouvez parler en phrases complètes. C'est la base : la majorité de vos kilomètres se font à cette allure, même si elle vous paraît lente.</dd>
+            <dt>Fractionné</dt><dd>Alterner des passages rapides et des récupérations. « 10 × 30 s / 30 s » : 30 secondes vite, 30 secondes en trottinant, 10 fois.</dd>
+            <dt>VMA</dt><dd>Vitesse maximale aérobie : la vitesse que vous pouvez tenir environ 6 minutes à fond. Les séances « à allure VMA » sont courtes et intenses.</dd>
+            <dt>Seuil</dt><dd>Une allure soutenue mais contrôlée, que vous pourriez tenir environ une heure. On parle par mots, plus par phrases.</dd>
+            <dt>Allure objectif</dt><dd>L'allure à tenir le jour de la course pour réaliser votre temps visé.</dd>
+            <dt>Récup</dt><dd>La récupération entre deux efforts : en trottinant ou en marchant, jamais arrêté net.</dd>
+            <dt>Lignes droites</dt><dd>5 à 6 accélérations progressives de 80 à 100 m en fin de footing, sans forcer. Elles réveillent les jambes.</dd>
+            <dt>Sortie longue</dt><dd>La plus longue sortie de la semaine, en endurance fondamentale. Elle habitue le corps à courir longtemps.</dd>
+            <dt>Côtes</dt><dd>Montées courtes courues avec énergie, descente en trottinant. Elles renforcent les jambes sans les chocs de la piste.</dd>
+            <dt>Assimilation</dt><dd>Une semaine plus légère toutes les quatre semaines : c'est pendant le repos que le corps progresse.</dd>
+            <dt>Affûtage</dt><dd>Les dernières semaines avant la course : moins de volume, un peu d'intensité, pour arriver frais.</dd>
+          </dl>
+          <p class="hint">Débutant ? Si une séance vous semble trop dure, faites-la plus lentement ou plus courte : la régularité compte plus que l'allure.</p>
+        </details>
+        <div id="r-weeks" style="display:grid;gap:16px"></div>
+      </div>
+    </section>
+  </div>
+
+  <article class="content">
+    <section>
+      <h2>Comment est construit ce plan</h2>
+      <p>Le plan suit trois phases. La fondation développe l'endurance et la vitesse avec du fractionné court. Le développement allonge les répétitions et introduit l'allure objectif. L'affûtage réduit le volume pour arriver frais le jour de la course.</p>
+      <p>Toutes les quatre semaines, une semaine d'assimilation allège la charge : c'est pendant la récupération que le corps progresse. Les allures sont calculées à partir de votre temps visé.</p>
+    </section>
+    <section>
+      <h2>Questions fréquentes</h2>
+      <div>
+        <details><summary>Combien de semaines pour préparer un semi-marathon ?</summary><p>10 à 12 semaines si vous courez déjà 2 à 3 fois par semaine. Pour un premier marathon, comptez 16 semaines.</p></details>
+        <details><summary>Que faire si je rate une séance ?</summary><p>Ne la rattrapez pas. Reprenez le plan à la séance suivante. Si vous manquez une semaine entière, refaites la semaine précédente.</p></details>
+        <details><summary>Qu'est-ce que l'endurance fondamentale ?</summary><p>Une allure où vous pouvez parler sans être essoufflé, autour de 65 à 75 % de votre FC max. La majorité de vos kilomètres doit se faire à ce rythme.</p></details>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="fx.js"></script>
+</body>
+</html>

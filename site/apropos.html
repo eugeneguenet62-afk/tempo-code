@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>À propos | Tempo</title>
+<meta name="description" content="Qui a créé Tempo, pourquoi, et comment le site est construit.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">À propos</span>
+    <h1>Un carnet d'entraînement né à la salle</h1>
+    <p>Tempo est un projet personnel, conçu et développé de A à Z par Eugene Guenet.</p>
+  </div>
+  <article class="content about">
+    <section class="about-me">
+      <div class="about-av" aria-hidden="true">EG</div>
+      <div>
+        <h2>Qui suis-je ?</h2>
+        <p>Je m'appelle Eugene Guenet. Je suis étudiant en 1<sup>re</sup> année du cycle ingénieur en mécatronique à l'INSA Hauts-de-France. Passionné de sport, je pratique la musculation et le rugby, et je cours et nage aussi.</p>
+        <p class="about-links"><a class="btn" href="https://www.linkedin.com/in/eug%C3%A8ne-guenet-7b1296313" target="_blank" rel="noopener">Mon profil LinkedIn</a><a class="btn ghost" href="mailto:eugeneguenet62@gmail.com">M'écrire</a></p>
+      </div>
+    </section>
+    <section>
+      <h2>Pourquoi Tempo ?</h2>
+      <p>J'ai d'abord créé Tempo pour moi. À la salle, je n'arrivais jamais à me souvenir des charges de la séance précédente, ni à savoir si je progressais vraiment. Noter chaque série et retrouver d'un coup d'œil « la dernière fois : 80 kg × 8 » a tout changé.</p>
+      <p>J'ai ensuite ajouté ce dont j'avais besoin pour la course et la récupération, puis ouvert le site à tous : du débutant qui ne sait pas quoi faire en salle au sportif confirmé qui veut suivre ses records.</p>
+    </section>
+    <section>
+      <h2>Ce que fait Tempo</h2>
+      <ul class="about-feats">
+        <li><b>Carnet de musculation</b><span>172 exercices illustrés et expliqués, programmes prêts selon le niveau, objectif de charge à chaque séance, échauffement calculé, records et courbes de progression.</span></li>
+        <li><b>Course à pied</b><span>Calculateur d'allure, plans d'entraînement datés du 5 km au marathon et au trail, carnet de sorties avec import GPX depuis une montre.</span></li>
+        <li><b>Santé</b><span>Zones cardiaques, besoins caloriques et protéines selon le profil, bilan de la semaine.</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Comment c'est construit</h2>
+      <p>Pas de framework : du HTML, du CSS et du JavaScript écrits à la main, pour un site léger qui s'ouvre vite, même sur un vieux téléphone.</p>
+      <ul class="about-tech">
+        <li><b>Application installable</b><span>Tempo s'installe sur l'écran d'accueil comme une application et fonctionne sans connexion, grâce à un service worker qui garde les pages en cache.</span></li>
+        <li><b>Synchronisation entre appareils</b><span>Sans compte, tout reste dans le navigateur. Avec un compte (Firebase Authentication et Firestore), les carnets sont découpés par mois et chaque écriture passe par une transaction qui fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre.</span></li>
+        <li><b>Sécurité et vie privée</b><span>Chaque utilisateur ne peut lire et écrire que ses propres données (règles de sécurité Firestore), aucun cookie publicitaire, aucune mesure d'audience.</span></li>
+        <li><b>Accessibilité et rapidité</b><span>Contrastes vérifiés, navigation au clavier, textes lisibles par les lecteurs d'écran, mode sombre automatique. Audité avec Lighthouse.</span></li>
+        <li><b>Mise en ligne continue</b><span>Le code est versionné sur GitHub ; chaque modification est testée puis publiée automatiquement sur Netlify.</span></li>
+      </ul>
+      <p id="about-code"><a class="btn ghost" href="https://github.com/eugeneguenet62-afk/tempo-code" target="_blank" rel="noopener">Voir le code sur GitHub</a></p>
+      <p class="hint">Le dépôt public contient tout le code, sans les illustrations des exercices, protégées par leur licence.</p>
+    </section>
+    <section>
+      <h2>Crédits</h2>
+      <p>Illustrations et données d'origine des exercices : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a>. Polices Barlow et Barlow Condensed sous licence SIL Open Font License. Informations légales : <a href="mentions-legales.html">mentions légales</a> et <a href="confidentialite.html">confidentialité</a>.</p>
+    </section>
+  </article>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<script src="fx.js"></script>
+</body>
+</html>

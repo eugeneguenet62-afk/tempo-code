@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tempo : outils gratuits de course à pied, musculation et santé</title>
+<meta name="description" content="Calculateur d'allure, plan d'entraînement, carnets de course et de musculation, 1RM, zones cardiaques et calories. Des outils gratuits, rapides, installables sur téléphone.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tempo">
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body data-bg="accueil">
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a>
+  <nav class="menu" aria-label="Outils">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Outils" aria-expanded="false" aria-controls="menu-panel"><svg class="mb-grid" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Outils</span><svg class="mb-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="menu-panel" id="menu-panel">
+      <div class="mp-cols">
+        <div class="mp-col" style="--c:var(--c-course)"><span class="mp-head">Course à pied</span>
+          <a href="allure.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M18 6l1.5-1.5"/></svg></span><span><b>Calculateur d'allure</b><small>Temps, allure et vitesse</small></span></a>
+          <a href="plan-entrainement.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Plan d'entraînement</b><small>Du 5 km au marathon</small></span></a>
+          <a href="carnet-course.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de course</b><small>Vos sorties et vos kilomètres</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-muscu)"><span class="mp-head">Musculation</span>
+          <a href="carnet.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h6M9 11h4"/></svg></span><span><b>Carnet de séances</b><small>172 exercices illustrés</small></span></a>
+          <a href="musculation.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><rect x="5" y="6" width="3" height="12" rx="1"/><rect x="16" y="6" width="3" height="12" rx="1"/></svg></span><span><b>Charges muscu</b><small>1RM et disques sur la barre</small></span></a>
+        </div>
+        <div class="mp-col" style="--c:var(--c-cardio)"><span class="mp-head">Santé</span>
+          <a href="calories.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.8 2.5-5 .3 1.6 1 2.6 2 3 0-3 .2-5.5.5-8z"/></svg></span><span><b>Calories</b><small>Dépense du jour et besoins</small></span></a>
+          <a href="zones-cardiaques.html"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></svg></span><span><b>Zones cardiaques</b><small>Vos 5 zones en bpm</small></span></a>
+          <a href="compte.html#profil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><b>Mon profil</b><small>Âge, poids, taille</small></span></a>
+        </div>
+      </div>
+      <div class="mp-foot"><a href="index.html" aria-current="page">Accueil</a><a href="compte.html">Compte et synchronisation</a><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a><a href="apropos.html">À propos</a></div>
+    </div>
+  </nav>
+</div></header>
+
+<script src="firebase-config.js"></script>
+<script src="store.js"></script>
+<main class="home">
+  <section class="h-hero wrap">
+    <div class="h-copy">
+      <h1 class="h-title">Courez.<br>Soulevez.<br>Progressez.</h1>
+      <p class="h-lead">Tempo calcule vos allures, vous aide à construire vos séances de musculation et compte vos calories. Gratuit, sans publicité, et ça marche même sans réseau.</p>
+      <div class="h-ctas">
+        <a class="h-btn h-btn-muscu" href="carnet.html">Commencer une séance de muscu</a>
+        <a class="h-btn h-btn-run" href="carnet-course.html">Noter une sortie de course</a>
+      </div>
+      <p class="h-small">Pas besoin de compte pour commencer. <a href="compte.html">Créez-en un</a> pour retrouver vos carnets sur tous vos appareils.</p>
+    </div>
+    <div class="h-visual" aria-hidden="true">
+      <div class="h-tile h-tile-run"><img src="img/home/running-main.webp" alt="" width="480" height="480"></div>
+      <div class="h-tile h-tile-lift"><img src="img/home/squat-peak.webp" alt="" width="480" height="480"></div>
+      <div class="h-chip h-chip-1"><small>Allure pour un 10 km en 50 min</small><b>5:00 /km</b></div>
+      <div class="h-chip h-chip-2"><small>Squat, record</small><b>100 kg × 5</b></div>
+      <div class="h-chip h-chip-3"><small>Dépensé aujourd'hui</small><b>2 340 kcal</b></div>
+    </div>
+  </section>
+
+  <section class="h-back wrap" id="h-back" hidden aria-label="Reprendre là où vous en étiez">
+    <h2>Content de vous revoir</h2>
+    <div class="h-back-row" id="h-back-row"></div>
+    <div class="h-week" id="h-week" hidden></div>
+  </section>
+
+  <section class="h-lanes" aria-labelledby="lanes-title">
+    <div class="wrap h-lanes-head">
+      <h2 id="lanes-title">Que voulez-vous faire aujourd'hui ?</h2>
+      <p>Choisissez votre couloir. Chaque outil répond à une question simple.</p>
+    </div>
+
+    <div class="h-lane" style="--c:var(--c-course)" id="course">
+      <div class="wrap h-lane-in">
+        <div class="h-lane-intro">
+          <h3>Course à pied</h3>
+          <p>Trouver la bonne allure, suivre un plan jusqu'au jour J, garder la trace de chaque sortie.</p>
+        </div>
+        <div class="h-tools">
+          <a class="h-tool" href="allure.html"><b>Calculateur d'allure</b><span>À quelle allure courir pour finir un 10 km en 50 minutes ?</span></a>
+          <a class="h-tool" href="plan-entrainement.html"><b>Plan d'entraînement</b><span>Quoi faire chaque semaine pour préparer un 5 km, un semi, un marathon ou un trail ?</span></a>
+          <a class="h-tool" href="carnet-course.html"><b>Carnet de course</b><span>Combien de kilomètres cette semaine, et où en sont mes chaussures ?</span></a>
+        </div>
+        <img class="h-lane-img" src="img/home/running-main.webp" alt="" width="480" height="480" loading="lazy">
+      </div>
+    </div>
+
+    <div class="h-lane" style="--c:var(--c-muscu)" id="muscu">
+      <div class="wrap h-lane-in">
+        <div class="h-lane-intro">
+          <h3>Musculation</h3>
+          <p>Du premier jour en salle aux charges lourdes : programmes prêts selon votre niveau, 172 exercices illustrés et expliqués, et la charge à viser à chaque séance.</p>
+        </div>
+        <div class="h-tools">
+          <a class="h-tool" href="carnet.html"><b>Carnet de séances</b><span>Je débute : quoi faire aujourd'hui, et avec quel poids ? Ai-je progressé depuis la dernière fois ?</span></a>
+          <a class="h-tool" href="musculation.html"><b>Charges muscu</b><span>Combien soulever pour 8 répétitions, et quels disques mettre sur la barre ?</span></a>
+        </div>
+        <img class="h-lane-img" src="img/home/bench-press-peak.webp" alt="" width="480" height="480" loading="lazy">
+      </div>
+    </div>
+
+    <div class="h-lane" style="--c:var(--c-cardio)" id="sante">
+      <div class="wrap h-lane-in">
+        <div class="h-lane-intro">
+          <h3>Santé</h3>
+          <p>Doser vos efforts et équilibrer ce que vous mangez avec ce que vous dépensez.</p>
+        </div>
+        <div class="h-tools">
+          <a class="h-tool" href="calories.html"><b>Calories</b><span>Combien ai-je dépensé aujourd'hui, avec mes pas et mes séances ?</span></a>
+          <a class="h-tool" href="zones-cardiaques.html"><b>Zones cardiaques</b><span>À quelle fréquence cardiaque m'entraîner en endurance ou au seuil ?</span></a>
+          <a class="h-tool" href="compte.html#profil"><b>Mon profil</b><span>Âge, poids, taille : renseignés une fois, utilisés par tous les outils.</span></a>
+        </div>
+        <img class="h-lane-img" src="img/home/walking-main.webp" alt="" width="480" height="480" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="h-steps wrap" aria-labelledby="steps-title">
+    <h2 id="steps-title">Comment ça marche</h2>
+    <ol>
+      <li><b>Renseignez votre profil</b><span>Sexe, âge, taille et poids, une seule fois. Les calories, les zones et les carnets s'adaptent à vous.</span><a href="compte.html#profil">Remplir mon profil</a></li>
+      <li><b>Notez ce que vous faites</b><span>Une sortie de course ou une séance de muscu, en quelques touches, même au fond de la salle sans réseau.</span><a href="carnet.html">Ouvrir le carnet de séances</a></li>
+      <li><b>Regardez vos progrès</b><span>Records, courbes, kilomètres par semaine et calories dépensées en sport, calculés pour vous.</span><a href="calories.html#sport">Voir mes calories en sport</a></li>
+    </ol>
+  </section>
+
+  <section class="h-app wrap" aria-labelledby="app-title">
+    <div class="h-app-in">
+      <div>
+        <h2 id="app-title">Gardez Tempo dans votre poche</h2>
+        <ul class="h-facts">
+          <li><b>Gratuit, sans publicité</b>Aucune inscription obligatoire.</li>
+          <li><b>Sans réseau</b>Les pages et vos carnets restent disponibles hors connexion.</li>
+          <li><b>Sur tous vos appareils</b>Avec un compte gratuit, vos carnets se synchronisent.</li>
+        </ul>
+      </div>
+      <div class="h-app-cta">
+        <button type="button" class="h-btn h-btn-ink" id="h-install" hidden>Installer l'application</button>
+        <p class="h-small" id="h-install-ios" hidden>Sur iPhone : bouton Partager de Safari, puis « Sur l'écran d'accueil ».</p>
+        <p class="h-small" id="h-install-other">Dans le menu de votre navigateur, choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil ».</p>
+        <a class="h-btn h-btn-ghost" href="compte.html">Créer un compte gratuit</a>
+      </div>
+    </div>
+  </section>
+  <section class="h-made wrap">
+    <p>Tempo est un projet personnel d'Eugene Guenet, étudiant ingénieur en mécatronique à l'INSA Hauts-de-France, pratiquant de musculation et de rugby. <a href="apropos.html">Découvrir le projet</a></p>
+  </section>
+</main>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  /* Reprendre là où vous en étiez (données de l'appareil ou du compte) */
+  function back() {
+    if (!window.TempoStore) return;
+    const T = TempoStore, items = [];
+    const fmtDay = (d) => new Date(d).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    const draft = T.get("carnet-fonte-draft");
+    if (draft && draft.dayName) items.push(["var(--c-muscu)", "Séance en cours", draft.dayName + " : " + (draft.exercises || []).length + " exercice" + ((draft.exercises || []).length > 1 ? "s" : ""), "carnet.html", "Reprendre la séance"]);
+    const f = T.get("carnet-fonte-v1"), last = f && (f.sessions || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+    if (!draft && last) items.push(["var(--c-muscu)", "Dernière séance de muscu", last.dayName + ", " + fmtDay(last.date), "carnet.html", "Ouvrir le carnet"]);
+    const pl = T.get("tempo-plan-v1");
+    if (pl && Array.isArray(pl.weeks)) {
+      const dk = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      const today = dk(new Date()), all = [].concat(...pl.weeks.map((w) => w.sessions || []));
+      const td = all.find((x) => x.date === today), nx = all.find((x) => x.date > today);
+      if (pl.raceDate >= today) {
+        if (td) items.push(["var(--c-course)", "Séance du jour", td.text, "carnet-course.html", pl.done && pl.done[today] ? "Séance faite" : "Voir mon plan"]);
+        else if (nx) items.push(["var(--c-course)", "Prochaine séance, " + fmtDay(nx.date + "T12:00"), nx.text, "carnet-course.html", "Voir mon plan"]);
+      }
+    }
+    const c = T.get("tempo-course-v1"), run = c && (c.sessions || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+    if (run) items.push(["var(--c-course)", "Dernière sortie", String(run.dist).replace(".", ",") + " km, " + fmtDay(run.date + "T12:00"), "carnet-course.html", "Noter une sortie"]);
+    const p = T.profile ? T.profile() : null;
+    if (p && !(p.age && p.kg && p.cm && p.sex) && items.length) items.push(["var(--c-cardio)", "Profil incomplet", "Ajoutez âge, taille et poids pour des calculs justes", "compte.html#profil", "Compléter mon profil"]);
+    if (!items.length) return;
+    $("#h-back-row").innerHTML = items.map(([c, k, v, href, cta]) => `<a class="h-back-item" style="--c:${c}" href="${href}"><small>${k}</small><b></b><span>${cta}</span></a>`).join("");
+    $("#h-back-row").querySelectorAll("b").forEach((b, i) => (b.textContent = items[i][2]));
+    $("#h-back").hidden = false;
+  }
+  /* Bilan de la semaine : muscu + course, comparé à la semaine précédente */
+  function week() {
+    const box = $("#h-week"); if (!box || !window.TempoStore) return;
+    const T = TempoStore, f = T.get("carnet-fonte-v1") || {}, c = T.get("tempo-course-v1") || {};
+    const lifts = (f.sessions || []).slice().sort((a, b) => (a.date < b.date ? -1 : 1)), runs = (c.sessions || []).filter((r) => r.type !== "marche");
+    if (!lifts.length && !runs.length) { box.hidden = true; return; }
+    const mon = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+    const w0 = mon(new Date()), w1 = new Date(w0); w1.setDate(w1.getDate() - 7);
+    const inW = (d, a) => { const t = new Date(d).getTime(), b = a.getTime(); return t >= b && t < b + 7 * 864e5; };
+    const e1 = (kg, r) => (r > 0 && kg > 0 ? (r === 1 ? kg : kg * (1 + r / 30)) : 0);
+    function stats(a) {
+      const L = lifts.filter((s) => inW(s.date, a)), R = runs.filter((r) => inW(r.date + "T12:00", a));
+      const sets = L.reduce((n, s) => n + s.exercises.reduce((m, e) => m + e.sets.length, 0), 0);
+      const vol = L.reduce((n, s) => n + s.exercises.reduce((m, e) => m + e.sets.reduce((k, x) => k + (x.kg || 0) * (x.reps || 0), 0), 0), 0);
+      // Records : meilleur 1RM estimé de la semaine supérieur à tout ce qui précède
+      const best = {}, recs = [];
+      lifts.forEach((s) => {
+        const t = new Date(s.date).getTime(), cur = inW(s.date, a), before = t < a.getTime();
+        if (!cur && !before) return;
+        s.exercises.forEach((e) => {
+          const k = e.exId || e.name; let top = null;
+          e.sets.forEach((x) => { if (!top || e1(x.kg, x.reps) > e1(top.kg, top.reps)) top = x; });
+          if (!top) return; const v = e1(top.kg, top.reps);
+          if (cur && best[k] && v > best[k] + 0.01) { const i = recs.findIndex((r) => r.k === k); const r = { k, name: e.name, kg: top.kg, reps: top.reps, v }; if (i < 0) recs.push(r); else if (v > recs[i].v) recs[i] = r; }
+          best[k] = Math.max(best[k] || 0, v);
+        });
+      });
+      return { lifts: L.length, sets, vol, runs: R.length, km: R.reduce((n, r) => n + (+r.dist || 0), 0), dplus: R.reduce((n, r) => n + (+r.dplus || 0), 0), recs };
+    }
+    const now = stats(w0), prev = stats(w1);
+    const showPrev = (new Date().getDay() === 1 && !now.lifts && !now.runs) || (!now.lifts && !now.runs);
+    const S = showPrev ? prev : now, ref = showPrev ? null : prev;
+    if (!S.lifts && !S.runs) { box.hidden = true; return; }
+    const n1 = (x) => (Math.round(x * 10) / 10).toLocaleString("fr-FR");
+    const delta = (a, b, unit) => { if (!ref) return ""; const d = a - b; if (Math.abs(d) < 0.05) return "comme la semaine dernière"; return (d > 0 ? "+" : "−") + n1(Math.abs(d)) + (unit ? " " + unit : "") + " vs semaine dernière"; };
+    const tiles = [];
+    if (lifts.length) {
+      tiles.push(["var(--c-muscu)", "Séances de muscu", S.lifts, delta(S.lifts, ref ? ref.lifts : 0)]);
+      tiles.push(["var(--c-muscu)", "Séries", S.sets, S.vol ? Math.round(S.vol).toLocaleString("fr-FR") + " kg soulevés" : ""]);
+    }
+    if (runs.length) {
+      tiles.push(["var(--c-course)", "Kilomètres courus", n1(S.km), delta(S.km, ref ? ref.km : 0, "km")]);
+      tiles.push(["var(--c-course)", "Sorties", S.runs, S.dplus ? Math.round(S.dplus) + " m de dénivelé" : ""]);
+    }
+    const recs = S.recs.slice(0, 4);
+    box.innerHTML = `<h3>${showPrev ? "Votre semaine dernière" : "Votre semaine"}</h3><div class="h-week-tiles">${tiles.map(([c, k, v, sub]) => `<div class="h-wt" style="--c:${c}"><b>${v}</b><span>${k}</span>${sub ? `<small>${sub}</small>` : ""}</div>`).join("")}</div>` +
+      (recs.length ? `<div class="h-recs"><span>${recs.length > 1 ? "Nouveaux records" : "Nouveau record"}</span>${recs.map((r) => `<b>${r.name.replace(/[<>&]/g, "")} : ${String(r.kg).replace(".", ",")} kg × ${r.reps}</b>`).join("")}</div>` : "");
+    box.hidden = false; $("#h-back").hidden = false;
+  }
+  back(); week();
+  if (window.TempoStore) ["carnet-fonte-v1", "tempo-course-v1"].forEach((k) => TempoStore.watch(k, week));
+  if (window.TempoStore) ["carnet-fonte-v1", "tempo-course-v1", "carnet-fonte-draft", "tempo-plan-v1"].forEach((k) => TempoStore.watch(k, back));
+  /* Installation */
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (standalone) { $(".h-app-cta").querySelectorAll(".h-small").forEach((x) => (x.hidden = true)); }
+  else if (ios) { $("#h-install-ios").hidden = false; $("#h-install-other").hidden = true; }
+  let prompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); prompt = e; $("#h-install").hidden = false; $("#h-install-other").hidden = true; });
+  $("#h-install").addEventListener("click", async () => { if (!prompt) return; prompt.prompt(); await prompt.userChoice; prompt = null; $("#h-install").hidden = true; });
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
+    <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
+    <nav aria-label="Santé"><b>Santé</b><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
+  </div>
+  <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
+</footer>
+<script src="fx.js"></script>
+</body>
+</html>
