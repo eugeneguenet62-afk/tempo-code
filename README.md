@@ -4,7 +4,7 @@
 
 Site en ligne : **https://tempo-2er.pages.dev**
 
-Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieur en mécatronique à l'INSA Hauts-de-France. Je l'ai d'abord créé pour moi, pour retrouver mes séances et mes charges à la musculation, puis je l'ai ouvert à tous.
+Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénieur en mécatronique à l'INSA Hauts-de-France. Je l'ai d'abord créé pour moi, pour retrouver mes séances et mes charges à la musculation, puis je l'ai ouvert à tous.
 [LinkedIn](https://www.linkedin.com/in/eug%C3%A8ne-guenet-7b1296313)
 
 <p>
@@ -85,4 +85,4 @@ Les illustrations des exercices et leurs consignes d'origine proviennent de [Exe
 
 ## Licence
 
-© Eugene Guenet. Code publié pour consultation : tous droits réservés. Polices Barlow et Barlow Condensed sous licence SIL Open Font License (`site/fonts/OFL.txt`).
+© Eugène Guenet. Code publié pour consultation : tous droits réservés. Polices Barlow et Barlow Condensed sous licence SIL Open Font License (`site/fonts/OFL.txt`).
