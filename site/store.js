@@ -41,11 +41,50 @@
   const guestFlag = () => { try { return sessionStorage.getItem("tempo-migrated") === "1"; } catch (e) { return false; } };
   /* Passage du mode essai au compte : ce qui a été noté pendant la visite devient durable */
   function promote() {
+    // Le compte peut déjà être déclaré par Firebase à ce stade : on lit les drapeaux directement
+    const demo = sessFlag("tempo-demo"), demoProf = sessFlag("tempo-demo-prof");
     SYNCED.forEach((k) => {
-      const v = rawGet(area(k, true), k);
-      if (v != null) { rawSet(localStorage, k, v); rawSet(area(k, true), k, null); }
+      let v = rawGet(area(k, true), k);
+      rawSet(area(k, true), k, null);
+      if (v == null) return;
+      if (demo) {   // l'exemple n'entre jamais dans un compte : on ne garde que ce que la personne a saisi
+        if (k === "tempo-profile-v1" && demoProf) return;
+        if (v && Array.isArray(v.sessions)) {
+          v.sessions = v.sessions.filter((s) => !String(s.id).startsWith("demo-"));
+          if (!v.sessions.length) return;
+          if (v.settings) delete v.settings.demo;
+          if (k === "carnet-fonte-v1") delete v.program;
+          if (v.gear) v.gear = v.gear.filter((g) => !String(g.id).startsWith("demo-"));
+        }
+      }
+      rawSet(localStorage, k, v);
     });
-    try { sessionStorage.removeItem("tempo-migrated"); } catch (e) {}
+    ["tempo-migrated", "tempo-demo", "tempo-demo-prof"].forEach((f) => { try { sessionStorage.removeItem(f); } catch (e) {} });
+    SYNCED.forEach((k) => { mem[k] = str(rawGet(localStorage, k)); });   // la suite (fusion avec le compte) part de ce qui a été gardé
+  }
+  const sessFlag = (f) => { try { return sessionStorage.getItem(f) === "1"; } catch (e) { return false; } };
+  const isDemo = () => !account && sessFlag("tempo-demo");
+  /* Exemple : carnets fictifs pour découvrir le site (mode essai seulement) */
+  function loadDemo() {
+    if (account) return Promise.resolve(false);
+    const go = () => {
+      const data = window.TempoDemo.build();
+      const prof = get("tempo-profile-v1");
+      Object.keys(data).forEach((k) => {
+        if (k === "tempo-profile-v1") { if (prof && Object.keys(prof).length) return; try { sessionStorage.setItem("tempo-demo-prof", "1"); } catch (e) {} }
+        set(k, data[k]); fire(k);
+      });
+      try { sessionStorage.setItem("tempo-demo", "1"); } catch (e) {}
+      return true;
+    };
+    if (window.TempoDemo) return Promise.resolve(go());
+    return new Promise((res, rej) => { const s = document.createElement("script"); s.src = "demo.js"; s.onload = () => res(go()); s.onerror = rej; document.head.appendChild(s); });
+  }
+  function clearDemo() {
+    if (account) return;
+    SYNCED.forEach((k) => { rawSet(area(k, true), k, null); mem[k] = null; });
+    ["tempo-demo", "tempo-demo-prof", "tempo-migrated"].forEach((f) => { try { sessionStorage.removeItem(f); } catch (e) {} });
+    SYNCED.forEach(fire);
   }
   /* Déconnexion : rien ne reste sur l'appareil */
   function wipe() {
@@ -104,6 +143,8 @@
     "auth/invalid-login-credentials": "bad_credentials", "auth/too-many-requests": "too_many", "auth/network-request-failed": "offline",
     "auth/operation-not-allowed": "not_configured", "auth/configuration-not-found": "not_configured", "auth/api-key-not-valid.-please-pass-a-valid-api-key.": "not_configured",
     "auth/unauthorized-domain": "unauthorized_domain", "auth/requires-recent-login": "bad_credentials",
+    "auth/popup-closed-by-user": "cancelled", "auth/cancelled-popup-request": "cancelled", "auth/user-cancelled": "cancelled",
+    "auth/popup-blocked": "popup_blocked", "auth/account-exists-with-different-credential": "email_taken",
   };
   const mapErr = (e) => err(AUTH_ERR[e && e.code] || (e && e.code && !String(e.code).includes("/") ? e.code : "unknown"));
 
@@ -300,6 +341,8 @@
   }
 
   /* ---------- Session ---------- */
+  // google : compte créé avec Google, sans mot de passe propre à Tempo
+  const acct = (u) => { const ids = (u.providerData || []).map((p) => p.providerId); return { email: u.email, google: ids.includes("google.com") && !ids.includes("password") }; };
   let authReady = null;
   function watchAuth() {
     if (!configured) return;
@@ -307,7 +350,7 @@
       fb.A.onAuthStateChanged(fb.auth, async (user) => {
         if (user) {
           uid = user.uid;
-          account = { email: user.email }; lsSet(ACCOUNT, account);
+          account = acct(user); lsSet(ACCOUNT, account);
           if (merging) { try { await merging; } catch (e) {} }
           subscribe().catch(() => setStatus("offline"));
           flush(); settle();
@@ -334,7 +377,7 @@
       try { cred = await fn(fb); } catch (e) { throw mapErr(e); }
       uid = cred.user.uid;
       promote();
-      account = { email: cred.user.email }; lsSet(ACCOUNT, account);
+      account = acct(cred.user); lsSet(ACCOUNT, account);
       await mergeIn(fb);
       flush(); settle();
       return { email: cred.user.email };
@@ -343,8 +386,10 @@
   async function reauth(fb, password) {
     const u = fb.auth.currentUser;
     if (!u) throw err("not_signed_in");
-    try { await fb.A.reauthenticateWithCredential(u, fb.A.EmailAuthProvider.credential(u.email, String(password))); }
-    catch (e) { throw mapErr(e); }
+    try {
+      if (acct(u).google) await fb.A.reauthenticateWithPopup(u, new fb.A.GoogleAuthProvider());   // confirmation dans une fenêtre Google
+      else await fb.A.reauthenticateWithCredential(u, fb.A.EmailAuthProvider.credential(u.email, String(password)));
+    } catch (e) { throw mapErr(e); }
     return u;
   }
   const checkLen = (pw) => { if (String(pw).length < 8) throw err("weak_password"); };
@@ -354,6 +399,7 @@
     configured,
     signup(email, password) { checkLen(password); return begin((fb) => fb.A.createUserWithEmailAndPassword(fb.auth, normEmail(email), String(password))); },
     login(email, password) { return begin((fb) => fb.A.signInWithEmailAndPassword(fb.auth, normEmail(email), String(password))); },
+    google() { return begin((fb) => { const p = new fb.A.GoogleAuthProvider(); p.setCustomParameters && p.setCustomParameters({ prompt: "select_account" }); return fb.A.signInWithPopup(fb.auth, p); }); },
     async reset(email) {
       const fb = await firebase();
       try { await fb.A.sendPasswordResetEmail(fb.auth, normEmail(email)); } catch (e) { const m = mapErr(e); if (m.code !== "bad_credentials") throw m; }
@@ -412,7 +458,7 @@
   }
 
   window.TempoStore = {
-    get, set, watch, account: accountApi, notify, profile, setProfile,
+    get, set, watch, account: accountApi, notify, profile, setProfile, loadDemo, clearDemo, isDemo: () => isDemo(),
     status: () => status,
     onStatus: (f) => { statusFns.push(f); f(status, account); },
   };
@@ -464,24 +510,44 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", headerLink); else headerLink();
 
-  /* ---------- Bandeau « mode essai » sur les pages qui enregistrent des séances ---------- */
-  const GUEST_PAGES = /(carnet|carnet-course|multisport|calories|plan-entrainement)\.html$/;
+  /* ---------- Bandeau « mode essai » sur l'accueil et les pages qui enregistrent des séances ---------- */
+  const GUEST_PAGES = /(^\/$|index\.html$|carnet\.html$|carnet-course\.html$|multisport\.html$|calories\.html$|plan-entrainement\.html$)/;
+  const hasData = () => ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].some((k) => { const v = get(k); return v && v.sessions && v.sessions.length; });
   function guestBar() {
     if (!GUEST_PAGES.test(location.pathname)) return;
     const top = document.querySelector("header.top");
     if (!top) return;
-    let bar = null;
-    TempoStore.onStatus(() => {
-      if (account) { if (bar) { bar.remove(); bar = null; } return; }
-      if (bar) return;
-      bar = document.createElement("aside");
-      bar.className = "guest-bar"; bar.setAttribute("aria-label", "Mode essai");
-      const txt = guestFlag()
-        ? "Les séances notées sur cet appareil avant la mise à jour seront effacées quand vous fermerez le site. Créez un compte gratuit maintenant pour les garder."
-        : "Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.";
-      bar.innerHTML = '<div class="wrap"><p><b>Mode essai.</b> ' + txt + '</p><a class="btn" href="compte.html">Créer un compte</a></div>';
-      top.insertAdjacentElement("afterend", bar);
-    });
+    let bar = document.querySelector(".guest-bar"), wired = false;   // présent dans la page : pas de saut à l'affichage
+    const draw = () => {
+      document.documentElement.classList.toggle("guest", !account);
+      if (account) return;
+      if (!bar) {
+        bar = document.createElement("aside");
+        bar.className = "guest-bar"; bar.setAttribute("aria-label", "Mode essai");
+        top.insertAdjacentElement("afterend", bar);
+      }
+      if (!wired) {
+        wired = true;
+        bar.addEventListener("click", async (e) => {
+          const b = e.target.closest("button[data-g]"); if (!b) return;
+          b.disabled = true;
+          try { if (b.dataset.g === "demo") await loadDemo(); else clearDemo(); location.reload(); }
+          catch (_) { b.disabled = false; notify("L'exemple n'a pas pu être chargé. Vérifiez votre connexion."); }
+        });
+      }
+      const demo = isDemo();
+      const txt = demo
+        ? "<b>Exemple.</b> Vous voyez les carnets fictifs d'un sportif qui fait de la musculation, du rugby et de la course depuis 12 semaines. Explorez librement : tout s'efface quand vous fermez le site."
+        : guestFlag()
+          ? "<b>Mode essai.</b> Les séances notées sur cet appareil avant la mise à jour seront effacées quand vous fermerez le site. Créez un compte gratuit maintenant pour les garder."
+          : "<b>Mode essai.</b> Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.";
+      const extra = demo ? '<button type="button" class="btn ghost" data-g="clear">Effacer l\'exemple</button>'
+        : !hasData() ? '<button type="button" class="btn ghost" data-g="demo">Voir un exemple</button>' : "";
+      const html = '<div class="wrap"><p>' + txt + '</p><div class="gb-act">' + extra + '<a class="btn" href="compte.html">Créer un compte</a></div></div>';
+      if (bar.innerHTML !== html) bar.innerHTML = html;
+    };
+    TempoStore.onStatus(draw);
+    ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].forEach((k) => watch(k, draw));
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", guestBar); else guestBar();
 
@@ -489,9 +555,7 @@
   if (configured && (account || location.pathname.endsWith("compte.html"))) watchAuth();
   else if (configured) {
     // Pas connecté sur cet appareil : on ne charge Firebase qu'à la demande (pages plus légères)
-    const orig = accountApi.signup, origL = accountApi.login;
-    accountApi.signup = (...a) => { if (!authReady) watchAuth(); return orig(...a); };
-    accountApi.login = (...a) => { if (!authReady) watchAuth(); return origL(...a); };
+    ["signup", "login", "google"].forEach((m) => { const f = accountApi[m]; accountApi[m] = (...a) => { if (!authReady) watchAuth(); return f(...a); }; });
   }
   window.addEventListener("online", () => { if (account) { firebase().then(() => { if (!unsub && uid) subscribe(); flush(); }).catch(() => {}); } });
   window.addEventListener("offline", () => { if (account) setStatus("offline"); });

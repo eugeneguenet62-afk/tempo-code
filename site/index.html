@@ -17,7 +17,7 @@
 <link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 </head>
 <body data-bg="accueil">
 <header class="top"><div class="wrap">
@@ -46,7 +46,7 @@
     </div>
   </nav>
 </div></header>
-
+<aside class="guest-bar" aria-label="Mode essai"><div class="wrap"><p><b>Mode essai.</b> Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.</p><div class="gb-act"><button type="button" class="btn ghost" data-g="demo">Voir un exemple</button><a class="btn" href="compte.html">Créer un compte</a></div></div></aside>
 <script src="firebase-config.js"></script>
 <script src="store.js"></script>
 <script src="charge.js"></script>
@@ -59,7 +59,7 @@
         <a class="h-btn h-btn-muscu" href="carnet.html">Commencer une séance de muscu</a>
         <a class="h-btn h-btn-run" href="carnet-course.html">Noter une sortie de course</a>
       </div>
-      <p class="h-small">Pas besoin de compte pour commencer. <a href="compte.html">Créez-en un</a> pour retrouver vos carnets sur tous vos appareils.</p>
+      <p class="h-small">Essayez sans compte. <a href="compte.html">Créez-en un gratuitement</a> pour enregistrer vos séances et les retrouver sur tous vos appareils.</p>
     </div>
     <div class="h-visual" aria-hidden="true">
       <div class="h-tile h-tile-run"><img src="img/home/running-main.webp" alt="" width="480" height="480"></div>

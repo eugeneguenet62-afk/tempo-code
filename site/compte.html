@@ -18,7 +18,7 @@
 <link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 
 </head>
 <body>
@@ -114,6 +114,8 @@
 
     <!-- Non connecté -->
     <section class="acc-card" id="acc-out" hidden>
+      <button type="button" class="btn g-btn" id="acc-google"><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.2-13.5-10l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Continuer avec Google</button>
+      <p class="acc-or"><span>ou avec votre e-mail</span></p>
       <div class="seg" id="acc-mode">
         <button type="button" data-v="signup" aria-pressed="true">Créer un compte</button>
         <button type="button" data-v="login" aria-pressed="false">Se connecter</button>
@@ -138,7 +140,7 @@
       <div class="acc-row">
         <button type="button" class="btn ghost" id="acc-export">Télécharger mes données</button>
       </div>
-      <details>
+      <details id="acc-pwbox">
         <summary>Changer de mot de passe</summary>
         <form id="pw-form" novalidate>
           <div class="field"><label for="pw-cur">Mot de passe actuel</label><input id="pw-cur" type="password" autocomplete="current-password" required></div>
@@ -155,7 +157,8 @@
         <summary>Supprimer mon compte</summary>
         <form id="del-form" novalidate>
           <p class="hint">Votre compte et tous vos carnets sont supprimés définitivement, en ligne et sur cet appareil. Téléchargez vos données avant si vous voulez en garder une copie.</p>
-          <div class="field"><label for="del-pw">Mot de passe</label><input id="del-pw" type="password" autocomplete="current-password" required></div>
+          <div class="field" id="del-pwf"><label for="del-pw">Mot de passe</label><input id="del-pw" type="password" autocomplete="current-password" required></div>
+          <p class="hint" id="del-g" hidden>Une fenêtre Google va s'ouvrir pour confirmer que c'est bien vous.</p>
           <p class="acc-err" id="del-err" hidden></p>
           <button class="btn danger" type="submit">Supprimer définitivement</button>
         </form>
@@ -186,6 +189,8 @@
     offline: "Pas de connexion internet. Réessayez une fois en ligne.",
     unavailable: "Le service de comptes ne répond pas. Réessayez dans un instant.",
     not_configured: "Les comptes ne sont pas encore activés sur ce site.",
+    cancelled: "Connexion annulée.",
+    popup_blocked: "La fenêtre Google a été bloquée. Autorisez les fenêtres pop-up pour ce site, ou utilisez votre e-mail.",
     unauthorized_domain: "Cette adresse n'est pas encore autorisée dans Firebase (Authentication › Settings › Authorized domains).",
   };
   const msg = (e) => MSG[e && e.code] || (navigator.onLine ? "Une erreur est survenue. Réessayez." : "Pas de connexion internet.");
@@ -198,7 +203,11 @@
     $("#acc-out").hidden = !!acc; $("#acc-in").hidden = !acc;
     $("#acc-title").textContent = acc ? "Mon compte" : "Retrouvez vos carnets partout";
     $("#acc-lead").hidden = !!acc;
-    if (acc) $("#acc-me").textContent = acc.email;
+    if (acc) {
+      $("#acc-me").textContent = acc.email + (acc.google ? " (compte Google)" : "");
+      $("#acc-pwbox").hidden = !!acc.google; $("#del-pwf").hidden = !!acc.google; $("#del-g").hidden = !acc.google;
+      $("#del-pw").required = !acc.google;
+    }
     // Le sélecteur glissant de fx.js se place une fois visible
     window.dispatchEvent(new Event("resize"));
   }
@@ -221,6 +230,12 @@
       $("#acc-pw").value = ""; view();
       TS.notify(mode === "signup" ? "Compte créé : vos carnets sont enregistrés." : "Connecté : vos carnets sont à jour.");
     } catch (err) { show($("#acc-err"), msg(err)); }
+    btn.disabled = false;
+  });
+  $("#acc-google").addEventListener("click", async () => {
+    const btn = $("#acc-google"); btn.disabled = true; show($("#acc-err"), "");
+    try { await A.google(); view(); TS.notify("Connecté avec Google : vos carnets sont enregistrés."); }
+    catch (err) { if (err.code !== "cancelled") show($("#acc-err"), msg(err)); }
     btn.disabled = false;
   });
   $("#acc-forgot").addEventListener("click", async () => {

@@ -18,7 +18,7 @@
 <link rel="preload" href="fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="journal.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 </head>
 <body data-bg="piste" data-journal="course">
 <header class="top"><div class="wrap">
@@ -47,7 +47,7 @@
     </div>
   </nav>
 </div></header>
-
+<aside class="guest-bar" aria-label="Mode essai"><div class="wrap"><p><b>Mode essai.</b> Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.</p><div class="gb-act"><button type="button" class="btn ghost" data-g="demo">Voir un exemple</button><a class="btn" href="compte.html">Créer un compte</a></div></div></aside>
 <div class="j-app">
   <div class="j-intro">
     <span class="eyebrow">Course à pied · suivi</span>

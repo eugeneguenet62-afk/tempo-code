@@ -35,6 +35,9 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 - Charge d'entraînement globale (méthode session-RPE : durée × effort ressenti) qui additionne musculation, course et autres sports.
 - Rapport de charge aiguë / chronique (7 jours / 28 jours) avec alerte quand la charge monte trop vite, principal facteur de blessure.
 
+**Découverte**
+- Mode essai sans compte et bouton « Voir un exemple » : 12 semaines de carnets fictifs (musculation, rugby, course) pour tout explorer en un clic, jamais copiés dans un compte.
+
 **Santé et partage**
 - Zones cardiaques, besoins caloriques, objectif de protéines avec équivalents en aliments.
 - Bilan de la semaine sur l'accueil.
@@ -47,7 +50,7 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 | Front-end | HTML, CSS et JavaScript sans framework ni étape de compilation |
 | Application installable | Progressive Web App : manifeste et service worker (réseau d'abord pour les pages, cache pour le reste), fonctionne hors connexion |
 | Sans compte | Mode essai : `sessionStorage`, rien n'est gardé après la visite (appareil partagé sans risque) |
-| Comptes | Firebase Authentication (e-mail et mot de passe) |
+| Comptes | Firebase Authentication : e-mail et mot de passe, ou connexion avec Google |
 | Synchronisation | Firestore, un document par clé dans `users/{uid}/kv`. Les carnets sont découpés par mois pour rester loin de la limite de 1 Mo par document. Chaque écriture passe par une transaction qui relit le serveur et fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre. |
 | Sécurité | Règles Firestore : chaque utilisateur ne lit et n'écrit que ses données, avec validation du format (`firestore.rules`) |
 | Graphiques et images | SVG générés à la main, image de partage dessinée en Canvas |
