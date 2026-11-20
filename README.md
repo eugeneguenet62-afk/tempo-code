@@ -2,7 +2,7 @@
 
 **Carnet d'entraînement pour la musculation, la course à pied et la santé, du débutant au confirmé.**
 
-Site en ligne : **https://mon-carnet-sport.netlify.app**
+Site en ligne : **https://tempo-2er.pages.dev**
 
 Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieur en mécatronique à l'INSA Hauts-de-France. Je l'ai d'abord créé pour moi, pour retrouver mes séances et mes charges à la musculation, puis je l'ai ouvert à tous.
 [LinkedIn](https://www.linkedin.com/in/eug%C3%A8ne-guenet-7b1296313)
@@ -51,7 +51,7 @@ Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieu
 | Synchronisation | Firestore, un document par clé dans `users/{uid}/kv`. Les carnets sont découpés par mois pour rester loin de la limite de 1 Mo par document. Chaque écriture passe par une transaction qui relit le serveur et fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre. |
 | Sécurité | Règles Firestore : chaque utilisateur ne lit et n'écrit que ses données, avec validation du format (`firestore.rules`) |
 | Graphiques et images | SVG générés à la main, image de partage dessinée en Canvas |
-| Hébergement | Netlify, déploiement continu à chaque `git push`, version du service worker estampillée au build (`scripts/build.sh`) |
+| Hébergement | Cloudflare Pages, déploiement continu à chaque `git push`, version du service worker estampillée au build (`scripts/build.sh`) |
 | Qualité | Tests de bout en bout avec Playwright (parcours débutant et confirmé, synchronisation entre deux appareils simulés), audits Lighthouse : 100 en accessibilité, bonnes pratiques et SEO, 95 à 100 en performance |
 
 ## Organisation du code

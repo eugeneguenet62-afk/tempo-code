@@ -83,7 +83,7 @@
     c.fillStyle = col; roundRect(c, X, H - 110, 56, 56, 16); c.fill();
     c.strokeStyle = "#ffffff"; c.lineWidth = 5; c.beginPath(); c.ellipse(X + 28, H - 82, 16, 11, 0, 0, 2 * Math.PI); c.stroke();
     c.fillStyle = ink; c.font = "700 40px 'Barlow Condensed', sans-serif"; c.fillText("Tempo", X + 76, H - 68);
-    c.fillStyle = muted; c.font = "400 28px Barlow, sans-serif"; const u = "mon-carnet-sport.netlify.app"; c.fillText(u, W - X - c.measureText(u).width, H - 70);
+    c.fillStyle = muted; c.font = "400 28px Barlow, sans-serif"; const u = "tempo-2er.pages.dev"; c.fillText(u, W - X - c.measureText(u).width, H - 70);
     return new Promise((res) => cv.toBlob(res, "image/png"));
   }
 

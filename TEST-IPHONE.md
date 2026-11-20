@@ -2,7 +2,7 @@
 
 À refaire après chaque grosse mise à jour. Cochez au fur et à mesure.
 
-1. [ ] **Ouverture** : Safari → mon-carnet-sport.netlify.app. La page d'accueil s'affiche sans texte coupé ni défilement horizontal.
+1. [ ] **Ouverture** : Safari → tempo-2er.pages.dev. La page d'accueil s'affiche sans texte coupé ni défilement horizontal.
 2. [ ] **Menu** : touchez « Outils » : les 3 colonnes et les liens du bas (dont Mentions légales) s'affichent, et un nouveau toucher referme le menu.
 3. [ ] **Installation** : bouton Partager → « Sur l'écran d'accueil ». Ouvrez Tempo depuis l'icône : il s'ouvre en plein écran, sans barre Safari, avec le bon logo.
 4. [ ] **Compte** : depuis l'appli installée, connectez-vous. Le statut indique « Enregistré dans votre compte ».
