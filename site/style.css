@@ -860,3 +860,10 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 .h-made p { margin: 0; max-width: 62ch; color: var(--muted); font-size: 15px; line-height: 1.55; }
 .h-made a { color: var(--accent); font-weight: 600; white-space: nowrap; }
 #about-code .btn { text-decoration: none; display: inline-flex; }
+
+/* Mode essai (sans compte) : rien n'est gardé après la visite */
+.guest-bar { background: var(--accent-soft); border-bottom: 1px solid var(--line); }
+.guest-bar .wrap { display: flex; align-items: center; gap: 12px 20px; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
+.guest-bar p { margin: 0; flex: 1 1 320px; font-size: 14px; line-height: 1.45; color: var(--ink); }
+.guest-bar .btn { flex: none; display: inline-block; text-decoration: none; padding: 8px 14px; font-size: 14px; min-height: 0; }
+@media print { .guest-bar { display: none; } }

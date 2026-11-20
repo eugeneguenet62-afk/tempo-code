@@ -55,7 +55,7 @@
   <div class="intro">
     <span class="eyebrow">Votre compte</span>
     <h1 id="acc-title">Retrouvez vos carnets partout</h1>
-    <p id="acc-lead">Sans compte, Tempo fonctionne déjà : vos carnets restent sur cet appareil. Avec un compte gratuit, ils sont enregistrés et vous les retrouvez sur votre téléphone, votre ordinateur, même après avoir vidé le navigateur.</p>
+    <p id="acc-lead">Sans compte, vous pouvez tout tester, mais rien n'est gardé quand vous fermez le site : c'est plus sûr sur un appareil partagé. Avec un compte gratuit, vos séances et votre progression sont enregistrées et vous les retrouvez sur votre téléphone comme sur votre ordinateur.</p>
   </div>
 
   <div class="acc">
@@ -109,7 +109,7 @@
     <!-- Comptes pas encore activés -->
     <section class="acc-card" id="acc-off" hidden>
       <h2>Comptes bientôt disponibles</h2>
-      <p class="hint">Pour l'instant, Tempo garde vos carnets sur cet appareil. Utilisez « Copier une sauvegarde » dans les réglages des carnets pour les transférer ailleurs.</p>
+      <p class="hint">Pour l'instant, les carnets ne sont gardés que le temps de la visite. Utilisez « Copier une sauvegarde » dans les réglages des carnets pour ne rien perdre.</p>
     </section>
 
     <!-- Non connecté -->
@@ -125,7 +125,7 @@
         <button class="btn" type="submit" id="acc-submit">Créer mon compte</button>
         <button type="button" class="acc-link" id="acc-forgot" hidden>Mot de passe oublié ?</button>
         <p class="acc-ok" id="acc-sent" hidden></p>
-        <p class="hint" id="acc-merge">Les séances déjà notées sur cet appareil seront ajoutées à votre compte.</p>
+        <p class="hint" id="acc-merge">Ce que vous avez noté pendant l'essai sera ajouté à votre compte.</p>
         <p class="hint">En créant un compte, vous acceptez la <a href="confidentialite.html">politique de confidentialité</a>.</p>
       </form>
     </section>
@@ -148,13 +148,13 @@
         </form>
       </details>
       <form id="out-form">
-        <label class="acc-check"><input type="checkbox" id="out-forget"> Effacer aussi les carnets de cet appareil (appareil partagé)</label>
+        <p class="hint">À la déconnexion, vos carnets sont retirés de cet appareil. Ils restent dans votre compte.</p>
         <button class="btn ghost" type="submit">Se déconnecter</button>
       </form>
       <details>
         <summary>Supprimer mon compte</summary>
         <form id="del-form" novalidate>
-          <p class="hint">Votre compte et tout ce qui est enregistré sur le serveur sont supprimés définitivement. Les carnets restent sur cet appareil.</p>
+          <p class="hint">Votre compte et tous vos carnets sont supprimés définitivement, en ligne et sur cet appareil. Téléchargez vos données avant si vous voulez en garder une copie.</p>
           <div class="field"><label for="del-pw">Mot de passe</label><input id="del-pw" type="password" autocomplete="current-password" required></div>
           <p class="acc-err" id="del-err" hidden></p>
           <button class="btn danger" type="submit">Supprimer définitivement</button>
@@ -241,7 +241,7 @@
     catch (err) { show($("#pw-err"), msg(err)); }
   });
   $("#out-form").addEventListener("submit", async (e) => {
-    e.preventDefault(); await A.logout($("#out-forget").checked); view(); TS.notify("Vous êtes déconnecté.");
+    e.preventDefault(); await A.logout(); view(); TS.notify("Vous êtes déconnecté.");
   });
   $("#del-form").addEventListener("submit", async (e) => {
     e.preventDefault(); show($("#del-err"), "");
@@ -287,7 +287,7 @@
     TS.setProfile({ [box.dataset.k]: b.dataset.v }); summary();
   });
   TS.watch("tempo-profile-v1", fillProfile);
-  TS.onStatus(() => { $("#pf-where").textContent = (A.current() ? "Enregistré dans votre compte. " : "Enregistré sur cet appareil. ") + "Les calories, les zones cardiaques et les carnets s'adaptent à vous."; });
+  TS.onStatus(() => { $("#pf-where").textContent = (A.current() ? "Enregistré dans votre compte. " : "Mode essai : gardé jusqu'à la fermeture du site. ") + "Les calories, les zones cardiaques et les carnets s'adaptent à vous."; });
   fillProfile();
   if (location.hash === "#profil") setTimeout(() => { const f = $("#pf-age"); f && f.focus({ preventScroll: true }); }, 300);
   /* Installation */
@@ -304,7 +304,7 @@
 
 <footer class="foot">
   <div class="wrap foot-grid">
-    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Testez sans compte : rien n'est gardé après la visite. Avec un compte gratuit, vos carnets sont enregistrés et vous les retrouvez sur tous vos appareils.</p></div>
     <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
     <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
     <nav aria-label="Autres sports et santé"><b>Autres sports et santé</b><a href="multisport.html">Carnet multisport</a><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>

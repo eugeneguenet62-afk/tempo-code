@@ -326,5 +326,5 @@
   TS.watch(KEY, (v) => { S = Object.assign({ sessions: [], settings: {} }, v || {}); sortS(); if ($("#m-sheet").hidden) render(); });
   ["carnet-fonte-v1", "tempo-course-v1"].forEach((k) => TS.watch(k, () => { if ($("#m-sheet").hidden) render(); }));
   const syncEl = $("#m-sync");
-  if (syncEl && TS.onStatus) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Sur cet appareil"); });
+  if (syncEl && TS.onStatus) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Mode essai"); });
 })();

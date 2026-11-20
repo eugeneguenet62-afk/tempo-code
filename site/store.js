@@ -1,7 +1,8 @@
 /* Stockage de Tempo.
-   Sans compte : tout reste sur l'appareil (navigateur).
-   Avec un compte (Firebase) : chaque carnet est aussi enregistré en ligne et retrouvé sur tous vos appareils,
-   en direct. Les modifications faites hors connexion sont envoyées au retour du réseau. */
+   Sans compte (mode essai) : les carnets sont gardés le temps de la visite seulement (sessionStorage), puis effacés
+   à la fermeture du site. Une autre personne qui utilise le même appareil ne voit donc rien.
+   Avec un compte (Firebase) : chaque carnet est enregistré en ligne et retrouvé sur tous vos appareils, en direct.
+   Une copie reste sur l'appareil pour fonctionner hors connexion ; elle est effacée à la déconnexion. */
 (function () {
   "use strict";
   const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1", "tempo-multi-v1"];
@@ -11,14 +12,46 @@
   const CFG = window.TEMPO_FIREBASE || {};
   const configured = !!(CFG.apiKey && CFG.projectId && CFG.appId);
 
-  const lsGet = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
-  const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  // Carnets : durables avec un compte, temporaires sans compte. Le reste (préférences d'affichage) : durable.
+  const DATA = new Set(SYNCED);
+  const area = (k, guest) => { try { return DATA.has(k) && guest ? sessionStorage : localStorage; } catch (e) { return null; } };
+  const rawGet = (s, k) => { try { return s ? JSON.parse(s.getItem(k)) : null; } catch (e) { return null; } };
+  const rawSet = (s, k, v) => { try { if (s) v == null ? s.removeItem(k) : s.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const lsGet = (k) => rawGet(area(k, DATA.has(k) && !account), k);
+  const lsSet = (k, v) => rawSet(area(k, DATA.has(k) && !account), k, v);
   const str = (v) => (v == null ? null : JSON.stringify(v));
   const err = (code) => Object.assign(new Error(code), { code });
 
   const mem = {}, watchers = {}, timers = {}, inflight = {}, statusFns = [];
   let dirty = lsGet(DIRTY) || {};               // clé -> date d'une modification pas encore envoyée
-  let account = configured ? lsGet(ACCOUNT) : null;   // { email } si connecté sur cet appareil
+  let account = configured ? rawGet(localStorage, ACCOUNT) : null;   // { email } si connecté sur cet appareil
+
+  /* Anciennes versions : sans compte, les carnets restaient sur l'appareil. On les passe en mode essai
+     (visibles jusqu'à la fermeture du site, le temps de créer un compte pour les garder). */
+  let migrated = false;
+  if (!account) {
+    SYNCED.forEach((k) => {
+      const v = rawGet(localStorage, k);
+      if (v == null) return;
+      if (rawGet(sessionStorage, k) == null) rawSet(area(k, true), k, v);
+      rawSet(localStorage, k, null); migrated = true;
+    });
+    if (migrated) { rawSet(localStorage, "tempo-dirty", null); rawSet(localStorage, "tempo-synced", null); rawSet(area("tempo-course-v1", true), "tempo-migrated", 1); }
+  }
+  const guestFlag = () => { try { return sessionStorage.getItem("tempo-migrated") === "1"; } catch (e) { return false; } };
+  /* Passage du mode essai au compte : ce qui a été noté pendant la visite devient durable */
+  function promote() {
+    SYNCED.forEach((k) => {
+      const v = rawGet(area(k, true), k);
+      if (v != null) { rawSet(localStorage, k, v); rawSet(area(k, true), k, null); }
+    });
+    try { sessionStorage.removeItem("tempo-migrated"); } catch (e) {}
+  }
+  /* Déconnexion : rien ne reste sur l'appareil */
+  function wipe() {
+    SYNCED.forEach((k) => { rawSet(localStorage, k, null); rawSet(area(k, true), k, null); mem[k] = null; });
+    SYNCED.forEach(fire);
+  }
   let uid = null, unsub = null, merging = null;
   let status = account ? "saving" : "anon";
   const setStatus = (s) => { status = s; statusFns.forEach((f) => { try { f(s, account); } catch (e) {} }); };
@@ -282,7 +315,9 @@
         } else {
           uid = null; if (unsub) { unsub(); unsub = null; }
           remote = {}; haveRemote = false;
-          if (account) { account = null; lsSet(ACCOUNT, null); }
+          if (account && !merging) {   // déconnecté depuis un autre appareil ou session expirée : on vide cet appareil
+            account = null; lsSet(ACCOUNT, null); dirty = {}; saveDirty(); synced = {}; saveSynced(); wipe();
+          }
           setStatus("anon");
         }
         resolve();
@@ -298,6 +333,7 @@
       let cred;
       try { cred = await fn(fb); } catch (e) { throw mapErr(e); }
       uid = cred.user.uid;
+      promote();
       account = { email: cred.user.email }; lsSet(ACCOUNT, account);
       await mergeIn(fb);
       flush(); settle();
@@ -322,11 +358,11 @@
       const fb = await firebase();
       try { await fb.A.sendPasswordResetEmail(fb.auth, normEmail(email)); } catch (e) { const m = mapErr(e); if (m.code !== "bad_credentials") throw m; }
     },
-    async logout(forget) {
+    async logout() {
       try { const fb = await firebase(); await fb.A.signOut(fb.auth); } catch (e) {}
       uid = null; if (unsub) { unsub(); unsub = null; }
       account = null; lsSet(ACCOUNT, null); dirty = {}; saveDirty(); synced = {}; saveSynced(); remote = {}; haveRemote = false;
-      if (forget) SYNCED.forEach((k) => { mem[k] = null; lsSet(k, null); fire(k); });
+      wipe();
       setStatus("anon");
     },
     async me() { if (authReady) await authReady; if (!account) throw err("not_signed_in"); return account; },
@@ -342,7 +378,7 @@
       const snap = await fb.F.getDocs(kvCol(fb));
       await Promise.all(snap.docs.map((d) => fb.F.deleteDoc(d.ref)));
       try { await u.delete(); } catch (e) { throw mapErr(e); }
-      uid = null; account = null; lsSet(ACCOUNT, null); dirty = {}; saveDirty(); synced = {}; saveSynced(); remote = {}; haveRemote = false; setStatus("anon");
+      uid = null; account = null; lsSet(ACCOUNT, null); dirty = {}; saveDirty(); synced = {}; saveSynced(); remote = {}; haveRemote = false; wipe(); setStatus("anon");
     },
     exportData() {
       const data = {};
@@ -350,6 +386,7 @@
       return { app: "tempo", email: account && account.email, exported: new Date().toISOString(), data };
     },
     current: () => account,
+    guest: () => !account,
   };
 
   function notify(msg) {
@@ -422,10 +459,31 @@
     TempoStore.onStatus((s) => {
       a.dataset.s = s;
       label.textContent = account ? "Mon compte" : "Se connecter";
-      a.title = { anon: "Données sur cet appareil uniquement", ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : sera envoyé au retour du réseau", err: "Erreur d'enregistrement" }[s] || "";
+      a.title = { anon: "Mode essai : rien n'est gardé après la visite", ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : sera envoyé au retour du réseau", err: "Erreur d'enregistrement" }[s] || "";
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", headerLink); else headerLink();
+
+  /* ---------- Bandeau « mode essai » sur les pages qui enregistrent des séances ---------- */
+  const GUEST_PAGES = /(carnet|carnet-course|multisport|calories|plan-entrainement)\.html$/;
+  function guestBar() {
+    if (!GUEST_PAGES.test(location.pathname)) return;
+    const top = document.querySelector("header.top");
+    if (!top) return;
+    let bar = null;
+    TempoStore.onStatus(() => {
+      if (account) { if (bar) { bar.remove(); bar = null; } return; }
+      if (bar) return;
+      bar = document.createElement("aside");
+      bar.className = "guest-bar"; bar.setAttribute("aria-label", "Mode essai");
+      const txt = guestFlag()
+        ? "Les séances notées sur cet appareil avant la mise à jour seront effacées quand vous fermerez le site. Créez un compte gratuit maintenant pour les garder."
+        : "Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.";
+      bar.innerHTML = '<div class="wrap"><p><b>Mode essai.</b> ' + txt + '</p><a class="btn" href="compte.html">Créer un compte</a></div>';
+      top.insertAdjacentElement("afterend", bar);
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", guestBar); else guestBar();
 
   /* ---------- Démarrage ---------- */
   if (configured && (account || location.pathname.endsWith("compte.html"))) watchAuth();

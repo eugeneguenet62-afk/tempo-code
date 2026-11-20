@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Carnet de musculation gratuit : suivi des séances, records, progression | Tempo</title>
-<meta name="description" content="Notez vos séances de musculation, chronométrez vos repos, battez vos records et suivez votre progression exercice par exercice. Gratuit, sans inscription, fonctionne sur téléphone.">
+<meta name="description" content="Notez vos séances de musculation, chronométrez vos repos, battez vos records et suivez votre progression exercice par exercice. Essai gratuit sans inscription, fonctionne sur téléphone.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#f6f8f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
@@ -407,7 +407,7 @@
   <div class="cf-intro">
     <span class="eyebrow">Musculation · suivi</span>
     <h1>Carnet de séances</h1>
-    <div class="links"><span class="sync" id="sync" data-s="local">Sur cet appareil</span><a href="musculation.html">Calculer mes charges (1RM) →</a></div>
+    <div class="links"><span class="sync" id="sync" data-s="local">Mode essai</span><a href="musculation.html">Calculer mes charges (1RM) →</a></div>
   </div>
   <nav class="tabs" aria-label="Sections du carnet"><div class="in" id="tabs"></div></nav>
   <main id="view" aria-live="polite"></main>
@@ -418,7 +418,7 @@
 
 <footer class="foot">
   <div class="wrap foot-grid">
-    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Sans compte, vos carnets restent sur votre appareil. Avec un compte gratuit, vous les retrouvez sur tous vos appareils.</p></div>
+    <div class="foot-brand"><a class="brand" href="index.html"><img src="icons/logo.svg" alt="" width="30" height="30">Tempo</a><p>Des outils gratuits pour préparer et suivre vos entraînements. Testez sans compte : rien n'est gardé après la visite. Avec un compte gratuit, vos carnets sont enregistrés et vous les retrouvez sur tous vos appareils.</p></div>
     <nav aria-label="Course à pied"><b>Course à pied</b><a href="allure.html">Calculateur d'allure</a><a href="plan-entrainement.html">Plan d'entraînement</a><a href="carnet-course.html">Carnet de course</a></nav>
     <nav aria-label="Musculation"><b>Musculation</b><a href="musculation.html">Charges muscu</a><a href="carnet.html">Carnet de séances</a></nav>
     <nav aria-label="Autres sports et santé"><b>Autres sports et santé</b><a href="multisport.html">Carnet multisport</a><a href="zones-cardiaques.html">Zones cardiaques</a><a href="calories.html">Calories</a></nav>
@@ -504,7 +504,7 @@ const saveUI=()=>lsSet(LSU,{tab:UI.tab,pick:UI.pick});
 /* ---------- cloud sync (db, private per person) ---------- */
 const cloud={on:false,prof:null,col:null};
 let profTimer=null,chain=Promise.resolve(),pending=0;
-function setSync(s){const el=$("#sync");el.dataset.s=s;el.textContent={local:"Sur cet appareil",ok:"Synchronisé",saving:"Enregistrement…",err:"Hors ligne"}[s]}
+function setSync(s){const el=$("#sync");el.dataset.s=s;el.textContent={local:"Mode essai",ok:"Synchronisé",saving:"Enregistrement…",err:"Hors ligne"}[s]}
 function queue(fn){if(!cloud.on)return;pending++;setSync("saving");chain=chain.then(fn).then(()=>{if(--pending===0)setSync("ok")},e=>{pending--;setSync("err");if(e&&e.code==="quota_exceeded")toast("Stockage plein : supprimez d'anciennes séances.")})}
 function saveProfile(){persistLocal();if(!cloud.on)return;clearTimeout(profTimer);profTimer=setTimeout(()=>{const b={program:S.program,body:S.body,settings:S.settings};queue(()=>cloud.prof.set(b))},500)}
 function saveSession(s){persistLocal();queue(()=>cloud.col.doc(s.id).set(s))}
@@ -758,7 +758,7 @@ function viewPlan(){
     <label class="f" for="set-goal">Objectif hebdo<select id="set-goal" data-f="goal" data-describe>${[[1,"Entretien minimal : une séance complète du corps entier."],[2,"Débutant ou emploi du temps chargé : 2 séances corps entier."],[3,"Idéal pour débuter : corps entier ou haut / bas / corps entier."],[4,"Classique : haut / bas du corps deux fois par semaine."],[5,"Programme divisé (push / pull / legs + 2 séances)."],[6,"Avancé : push / pull / legs deux fois par semaine."],[7,"Tous les jours : alternez bien les groupes musculaires et gardez des séances légères."]].map(([n,d])=>`<option value="${n}" data-desc="${d}" ${S.settings.goal==n?"selected":""}>${n} séance${n>1?"s":""}</option>`).join("")}</select></label></div>
     <label class="f" for="set-bar">Poids de votre barre<select id="set-bar" data-f="bar" data-describe>${[[20,"Barre olympique standard (2,20 m) : la plus courante en salle."],[15,"Barre olympique femme ou barre technique (2,01 m)."],[10,"Barre courte ou barre EZ."],[7,"Petite barre de musculation à domicile."]].map(([n,d])=>`<option value="${n}" data-desc="${d}" ${(S.settings.bar||20)==n?"selected":""}>${n} kg</option>`).join("")}</select></label></section>
   <section class="card stack"><h3 class="h3" style="margin:0">Sauvegarde</h3>
-    <div class="muted small">Sans compte, vos données restent sur cet appareil ; avec un compte, vous les retrouvez sur tous vos appareils. Vous pouvez aussi copier une sauvegarde complète et la réimporter plus tard.</div>
+    <div class="muted small">Sans compte (mode essai), rien n'est gardé après la visite ; avec un compte, vos séances sont enregistrées et vous les retrouvez sur tous vos appareils. Vous pouvez aussi copier une sauvegarde complète et la réimporter plus tard.</div>
     <div class="row"><button class="btn sm" data-a="export">Copier la sauvegarde</button><button class="btn sm" data-a="import-open">Importer</button></div>
     <button class="btn sm danger" data-a="reset-prog">Vider mes séances (Push, Pull, Legs…)</button></section>`;
   if(MG)html+=`<details class="card lex"><summary>Lexique de la musculation</summary><dl>${Object.values(MG.GLOSS).map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join("")}</dl></details>`;

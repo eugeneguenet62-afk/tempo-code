@@ -46,7 +46,7 @@ Projet personnel d'**Eugene Guenet**, étudiant en 1re année du cycle ingénieu
 | --- | --- |
 | Front-end | HTML, CSS et JavaScript sans framework ni étape de compilation |
 | Application installable | Progressive Web App : manifeste et service worker (réseau d'abord pour les pages, cache pour le reste), fonctionne hors connexion |
-| Données sans compte | `localStorage`, rien ne quitte l'appareil |
+| Sans compte | Mode essai : `sessionStorage`, rien n'est gardé après la visite (appareil partagé sans risque) |
 | Comptes | Firebase Authentication (e-mail et mot de passe) |
 | Synchronisation | Firestore, un document par clé dans `users/{uid}/kv`. Les carnets sont découpés par mois pour rester loin de la limite de 1 Mo par document. Chaque écriture passe par une transaction qui relit le serveur et fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre. |
 | Sécurité | Règles Firestore : chaque utilisateur ne lit et n'écrit que ses données, avec validation du format (`firestore.rules`) |

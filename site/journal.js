@@ -1,5 +1,5 @@
 /* Carnet d'entraînement course à pied (moteur générique : le sport vient de <body data-journal>).
-   Les données restent dans le navigateur (localStorage). */
+   Stockage via TempoStore : temporaire sans compte, enregistré avec un compte. */
 (function () {
   "use strict";
   const SPORT = document.body.dataset.journal;
@@ -320,7 +320,7 @@
         <div class="j-grid"><label class="j-f" for="g-name">Nom<input id="g-name" placeholder="${esc(C.gearPh)}"></label><label class="j-f" for="g-limit">Durée de vie (km)<input id="g-limit" type="number" inputmode="numeric" value="${C.gearLimit}"></label></div>
         <button class="j-btn" data-a="gear-add">Ajouter</button>
         ${old.length ? `<details class="j-old"><summary>À la retraite (${old.length})</summary>${old.map(gearRow).join("")}</details>` : ""}</section>
-      <section class="j-stack"><div class="j-h3">Sauvegarde</div><div class="j-muted">Sans compte, vos données restent sur cet appareil ; avec un compte, elles sont enregistrées et retrouvées partout. Copiez une sauvegarde pour les garder ou les transférer.</div>
+      <section class="j-stack"><div class="j-h3">Sauvegarde</div><div class="j-muted">Sans compte (mode essai), rien n'est gardé après la visite ; avec un compte, vos sorties sont enregistrées et retrouvées partout. Copiez une sauvegarde pour les transférer.</div>
         <div class="j-row"><button class="j-btn sm" data-a="export">Copier la sauvegarde</button><button class="j-btn sm" data-a="import">Importer</button></div></section>`;
   }
   const empty = (t, s) => `<section class="j-empty"><b>${esc(t)}</b><span>${esc(s)}</span></section>`;
@@ -494,5 +494,5 @@
     sortS(); render();
   });
   const syncEl = document.getElementById("j-sync");
-  if (syncEl) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ anon: "Sur cet appareil", ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Sur cet appareil"); });
+  if (syncEl) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ anon: "Mode essai", ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Mode essai"); });
 })();
