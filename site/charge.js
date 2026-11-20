@@ -33,14 +33,33 @@
   // Échelle d'effort ressenti (CR-10 de Borg, en mots simples)
   const RPE = ["", "Très, très facile", "Très facile", "Facile", "Modéré", "Un peu dur", "Dur", "Dur", "Très dur", "Très, très dur", "Maximal"];
 
-  /* Calories : MET du sport, ajusté par l'effort ressenti (effort 5 = MET moyen) */
-  function kcal(s, w) {
+  /* Calories : l'effort ressenti n'entre pas dans le calcul (il dépend de la forme du jour, pas de l'énergie dépensée).
+     1. Fréquence cardiaque moyenne notée + âge et sexe du profil : formule de Keytel (2005), la plus fiable sans capteur de gaz.
+     2. Sinon : MET du sport (ou de la nage) × poids × durée. En match, seules les minutes jouées comptent à pleine intensité. */
+  const prof = () => { try { return window.TempoStore.profile(); } catch (_) { return {}; } };
+  function kcalHR(s, w, p) {
+    const hr = s.fc, a = p.age, sex = p.sex;
+    if (!(hr >= 90 && hr <= 220 && a > 0 && (sex === "h" || sex === "f" || sex === "m"))) return null;
+    const perMin = sex === "f" ? (-20.4022 + 0.4472 * hr - 0.1263 * w + 0.074 * a) / 4.184
+                               : (-55.0969 + 0.6309 * hr + 0.1988 * w + 0.2017 * a) / 4.184;
+    return perMin > 0 ? (perMin * (s.dur || 0)) / 60 : null;
+  }
+  function kcalMET(s, w) {
     const sp = sportOf(s.sport);
     let met = sp.met;
     if (s.sport === "natation" && s.stroke) { const st = STROKES.find((x) => x[0] === s.stroke); if (st) met = st[2]; }
-    const f = 0.7 + 0.06 * (s.rpe || 5);
-    return (met * f * (w || 70) * (s.dur || 0)) / 3600;
+    const dur = s.dur || 0;
+    let active = dur;
+    if (sp.fields === "team" && s.kind === "match" && s.played > 0) active = Math.min(dur, s.played * 60);
+    return (met * w * active + 1.5 * w * (dur - active)) / 3600;   // 1,5 MET sur le banc
   }
+  function kcal(s, w, p) {
+    p = p || prof();
+    w = w || p.kg || 70;
+    const h = kcalHR(s, w, p);
+    return h != null ? h : kcalMET(s, w);
+  }
+  const kcalSrc = (s, w, p) => { p = p || prof(); return kcalHR(s, w || p.kg || 70, p) != null ? "fc" : "met"; };
 
   /* Toutes les activités des carnets, au même format : { date, src, name, color, min, rpe, load } */
   const dk = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -94,5 +113,5 @@
     return { acute, chronic, ratio, zone, enough, days };
   }
 
-  window.TempoCharge = { SPORTS, sportOf, STROKES, RPE, kcal, entries, weekly, acwr, ZONES, MUSCU_RPE };
+  window.TempoCharge = { SPORTS, sportOf, STROKES, RPE, kcal, kcalSrc, entries, weekly, acwr, ZONES, MUSCU_RPE };
 })();

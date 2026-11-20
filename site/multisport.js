@@ -89,7 +89,7 @@
       const rows = [
         ["Charge", r0(loadOf(s)) + " points (" + Math.round(s.dur / 60) + " min × " + s.rpe + ")"],
         ["Effort ressenti", s.rpe + " / 10 · " + CH.RPE[s.rpe]],
-        ["Calories (estimation)", "≈ " + r0(CH.kcal(s, weight())) + " kcal"],
+        [CH.kcalSrc(s, weight()) === "fc" ? "Calories (d'après la fréquence cardiaque)" : "Calories (estimation selon le sport)", "≈ " + r0(CH.kcal(s, weight())) + " kcal"],
         s.stroke && ["Nage", (CH.STROKES.find((x) => x[0] === s.stroke) || [, s.stroke])[1]],
         s.fc && ["FC moyenne", r0(s.fc) + " bpm"],
       ].concat(facts.slice(1).map((x) => ["", x])).filter(Boolean);
@@ -237,7 +237,7 @@
     const el = $("#f-live"); if (!el) return;
     const dur = parseDur(($("#f-dur") || {}).value || "");
     if (!(dur > 0)) { el.textContent = ""; return; }
-    const s = { sport: FORM.sport, dur, rpe: FORM.rpe, stroke: ($("#f-stroke") || {}).value, dist: num(($("#f-dist") || {}).value) };
+    const s = { sport: FORM.sport, dur, rpe: FORM.rpe, stroke: ($("#f-stroke") || {}).value, dist: num(($("#f-dist") || {}).value), fc: num(($("#f-fc") || {}).value), kind: FORM.kind, played: num(($("#f-played") || {}).value) };
     let t = `Charge : ${r0(loadOf(s))} points · ≈ ${r0(CH.kcal(s, weight()))} kcal`;
     if (sp(FORM.sport).fields === "swim" && s.dist > 0) t += ` · ${mmss(dur / (s.dist / 100))} /100 m`;
     if (sp(FORM.sport).fields === "dist" && s.dist > 0) t += ` · ${r1(s.dist / (dur / 3600))} km/h`;
@@ -304,7 +304,7 @@
     "del-ok"(b) { S.sessions = S.sessions.filter((s) => s.id !== b.dataset.id); save(); closeSheet(); UI.open = null; render(); toast("Séance supprimée"); },
   };
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (!b || !A[b.dataset.a] || !b.closest(".j-app, #m-sheet")) return; e.preventDefault(); A[b.dataset.a](b, e); });
-  document.addEventListener("input", (e) => { if (["f-dur", "f-dist"].includes(e.target.id)) live(); });
+  document.addEventListener("input", (e) => { if (["f-dur", "f-dist", "f-fc", "f-played"].includes(e.target.id)) live(); });
   document.addEventListener("change", async (e) => {
     if (e.target.id === "f-stroke") live();
     if (e.target.id !== "f-gpx" || !e.target.files || !e.target.files[0]) return;

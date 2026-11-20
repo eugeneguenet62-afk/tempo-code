@@ -541,7 +541,7 @@
       const multi = get("tempo-multi-v1"), CH = window.TempoCharge;
       if (CH) ((multi && multi.sessions) || []).filter((s) => s.date === day).forEach((s) => {
         const t = CH.sportOf(s.sport);
-        out.push({ src: "multi", sport: t.name, color: t.color, name: t.name, sub: human(s.dur) + " · effort " + s.rpe + "/10", dur: s.dur, kcal: CH.kcal(s, w) });
+        out.push({ src: "multi", sport: t.name, color: t.color, name: t.name, sub: human(s.dur), dur: s.dur, kcal: CH.kcal(s, w) });
       });
       (extra[day] || []).forEach((x) => out.push({ src: "extra", id: x.id, act: x.act, name: LABEL[x.act], sub: human(x.dur) + " · " + ["facile", "modérée", "soutenue"][x.lvl], dur: x.dur, kcal: (MET[x.act][x.lvl] * w * x.dur) / 3600 }));
       return out;
