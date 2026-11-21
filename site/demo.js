@@ -94,8 +94,28 @@
       },
       "tempo-course-v1": { sessions: course.sort(byDate), gear: [{ id: "demo-shoe", name: "Chaussures de l'exemple", limit: 700, retired: false }], settings: { demo: 1 } },
       "tempo-multi-v1": { sessions: multi.sort(byDate), settings: { demo: 1 } },
+      "tempo-food-v1": { sessions: food(today), recents: [] },
       "tempo-profile-v1": { "n-sex": "h", "n-age": "20", "n-cm": "182", "n-kg": "84", "n-act": "1.725", "n-goal": "keep" },
     };
+  }
+
+  // Trois jours de repas, valeurs pour 100 g de la table Ciqual
+  function food(today) {
+    const M = {
+      bf: [["Flocons d'avoine", 60, 371, 11.7, 58.7, 7], ["Lait demi-écrémé", 250, 46, 3.3, 4.8, 1.6], ["Banane", 120, 90, 1.1, 20.5, 0.3]],
+      lunch: [["Riz blanc cuit", 220, 146, 2.8, 31.5, 0.7], ["Blanc de poulet rôti", 160, 158, 29.5, 0, 4.2], ["Haricots verts cuits", 150, 29, 1.8, 3.9, 0.2], ["Huile d'olive", 10, 899, 0, 0, 99.9]],
+      snack: [["Fromage blanc nature 3 %", 200, 76, 7.3, 4.2, 3.2], ["Amandes", 25, 634, 25.4, 8.8, 53.4]],
+      dinner: [["Pâtes cuites", 250, 152, 5.4, 30.6, 0.9], ["Steak haché 5 %", 125, 136, 21.7, 0, 5.4], ["Salade verte", 60, 15, 1.3, 1.5, 0.2], ["Yaourt nature", 125, 61, 4.1, 5.4, 2.5]],
+    };
+    const out = [];
+    for (let d = 0; d < 3; d++) {
+      const x = new Date(today); x.setDate(x.getDate() - d); const k = dk(x);
+      Object.keys(M).forEach((meal) => M[meal].forEach(([name, g, kcal, p, c, f], i) => {
+        if (d === 0 && meal === "dinner") return;   // le dîner du jour n'est pas encore noté
+        out.push({ id: id(), at: x.getTime() + i, date: k, meal, name, g: Math.round(g * (1 + (d - 1) * 0.06)), kcal, p, c, f, src: "ciqual" });
+      }));
+    }
+    return out;
   }
 
   window.TempoDemo = { build };

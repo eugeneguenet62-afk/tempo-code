@@ -39,6 +39,11 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 **Découverte**
 - Mode essai sans compte et bouton « Voir un exemple » : 12 semaines de carnets fictifs (musculation, rugby, course) pour tout explorer en un clic, jamais copiés dans un compte.
 
+**Nutrition**
+- Journal alimentaire par repas, comparé aux besoins calculés depuis le profil (calories, protéines, glucides, lipides).
+- Trois façons d'ajouter : recherche dans la table Ciqual de l'ANSES (sur l'appareil) et dans Open Food Facts, scan du code-barres (BarcodeDetector, ou ZXing sur iPhone), ou photo de l'assiette.
+- Analyse photo : au moins 2 angles obligatoires pour ne pas rater les aliments cachés, photos réduites sur l'appareil, envoyées à Claude Haiku par une fonction Cloudflare qui vérifie le compte Firebase (signature RS256) et garde la clé d'API secrète. Résultats modifiables avant d'être ajoutés.
+
 **Santé et partage**
 - Zones cardiaques, besoins caloriques, objectif de protéines avec équivalents en aliments.
 - Bilan de la semaine sur l'accueil.
@@ -73,6 +78,8 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 | `site/sports.js` | Champs, résumés et statistiques propres à chaque sport |
 | `site/charge.js` | Sports, calories et charge d'entraînement (session-RPE, rapport aigu / chronique) |
 | `site/gpx.js` | Lecture des fichiers GPX et tracé du parcours |
+| `site/nutrition.js` | Journal alimentaire : recherche, code-barres, photo, objectifs |
+| `functions/api/repas.js` | Fonction serveur d'analyse photo (vérification du jeton Firebase, appel à Claude Haiku) |
 | `site/app.js` | Calculateurs : allure, plan, zones, charges, calories, protéines |
 | `site/share.js` | Image de partage (Canvas) |
 | `site/sw.js` | Service worker |

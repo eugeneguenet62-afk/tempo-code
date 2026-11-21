@@ -580,6 +580,12 @@
       if (!bar.children.length) bar.innerHTML = parts.map(([, , c]) => `<span style="background:${c}"></span>`).join("");
       parts.forEach(([, v], i) => (bar.children[i].style.width = (v / T.all) * 100 + "%"));
       $("#d-legend").innerHTML = parts.map(([n, v, c]) => `<span><i style="background:${c}"></i>${n} <b>${r0(v)}</b></span>`).join("");
+      // Apports notés dans le journal alimentaire, face à la dépense
+      const food = ((get("tempo-food-v1") || {}).sessions || []).filter((e) => e.date === day);
+      const ate = food.reduce((t, e) => t + ((e.kcal || 0) * (e.g || 0)) / 100, 0), bal = ate - T.all;
+      $("#d-eat").innerHTML = food.length
+        ? `<div><small>Mangé ce jour</small><b>${r0(ate)} kcal</b></div><div><small>Bilan</small><b class="${bal > 0 ? "plus" : "minus"}">${bal > 0 ? "+" : "−"}${r0(Math.abs(bal))} kcal</b></div><p class="hint">${bal < -300 ? "Déficit : vous avez dépensé plus que mangé." : bal > 300 ? "Surplus : vous avez mangé plus que dépensé." : "Équilibre : apports et dépense se valent."} <a href="nutrition.html">Ouvrir le journal alimentaire</a></p>`
+        : `<p class="hint">Notez vos repas dans le <a href="nutrition.html">journal alimentaire</a> (recherche, code-barres ou photo de l'assiette) pour voir le bilan entre ce que vous mangez et ce que vous dépensez.</p>`;
       $("#d-list").innerHTML = T.ss.length
         ? T.ss.map((s) => `<div class="d-sess" style="--t:${s.color || SRC[s.src][0]}"><i></i><span><b>${esc(s.name)}</b><small>${esc(s.sub)} · ${SRC[s.src][1]}</small></span><strong>${r0(s.kcal)} kcal</strong>${s.id ? `<button type="button" class="d-del" data-del="${s.id}" aria-label="Retirer ${esc(s.name)}">×</button>` : ""}</div>`).join("")
         : `<p class="hint">Aucune séance ce jour-là. Les séances du <a href="carnet.html">carnet de musculation</a>, du <a href="carnet-course.html">carnet de course</a> et du <a href="multisport.html">carnet multisport</a> apparaissent ici automatiquement.</p>`;
@@ -618,6 +624,7 @@
     TS.watch("tempo-course-v1", render);
     TS.watch("carnet-fonte-v1", render);
     TS.watch("tempo-multi-v1", render);
+    TS.watch("tempo-food-v1", render);
 
     /* ---------- Total des calories dépensées en sport ---------- */
     const per = { v: "30" };

@@ -887,3 +887,11 @@ button:active, .h-tool:active, .h-btn:active, .card:active, .menu-panel a:active
 /* Passage d'une page à l'autre : rapide */
 ::view-transition-old(root) { animation: vt-out .14s ease-out both; }
 ::view-transition-new(root) { animation: vt-in .22s var(--ease) both; }
+/* Calories : apports du journal alimentaire face à la dépense */
+.d-eat { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; padding: 14px 16px; border-radius: 16px; background: var(--field); }
+.d-eat > div { display: grid; gap: 2px; }
+.d-eat small { font-size: 13px; color: var(--muted); }
+.d-eat b { font: 800 22px/1.1 var(--display); letter-spacing: -.02em; }
+.d-eat b.minus { color: var(--z2); } .d-eat b.plus { color: var(--z4); }
+.d-eat .hint { grid-column: 1 / -1; margin: 4px 0 0; }
+.d-eat > .hint:only-child { margin: 0; }
