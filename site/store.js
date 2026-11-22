@@ -5,6 +5,8 @@
    Une copie reste sur l'appareil pour fonctionner hors connexion ; elle est effacée à la déconnexion. */
 (function () {
   "use strict";
+  // Nom de la page sans « .html » (Cloudflare Pages sert /carnet pour /carnet.html)
+  const PAGE = (location.pathname.split("/").pop() || "index").replace(/\.html$/, "") || "index";
   const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1", "tempo-multi-v1", "tempo-food-v1"];
   const DIRTY = "tempo-dirty", ACCOUNT = "tempo-account";
   const SDK = "https://www.gstatic.com/firebasejs/11.0.2/";
@@ -500,7 +502,7 @@
     if (!wrap || wrap.querySelector(".acct")) return;
     const a = document.createElement("a");
     a.className = "acct"; a.href = "compte.html";
-    if (location.pathname.endsWith("compte.html")) a.setAttribute("aria-current", "page");
+    if (PAGE === "compte") a.setAttribute("aria-current", "page");
     a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span></span>';
     wrap.appendChild(a);
     const label = a.querySelector("span");
@@ -522,10 +524,10 @@
   try { if (sessionStorage.getItem("tempo-tour") != null) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => loadTour()); else loadTour(); } } catch (_) {}
 
   /* ---------- Bandeau « mode essai » sur l'accueil et les pages qui enregistrent des séances ---------- */
-  const GUEST_PAGES = /(^\/$|index\.html$|carnet\.html$|carnet-course\.html$|multisport\.html$|calories\.html$|plan-entrainement\.html$|nutrition\.html$)/;
+  const GUEST_PAGES = new Set(["index", "carnet", "carnet-course", "multisport", "calories", "plan-entrainement", "nutrition"]);
   const hasData = () => ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].some((k) => { const v = get(k); return v && v.sessions && v.sessions.length; });
   function guestBar() {
-    if (!GUEST_PAGES.test(location.pathname)) return;
+    if (!GUEST_PAGES.has(PAGE)) return;
     const top = document.querySelector("header.top");
     if (!top) return;
     let bar = document.querySelector(".guest-bar"), wired = false;   // présent dans la page : pas de saut à l'affichage
@@ -567,7 +569,7 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", guestBar); else guestBar();
 
   /* ---------- Démarrage ---------- */
-  if (configured && (account || location.pathname.endsWith("compte.html"))) watchAuth();
+  if (configured && (account || PAGE === "compte")) watchAuth();
   else if (configured) {
     // Pas connecté sur cet appareil : on ne charge Firebase qu'à la demande (pages plus légères)
     ["signup", "login", "google"].forEach((m) => { const f = accountApi[m]; accountApi[m] = (...a) => { if (!authReady) watchAuth(); return f(...a); }; });

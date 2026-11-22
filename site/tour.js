@@ -28,7 +28,10 @@
       x: "Tout ce que vous avez vu est un exemple, effacé à la fermeture du site. Créez un compte gratuit pour enregistrer vos propres séances." },
   ];
 
-  const here = () => (location.pathname.split("/").pop() || "index.html");
+  // Cloudflare Pages retire « .html » des adresses (/carnet.html devient /carnet) : on compare sans l'extension
+  const bare = (x) => (String(x || "").split("/").pop().replace(/\.html$/, "") || "index");
+  const here = () => bare(location.pathname);
+  const onPage = (s) => bare(s.page) === here();
   const getStep = () => { try { const v = sessionStorage.getItem(KEY); return v == null ? null : +v; } catch (_) { return null; } };
   const setStep = (i) => { try { if (i == null) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, String(i)); } catch (_) {} };
 
@@ -116,7 +119,7 @@
     if (i < 0) return;
     if (i >= STEPS.length) return stop();
     const s = STEPS[i];
-    if (s.page !== here() && !(s.page === "index.html" && here() === "")) { setStep(i); location.href = s.page; return; }
+    if (!onPage(s)) { setStep(i); location.href = s.page; return; }
     show(i);
   }
 
@@ -129,7 +132,7 @@
   // Démarrage : on attend que la page ait dessiné ses carnets
   function resume() {
     const i = getStep(); if (i == null || !STEPS[i]) return;
-    if (STEPS[i].page !== here() && !(STEPS[i].page === "index.html" && here() === "")) { setStep(null); return; }   // on a quitté la visite en changeant de page
+    if (!onPage(STEPS[i])) { setStep(null); return; }   // on a quitté la visite en changeant de page
     let tries = 0;
     const wait = () => { if (find(STEPS[i]) || tries++ > 20) show(i); else setTimeout(wait, 150); };
     setTimeout(wait, 250);
