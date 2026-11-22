@@ -28,6 +28,8 @@
       const base = (MUSCLE_MET[e.muscle] || 4.5) + (BIG.test(e.name) ? 0.5 : 0), bp = bodyPart(e), rom = ROM[e.muscle] || 0.4;
       e.sets.forEach((st) => {
         const load = (st.kg || 0) + bp, reps = st.reps || 0;
+        // Série tenue (gainage, chaise…) : comptée comme une série d'effort moyen, sans travail mécanique
+        if (st.sec > 0) { sets++; wsum += base * 0.9; if (LEGS.includes(e.muscle)) legs++; return; }
         if (!reps) return;
         const rel = best[exKey(e)] ? e1rm(load, reps) / best[exKey(e)] : 0.8;
         const effort = 0.85 + 0.25 * Math.max(0, Math.min(1, (rel - 0.55) / 0.4));

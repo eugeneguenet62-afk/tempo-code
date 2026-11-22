@@ -30,7 +30,8 @@
       ["squat", "Squat", "Quadriceps", 4, "5-6", 100, 120, 5],
       ["souleve-de-terre-roumain", "Soulevé de terre roumain", "Ischios", 3, "8-10", 80, 95, 5],
       ["presse-a-cuisses", "Presse à cuisses", "Quadriceps", 3, "10-12", 160, 200, 10],
-      ["leg-curl", "Leg curl", "Ischios", 3, "10-12", 40, 50, 2.5]] },
+      ["leg-curl", "Leg curl", "Ischios", 3, "10-12", 40, 50, 2.5],
+      ["gainage", "Gainage", "Abdos", 3, "30-60 s", 0, 10, 5]] },   // exercice en temps : durée + lest
   ];
   const WEEKS = 12;
 
@@ -51,6 +52,10 @@
         if (!past(d) || (w === 4 && D.id === "legs")) return;          // une séance manquée
         const h = at(d, 18, pick([0, 10, 20, 30]));
         const exercises = D.ex.map(([exId, name, muscle, sets, reps, a, b, step]) => {
+          if (/ s$/.test(reps)) {   // gainage : de 35 s à 60 s, puis 5 puis 10 kg de lest
+            const sec = Math.round(35 + 25 * Math.min(1, p * 1.6)), kg = p > 0.75 ? 10 : p > 0.6 ? 5 : 0;
+            return { exId, name, muscle, mode: "time", sets: Array.from({ length: sets }, (_, i) => ({ kg, sec: Math.max(20, (kg ? 45 : sec) - i * 5 - Math.floor(rnd() * 4)) })) };
+          }
           const [lo, hi] = reps.split("-").map(Number);
           let kg = round(a + (b - a) * Math.min(1, p * 1.08), step);
           if (deload) kg = round(kg * 0.85, step);
