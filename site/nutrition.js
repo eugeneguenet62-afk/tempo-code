@@ -35,15 +35,15 @@
   const dayItems = (d) => S.sessions.filter((e) => e.date === d);
   const dayTot = (d) => { const L = dayItems(d).map(tot); return { kcal: sum(L, (x) => x.kcal), p: sum(L, (x) => x.p), c: sum(L, (x) => x.c), f: sum(L, (x) => x.f) }; };
 
-  /* Besoins : mêmes formules que la page Calories (Mifflin-St Jeor × activité, ajusté à l'objectif) */
-  function targets() {
-    let p = {}; try { p = TS.profile() || {}; } catch (_) {}
-    if (!(p.kg && p.cm && p.age && p.sex)) return null;
-    const goal = p.goal || "keep", act = p.act || 1.55;
-    const bmr = 10 * p.kg + 6.25 * p.cm - 5 * p.age + (p.sex === "h" ? 5 : -161);
-    const kcal = bmr * act * { cut: 0.85, keep: 1, bulk: 1.1 }[goal];
-    const prot = p.kg * { cut: 2, keep: 1.6, bulk: 1.8 }[goal], fat = (kcal * 0.27) / 9, carb = Math.max(0, kcal - prot * 4 - fat * 9) / 4;
-    return { kcal, p: prot, c: carb, f: fat, goal };
+  /* Besoins du jour : ce que vous dépensez CE jour-là (kcal.js, même calcul que la page Calories),
+     soit métabolisme de base + vie quotidienne + séances notées dans les carnets, puis ajusté à l'objectif.
+     Un jour de match demande donc plus qu'un jour de repos. */
+  function targets(d) {
+    const K = window.TempoKcal; if (!K) return null;
+    const D = K.day(d || today()); if (!D) return null;
+    const p = D.p, goal = p.goal, kcal = D.target;
+    const prot = p.w * { cut: 2, keep: 1.6, bulk: 1.8 }[goal], fat = (kcal * 0.27) / 9, carb = Math.max(0, kcal - prot * 4 - fat * 9) / 4;
+    return { kcal, p: prot, c: carb, f: fat, goal, D };
   }
 
   /* ---------- Bases d'aliments ---------- */
@@ -133,7 +133,7 @@
   }
   const bar = (v, t, cls) => `<span class="n-bar ${cls || ""}"><span style="width:${t ? Math.min(100, (v / t) * 100) : 0}%"></span></span>`;
   function viewDay() {
-    const d = UI.date, T = targets(), t = dayTot(d), isToday = d === today();
+    const d = UI.date, T = targets(d), t = dayTot(d), isToday = d === today();
     let h = `<div class="n-date"><button class="j-btn sm" data-a="day-prev" aria-label="Jour précédent">${I.prev}</button>
       <b>${isToday ? "Aujourd'hui" : d === addDays(today(), -1) ? "Hier" : esc(dLong(d))}</b>
       <button class="j-btn sm" data-a="day-next" aria-label="Jour suivant" ${isToday ? "disabled" : ""}>${I.next}</button></div>`;
@@ -144,6 +144,7 @@
       h += `<div class="n-kcal"><div><span class="j-eyebrow">Mangé</span><b>${r0(t.kcal)}</b><small>sur ${r0(T.kcal)} kcal</small></div>
         <div class="n-left"><span class="j-eyebrow">${left >= 0 ? "Reste" : "Au-dessus de"}</span><b class="${left < 0 ? "over" : ""}">${r0(Math.abs(left))}</b><small>kcal</small></div></div>
         ${bar(t.kcal, T.kcal, "big")}
+        ${burnLine(T, isToday)}
         <div class="n-macros">${[["Protéines", t.p, T.p, "p"], ["Glucides", t.c, T.c, "c"], ["Lipides", t.f, T.f, "f"]].map(([l, v, g, k]) => `<div class="n-m n-${k}"><span>${l}</span><b>${r0(v)}<small> / ${r0(g)} g</small></b>${bar(v, g)}</div>`).join("")}</div>`;
     } else {
       h += `<div class="n-kcal"><div><span class="j-eyebrow">Mangé</span><b>${r0(t.kcal)}</b><small>kcal</small></div></div>
@@ -164,15 +165,33 @@
     });
     return h;
   }
+  // D'où vient l'objectif du jour : repos + vie quotidienne + sport
+  function burnLine(T, isToday) {
+    const D = T.D, rest = D.base + D.daily, k = T.kcal / D.all;
+    const sp = D.ss.length
+      ? D.ss.map((s) => esc(s.src === "muscu" ? "Musculation" : s.src === "course" ? "Course" : s.name)).join(", ")
+      : "";
+    const goal = T.goal === "cut" ? " − 15 % pour perdre du poids" : T.goal === "bulk" ? " + 10 % pour prendre du muscle" : "";
+    return `<div class="n-burn"><span><i class="z-rest"></i>Corps et journée <b>${r0(rest * k)}</b></span>
+      <span><i class="z-sport"></i>${D.ss.length ? "Sport : " + sp : "Sport"} <b>${D.sport > 0 ? "+" + r0(D.sport * k) : "0"}</b></span></div>
+      <p class="n-burn-t">${D.ss.length
+        ? `Vos séances du jour sont comptées : mangez plus les jours d'entraînement.${goal ? " Objectif" + goal + "." : ""}`
+        : `Aucune séance notée ${isToday ? "aujourd'hui" : "ce jour-là"} : l'objectif est celui d'un jour de repos.${goal ? " Objectif" + goal + "." : ""} Notez votre séance, il augmente tout seul.`}
+        ${D.p.lifeSet ? "" : ` <a href="calories.html">Réglez votre type de journée</a> (assis, debout, physique) pour plus de précision.`}</p>`;
+  }
   function viewWeek() {
-    const T = targets(), end = UI.date, days = Array.from({ length: 7 }, (_, i) => addDays(end, i - 6));
+    const end = UI.date, days = Array.from({ length: 7 }, (_, i) => addDays(end, i - 6));
+    const TT = days.map((d) => targets(d)); let T = TT[6];
     const vals = days.map((d) => dayTot(d)), filled = vals.filter((v) => v.kcal > 0);
-    const max = Math.max(T ? T.kcal * 1.15 : 0, ...vals.map((v) => v.kcal), 1);
+    const max = Math.max(...TT.map((x) => (x ? x.kcal * 1.15 : 0)), ...vals.map((v) => v.kcal), 1);
     let h = `<section><div class="j-eyebrow">7 derniers jours</div>
-      <div class="n-week">${days.map((d, i) => { const v = vals[i].kcal; return `<div class="n-wd${d === today() ? " today" : ""}"><small>${v ? r0(v) : "–"}</small><span><i style="height:${(v / max) * 100}%"></i>${T ? `<em style="bottom:${(T.kcal / max) * 100}%"></em>` : ""}</span><b>${toDate(d).toLocaleDateString("fr-FR", { weekday: "narrow" })}</b></div>`; }).join("")}</div>
-      ${T ? `<p class="j-muted">Trait : votre besoin du jour (${r0(T.kcal)} kcal).</p>` : ""}</section>`;
+      <div class="n-week">${days.map((d, i) => { const v = vals[i].kcal; return `<div class="n-wd${d === today() ? " today" : ""}"><small>${v ? r0(v) : "–"}</small><span><i style="height:${(v / max) * 100}%"></i>${TT[i] ? `<em style="bottom:${(TT[i].kcal / max) * 100}%"></em>` : ""}</span><b>${toDate(d).toLocaleDateString("fr-FR", { weekday: "narrow" })}</b></div>`; }).join("")}</div>
+      ${T ? `<p class="j-muted">Trait : votre besoin de chaque jour. Il monte les jours où vous avez fait du sport.</p>` : ""}</section>`;
     if (filled.length) {
       const avg = (k) => sum(filled, (v) => v[k]) / filled.length;
+      // Objectif moyen des jours notés (chaque jour a le sien selon le sport)
+      const tf = days.map((d, i) => vals[i].kcal > 0 && TT[i]).filter(Boolean);
+      if (tf.length) { const m = (k) => sum(tf, (x) => x[k]) / tf.length; T = { kcal: m("kcal"), p: m("p"), c: m("c"), f: m("f") }; }
       h += `<section><div class="j-eyebrow">Moyenne des ${filled.length} jour${filled.length > 1 ? "s" : ""} notés</div>
         <div class="n-macros wk">${[["Calories", avg("kcal"), T && T.kcal, "kcal", "k"], ["Protéines", avg("p"), T && T.p, "g", "p"], ["Glucides", avg("c"), T && T.c, "g", "c"], ["Lipides", avg("f"), T && T.f, "g", "f"]].map(([l, v, g, u, k]) => `<div class="n-m n-${k}"><span>${l}</span><b>${r0(v)}<small>${g ? " / " + r0(g) : ""} ${u}</small></b>${g ? bar(v, g) : ""}</div>`).join("")}</div></section>`;
     } else h += `<section class="j-empty"><p class="j-muted">Aucun repas noté sur ces 7 jours.</p></section>`;
@@ -433,7 +452,7 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.id === "n-code") { e.preventDefault(); lookup(e.target.value); } });
 
   TS.watch(KEY, (v) => { S = Object.assign({ sessions: [], recents: [] }, v || {}); if (sheetEl().hidden) render(); });
-  TS.watch("tempo-profile-v1", () => { if (sheetEl().hidden) render(); });
+  ["tempo-profile-v1", "carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1", "tempo-day-v1", "tempo-steps-v1"].forEach((k) => TS.watch(k, () => { if (sheetEl().hidden) render(); }));
   const syncEl = $("#n-sync");
   if (syncEl && TS.onStatus) TS.onStatus((s) => { syncEl.dataset.s = s; syncEl.textContent = ({ ok: "Enregistré dans votre compte", saving: "Enregistrement…", offline: "Hors connexion : envoi au retour du réseau", err: "Erreur d'enregistrement" }[s] || "Mode essai"); });
   if (location.hash === "#photo") setTimeout(openPhoto, 300);

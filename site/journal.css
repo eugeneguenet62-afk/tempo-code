@@ -469,3 +469,11 @@
 .j-tab[aria-current="page"], #carnet .tabs button[aria-current="page"], #carnet .tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
 #j-view { padding-bottom: 40px; }
 @media (max-width: 520px) { .j-tab, #carnet .tabs button { padding: 0 11px; font-size: 13px; } .j-tab svg, #carnet .tabs button svg { display: none; } }
+/* D'où vient l'objectif du jour */
+.n-burn { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 12px; font-size: 14px; color: var(--muted); }
+.n-burn span { display: inline-flex; align-items: center; gap: 7px; }
+.n-burn b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.n-burn i { width: 9px; height: 9px; border-radius: 3px; background: #6f7aa8; }
+.n-burn i.z-sport { background: var(--c-velo, #4fd19e); }
+.n-burn-t { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.n-burn-t a { color: var(--c-food, #ffc94d); }

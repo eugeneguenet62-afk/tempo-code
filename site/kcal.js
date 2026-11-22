@@ -49,5 +49,69 @@
     const density = Math.max(0.85, Math.min(1.15, (m.sets * 2.75) / (d / 60)));
     return Object.assign({}, m, { dur: d, kcal: (m.met * density * w * d) / 3600 + m.work });
   }
-  window.TempoKcal = { muscuMet, muscuKcal };
+
+  /* ---------- Dépense d'une journée : partagée par la page Calories et le journal alimentaire ----------
+     Métabolisme de base (Mifflin-St Jeor) + vie quotidienne (type de journée ou pas) + surplus des séances notées ce jour-là.
+     Le niveau « Activité au quotidien » du profil n'est pas utilisé ici : il contient déjà le sport, on le compterait deux fois. */
+  const MET = { course: [8.3, 9.8, 11.8], velo: [6.8, 8, 10], muscu: [3.5, 5, 6], natation: [5.8, 8.3, 9.8], marche: [3, 3.5, 5],
+    rando: [5.3, 6, 7.8], rameur: [4.8, 7, 8.5], hiit: [6, 8, 10], yoga: [2.5, 3, 4] };
+  const LABEL = { course: "Course à pied", velo: "Vélo", muscu: "Musculation", natation: "Natation", marche: "Marche", rando: "Randonnée", rameur: "Rameur", hiit: "HIIT", yoga: "Yoga" };
+  const dk = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const sum = (a, f) => a.reduce((t, x) => t + (f(x) || 0), 0);
+  const r1 = (x) => (Math.round(x * 10) / 10).toLocaleString("fr-FR");
+  function human(sec) {
+    sec = Math.round(sec || 0);
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60, out = [];
+    if (h) out.push(h + " h"); if (m || (h && s)) out.push((h ? String(m).padStart(2, "0") : m) + " min"); if (s || (!h && !m)) out.push((h || m ? String(s).padStart(2, "0") : s) + " s");
+    return out.join(" ");
+  }
+  const TS = () => window.TempoStore;
+  const get = (k) => { try { return TS().get(k); } catch (_) { return null; } };
+  function profile() {
+    let p = {}; try { p = TS().profile() || {}; } catch (_) {}
+    if (!(p.age && p.cm && p.kg && p.sex)) return null;
+    const life = parseFloat((p.raw || {})["d-life"]) || 1.2;
+    return { w: p.kg, h: p.cm, goal: p.goal || "keep", life, lifeSet: !!(p.raw || {})["d-life"], bmr: 10 * p.kg + 6.25 * p.cm - 5 * p.age + (p.sex === "h" ? 5 : -161) };
+  }
+  // Séances du jour lues dans les carnets + ajouts manuels de la page Calories
+  function sessions(day, w) {
+    const out = [];
+    const course = get("tempo-course-v1"), fonte = get("carnet-fonte-v1"), extra = get("tempo-day-v1") || {};
+    ((course && course.sessions) || []).filter((s) => s.date === day).forEach((s) => out.push({
+      src: "course", name: "Course · " + r1(s.dist) + " km", sub: human(s.dur), dur: s.dur,
+      kcal: w * s.dist * (s.type === "trail" ? 1.1 : 1) + (s.dplus || 0) * w * 0.0015 }));
+    const allMuscu = ((fonte && fonte.sessions) || []).map((x) => Object.assign({}, x, { date: dk(new Date(x.date)) }));
+    allMuscu.filter((s) => s.date === day).forEach((s) => {
+      const m = muscuKcal(s, w, allMuscu);
+      out.push({ src: "muscu", name: "Musculation · " + s.dayName, dur: m.dur,
+        sub: human(m.dur) + " · " + m.sets + " séries · " + r1(m.tonnage / 1000) + " t soulevées · " + m.zone, kcal: m.kcal });
+    });
+    const multi = get("tempo-multi-v1"), CH = window.TempoCharge;
+    if (CH) ((multi && multi.sessions) || []).filter((s) => s.date === day).forEach((s) => {
+      const t = CH.sportOf(s.sport);
+      out.push({ src: "multi", sport: t.name, color: t.color, name: t.name, sub: human(s.dur), dur: s.dur, kcal: CH.kcal(s, w) || 0 });
+    });
+    (extra[day] || []).forEach((x) => MET[x.act] && out.push({ src: "extra", id: x.id, act: x.act, name: LABEL[x.act], sub: human(x.dur) + " · " + ["facile", "modérée", "soutenue"][x.lvl], dur: x.dur, kcal: (MET[x.act][x.lvl] * w * x.dur) / 3600 }));
+    return out;
+  }
+  function day(dayKey, p, lf) {
+    p = p || profile(); if (!p) return null;
+    lf = lf || p.life;
+    const ss = sessions(dayKey, p.w);
+    // Le repos pendant la séance est déjà dans le métabolisme : on ne compte que le surplus du sport
+    const sport = sum(ss, (s) => Math.max(0, s.kcal - (p.bmr / 86400) * s.dur));
+    /* Pas : foulée de marche ≈ taille × 0,415, dépense nette ≈ 0,5 kcal par kg et par km.
+       Les pas des sorties de course du carnet sont retirés (foulée de course ≈ taille × 0,65) pour ne pas compter deux fois. */
+    const st = (get("tempo-steps-v1") || {})[dayKey] || 0;
+    const course = get("tempo-course-v1");
+    const runKm = sum(((course && course.sessions) || []).filter((x) => x.date === dayKey), (x) => x.dist);
+    const runSteps = Math.min(st, (runKm * 1000) / (p.h * 0.0065));
+    const walkSteps = st - runSteps, walkKm = (walkSteps * p.h * 0.00415) / 1000, stepsK = 0.5 * p.w * walkKm;
+    // Avec des pas : digestion et petits mouvements (~15 %) + supplément métier physique + pas.
+    // Sans pas : estimation selon le type de journée (une journée assise ≈ 3 000 pas).
+    const daily = st > 0 ? p.bmr * 0.15 + Math.max(0, lf - 1.2) * p.bmr + stepsK : p.bmr * (lf - 1);
+    const all = p.bmr + daily + sport, k = { cut: 0.85, keep: 1, bulk: 1.1 }[p.goal] || 1;
+    return { ss, sport, daily, st, runSteps, walkSteps, walkKm, stepsK, base: p.bmr, all, goal: p.goal, target: all * k, p };
+  }
+  window.TempoKcal = { muscuMet, muscuKcal, MET, LABEL, profile, sessions, day };
 })();

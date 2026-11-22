@@ -916,8 +916,10 @@ button:active, .h-tool:active, .h-btn:active, .card:active, .menu-panel a:active
 }
 /* Ordinateur : au centre de l'en-tête */
 @media (min-width: 980px) {
-  .gnav { top: 0; left: 50%; transform: translateX(-50%); height: 64px; align-items: center; gap: 4px; }
-  .gnav a { height: 40px; padding: 0 14px; }
+  /* Juste après le logo (et non centrée) pour ne jamais passer sous « Outils » et « Mon compte » */
+  .gnav { top: 0; left: calc(max(20px, (100% - 1000px) / 2) + 150px); height: 64px; align-items: center; gap: 2px; }
+  .top .menu-btn > span { display: none; }   /* l'icône suffit : la barre nomme déjà les rubriques */
+  .gnav a { height: 40px; padding: 0 13px; }
   .gnav a svg { width: 18px; height: 18px; }
   .gnav a[aria-current="page"], .gnav a[data-sec] { background: rgba(255, 255, 255, .08); }
 }

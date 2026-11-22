@@ -520,48 +520,11 @@
     if (lifeP) life.value = lifeP;
     life.addEventListener("input", () => TS.setProfile({ "d-life": life.value }));
 
-    function profile() {
-      const p = PROF();
-      if (!(p.age && p.cm && p.kg && p.sex)) return null;
-      return { w: p.kg, h: p.cm, goal: p.goal || "keep", bmr: 10 * p.kg + 6.25 * p.cm - 5 * p.age + (p.sex === "h" ? 5 : -161) };
-    }
-    // Séances du jour, lues dans les carnets du site (même navigateur) + ajouts manuels
-    function sessions(day, w) {
-      const out = [];
-      const course = get("tempo-course-v1"), fonte = get("carnet-fonte-v1");
-      ((course && course.sessions) || []).filter((s) => s.date === day).forEach((s) => out.push({
-        src: "course", name: "Course · " + r1(s.dist) + " km", sub: human(s.dur), dur: s.dur,
-        kcal: w * s.dist * (s.type === "trail" ? 1.1 : 1) + (s.dplus || 0) * w * 0.0015 }));
-      const allMuscu = ((fonte && fonte.sessions) || []).map((x) => Object.assign({}, x, { date: dk(new Date(x.date)) }));
-      allMuscu.filter((s) => s.date === day).forEach((s) => {
-        const m = window.TempoKcal.muscuKcal(s, w, allMuscu);
-        out.push({ src: "muscu", name: "Musculation · " + s.dayName, dur: m.dur,
-          sub: human(m.dur) + " · " + m.sets + " séries · " + r1(m.tonnage / 1000) + " t soulevées · " + m.zone, kcal: m.kcal });
-      });
-      const multi = get("tempo-multi-v1"), CH = window.TempoCharge;
-      if (CH) ((multi && multi.sessions) || []).filter((s) => s.date === day).forEach((s) => {
-        const t = CH.sportOf(s.sport);
-        out.push({ src: "multi", sport: t.name, color: t.color, name: t.name, sub: human(s.dur), dur: s.dur, kcal: CH.kcal(s, w) });
-      });
-      (extra[day] || []).forEach((x) => out.push({ src: "extra", id: x.id, act: x.act, name: LABEL[x.act], sub: human(x.dur) + " · " + ["facile", "modérée", "soutenue"][x.lvl], dur: x.dur, kcal: (MET[x.act][x.lvl] * w * x.dur) / 3600 }));
-      return out;
-    }
-    function total(day, p) {
-      const ss = sessions(day, p.w), lf = num(life);
-      // Le repos pendant la séance est déjà dans le métabolisme : on ne compte que le surplus du sport
-      const sport = sum(ss, (s) => Math.max(0, s.kcal - (p.bmr / 86400) * s.dur));
-      /* Pas : foulée de marche ≈ taille × 0,415, dépense nette ≈ 0,5 kcal par kg et par km.
-         Les pas des sorties de course du carnet sont retirés (foulée de course ≈ taille × 0,65) pour ne pas compter deux fois. */
-      const st = steps[day] || 0;
-      const course = get("tempo-course-v1");
-      const runKm = sum(((course && course.sessions) || []).filter((x) => x.date === day), (x) => x.dist);
-      const runSteps = Math.min(st, (runKm * 1000) / (p.h * 0.0065));
-      const walkSteps = st - runSteps, walkKm = (walkSteps * p.h * 0.00415) / 1000, stepsK = 0.5 * p.w * walkKm;
-      // Avec des pas : digestion et petits mouvements (~15 %) + supplément métier physique + pas.
-      // Sans pas : estimation selon le type de journée (une journée assise ≈ 3 000 pas, donc pas de saut à la saisie).
-      const daily = st > 0 ? p.bmr * 0.15 + Math.max(0, lf - 1.2) * p.bmr + stepsK : p.bmr * (lf - 1);
-      return { ss, sport, daily, st, runSteps, walkSteps, walkKm, stepsK, base: p.bmr, all: p.bmr + daily + sport };
-    }
+    // Calcul partagé avec le journal alimentaire (kcal.js)
+    const K = window.TempoKcal;
+    const profile = () => K.profile();
+    const sessions = (day) => K.sessions(day, (K.profile() || {}).w);
+    const total = (day, p) => K.day(day, p, num(life));
 
     function render() {
       const p = profile();
@@ -656,7 +619,7 @@
       const groups = {}, weeks = {};
       let kcal = 0, n = 0, time = 0;
       const monday = (d) => { const x = new Date(d + "T12:00"); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return dk(x); };
-      days.forEach((d) => sessions(d, w).forEach((s) => {
+      days.forEach((d) => K.sessions(d, w).forEach((s) => {
         const key = s.src === "extra" ? (LABEL[s.act] || "Autre") : s.src === "multi" ? s.sport : s.src === "course" ? "Course à pied" : "Musculation";
         const color = s.src === "extra" ? SRC.extra[0] : s.color || SRC[s.src][0];
         const g = (groups[key] = groups[key] || { kcal: 0, n: 0, time: 0, color });
