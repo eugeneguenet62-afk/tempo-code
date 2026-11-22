@@ -403,7 +403,7 @@ body[data-bg="jauge"] { --accent: var(--c-food); }
 /* Intro des outils : pastille avec l'icône de l'outil */
 .eyebrow svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .intro { padding-block: 64px 44px; }
-.intro h1 { font-size: clamp(36px, 5.8vw, 58px); }
+.intro h1 { font-size: clamp(24px, min(8vw, 5.8vw + 14px), 58px); }
 
 /* Formulaires et résultats en cartes */
 .tool { gap: 40px; }
@@ -847,7 +847,7 @@ body {
 }
 .bg { display: none; }
 ::selection { background: rgba(255, 107, 149, .35); }
-h1 { font-family: var(--display); font-weight: 800; font-size: clamp(26px, min(8vw, 4.4vw + 14px), 46px); line-height: 1.08; letter-spacing: -.03em; overflow-wrap: break-word; hyphens: auto; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(22px, min(7.2vw, 4.4vw + 14px), 46px); line-height: 1.08; letter-spacing: -.03em; overflow-wrap: break-word; }
 h2 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -.02em; }
 /* En-tête : verre dépoli, toujours */
 .top, .top.scrolled { background: var(--glass); border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
@@ -927,7 +927,12 @@ button:active, .h-tool:active, .h-btn:active, .card:active, .menu-panel a:active
 /* ================= Accueil : présentation pour les nouveaux, tableau de bord pour les habitués ================= */
 .h-today { display: none; padding-top: 24px; }
 html.ret .h-today { display: block; }
-html.ret .h-hero, html.ret .h-steps { display: none; }
+html.ret .h-steps { display: none; }
+.h-acc { display: none !important; }
+html.acc .h-acc { display: inline-flex !important; }
+html.acc .h-guest { display: none !important; }
+html.ret .h-hero { padding-bottom: clamp(24px, 4vw, 48px); }
+.h-today { scroll-margin-top: 80px; }
 .h-hello { font: 800 clamp(34px, 6vw, 52px)/1 var(--display); letter-spacing: -.035em; margin: 0 0 18px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; width: max-content; max-width: 100%; }
 .h-quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .h-quick a {
@@ -973,3 +978,4 @@ select { text-overflow: ellipsis; }
   .ptabs a { flex: 1 1 auto; min-width: 0; padding: 10px 6px; text-align: center; font-size: 13px; }
 }
 @media (max-width: 560px) { .row.stack-m { display: grid; grid-template-columns: 1fr; } }
+#today-title { scroll-margin-top: 90px; }

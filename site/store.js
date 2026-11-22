@@ -460,7 +460,7 @@
   }
 
   window.TempoStore = {
-    get, set, watch, account: accountApi, notify, profile, setProfile, loadDemo, clearDemo, isDemo: () => isDemo(),
+    get, set, watch, account: accountApi, notify, profile, setProfile, loadDemo, clearDemo, isDemo: () => isDemo(), startTour, startTourNext,
     status: () => status,
     onStatus: (f) => { statusFns.push(f); f(status, account); },
   };
@@ -512,8 +512,17 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", headerLink); else headerLink();
 
+  /* ---------- Visite guidée (tour.js, chargé seulement quand une visite est en cours) ---------- */
+  function loadTour(cb) {
+    if (window.TempoTour) return cb && cb();
+    const sc = document.createElement("script"); sc.src = "tour.js"; sc.onload = () => cb && cb(); document.head.appendChild(sc);
+  }
+  function startTourNext() { try { sessionStorage.setItem("tempo-tour", "0"); } catch (_) {} }
+  function startTour() { loadTour(() => window.TempoTour.start()); }
+  try { if (sessionStorage.getItem("tempo-tour") != null) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => loadTour()); else loadTour(); } } catch (_) {}
+
   /* ---------- Bandeau « mode essai » sur l'accueil et les pages qui enregistrent des séances ---------- */
-  const GUEST_PAGES = /(^\/$|index\.html$|carnet\.html$|carnet-course\.html$|multisport\.html$|calories\.html$|plan-entrainement\.html$)/;
+  const GUEST_PAGES = /(^\/$|index\.html$|carnet\.html$|carnet-course\.html$|multisport\.html$|calories\.html$|plan-entrainement\.html$|nutrition\.html$)/;
   const hasData = () => ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].some((k) => { const v = get(k); return v && v.sessions && v.sessions.length; });
   function guestBar() {
     if (!GUEST_PAGES.test(location.pathname)) return;
@@ -533,7 +542,11 @@
         bar.addEventListener("click", async (e) => {
           const b = e.target.closest("button[data-g]"); if (!b) return;
           b.disabled = true;
-          try { if (b.dataset.g === "demo") await loadDemo(); else clearDemo(); location.reload(); }
+          try {
+            if (b.dataset.g === "demo") { await loadDemo(); startTourNext(); location.href = "index.html"; }
+            else if (b.dataset.g === "tour") { startTour(); b.disabled = false; }
+            else { clearDemo(); location.reload(); }
+          }
           catch (_) { b.disabled = false; notify("L'exemple n'a pas pu être chargé. Vérifiez votre connexion."); }
         });
       }
@@ -543,7 +556,7 @@
         : guestFlag()
           ? "<b>Mode essai</b> : vos anciennes séances seront effacées à la fermeture. Créez un compte pour les garder."
           : "<b>Mode essai</b> : rien n'est gardé quand vous fermez le site.";
-      const extra = demo ? '<button type="button" class="btn ghost" data-g="clear">Effacer l\'exemple</button>'
+      const extra = demo ? '<button type="button" class="btn ghost" data-g="tour">Visite guidée</button><button type="button" class="btn ghost" data-g="clear">Effacer l\'exemple</button>'
         : !hasData() ? '<button type="button" class="btn ghost" data-g="demo">Voir un exemple</button>' : "";
       const html = '<div class="wrap"><p>' + txt + '</p><div class="gb-act">' + extra + '<a class="btn" href="compte.html">Créer un compte</a></div></div>';
       if (bar.innerHTML !== html) bar.innerHTML = html;
