@@ -554,11 +554,11 @@
       }
       const demo = isDemo();
       const txt = demo
-        ? "<b>Exemple</b> : carnets fictifs, effacés quand vous fermez le site."
+        ? "<b>Exemple</b> : données fictives, effacées à la fermeture du site."
         : guestFlag()
           ? "<b>Mode essai</b> : vos anciennes séances seront effacées à la fermeture. Créez un compte pour les garder."
           : "<b>Mode essai</b> : rien n'est gardé quand vous fermez le site.";
-      const extra = demo ? '<button type="button" class="btn ghost" data-g="tour">Visite guidée</button><button type="button" class="btn ghost" data-g="clear">Effacer l\'exemple</button>'
+      const extra = demo ? '<button type="button" class="btn ghost" data-g="tour">Visite guidée</button><button type="button" class="btn ghost" data-g="clear">Effacer</button>'
         : !hasData() ? '<button type="button" class="btn ghost" data-g="demo">Voir un exemple</button>' : "";
       const html = '<div class="wrap"><p>' + txt + '</p><div class="gb-act">' + extra + '<a class="btn" href="compte.html">Créer un compte</a></div></div>';
       if (bar.innerHTML !== html) bar.innerHTML = html;

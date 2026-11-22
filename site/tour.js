@@ -58,6 +58,7 @@
 .tour-prev{background:#2a3058;color:#f1f2fa}
 .tour-next{background:linear-gradient(120deg,#9a83ff,#ff6b95 55%,#ffa557);color:#0d1024}
 .tour-card :focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:560px){.tour-card{padding:12px 14px 10px;border-radius:16px;font-size:13.5px;line-height:1.45}.tour-card h2{font-size:15.5px;margin-bottom:4px}.tour-card small{font-size:11.5px}.tour-dots{margin-top:9px}.tour-dots i{height:3px}.tour-act{margin-top:9px;gap:6px}.tour-act button,.tour-act a{font-size:13.5px;padding:9px 13px}}
 @media (prefers-reduced-motion:reduce){.tour-ring{transition:none}}`;
     document.head.appendChild(st);
     const block = document.createElement("div"); block.className = "tour-block";

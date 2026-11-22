@@ -981,3 +981,57 @@ select { text-overflow: ellipsis; }
 @media (max-width: 560px) { .row.stack-m { display: grid; grid-template-columns: 1fr; } }
 #today-title { scroll-margin-top: 90px; }
 @media (max-width: 360px) { .h-title { font-size: 36px; } }
+
+/* ================= Téléphone : tout un cran plus compact =================
+   Textes, titres, boutons et marges réduits sous 560 px. Les champs de saisie restent à 16 px
+   (en dessous, l'iPhone zoome tout seul sur le champ). */
+@media (max-width: 560px) {
+  body { font-size: 15px; line-height: 1.55; }
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  h2 { font-size: 17px; }
+  h3, .card h3 { font-size: 15.5px; }
+  .btn { font-size: 15px; padding: 11px 16px; }
+  table { font-size: 14px; }
+  /* En-tête */
+  .top .wrap { padding-block: 9px; }
+  .brand { font-size: 16px; gap: 8px; }
+  .brand img { width: 26px; height: 26px; border-radius: 7px; }
+  .menu-btn { padding: 8px 10px; }
+  .acct { padding: 8px; }
+  /* Bandeau d'essai : une seule ligne de boutons */
+  .guest-bar .wrap { gap: 6px 10px; padding-top: 7px; padding-bottom: 7px; }
+  .guest-bar p { font-size: 12.5px; flex-basis: 100%; }
+  .guest-bar .btn { padding: 6px 11px; font-size: 12.5px; }
+  .guest-bar .gb-act { gap: 6px; flex-wrap: nowrap; }
+  /* Haut des pages */
+  .intro { padding-block: 22px 16px; gap: 8px; }
+  .intro h1 { font-size: clamp(22px, 7vw, 28px); }
+  .intro p { font-size: 15px; }
+  .eyebrow { font-size: 12px; padding: 4px 10px; }
+  .eyebrow svg { width: 13px; height: 13px; }
+  /* Barre du bas */
+  .gnav { height: calc(56px + env(safe-area-inset-bottom, 0px)); }
+  .gnav a { font-size: 10.5px; gap: 3px; margin: 5px 2px; }
+  .gnav a svg { width: 20px; height: 20px; }
+  body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+  .j-fab { bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+  /* Accueil */
+  .h-hero { padding-top: 22px; padding-bottom: 28px; gap: 22px; }
+  .h-title { font-size: 34px; margin-bottom: 14px; }
+  .h-lead { font-size: 15px; }
+  .h-btn { min-height: 46px; font-size: 15px; padding: 0 18px; }
+  .h-ctas { gap: 8px; }
+  .h-small { font-size: 12.5px; }
+  .h-visual { max-width: 300px; }
+  .h-chip b { font-size: 18px; }
+  .h-chip small { font-size: 11px; }
+  .h-hello { font-size: 28px; margin-bottom: 12px; }
+  .h-quick { gap: 8px; }
+  .h-quick a b { font-size: 14px; }
+  .h-back-item b { font-size: 15px; }
+  .h-week h3 { font-size: 15.5px; }
+  .h-steps, .h-app, .h-made { font-size: 14.5px; }
+  .learn > summary { padding: 14px 16px; font-size: 15px; }
+  .ptabs a { font-size: 13px; padding: 9px 12px; }
+}
+@media (max-width: 360px) { .h-title { font-size: 30px; } }
