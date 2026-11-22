@@ -451,3 +451,21 @@
 @media (max-width: 420px) { .n-shots { gap: 6px; } .n-shot { padding: 8px 6px 10px; } }
 .n-search input:focus, .n-search input:focus-visible { outline: none; box-shadow: none; border: 0; background: none; }
 .n-srcl { font-size: 12px !important; opacity: .8; }
+
+/* ================= Onglets des carnets : en haut, sous le titre, sur tous les écrans ================= */
+.j-tabs, #carnet .tabs {
+  position: sticky; top: 66px; bottom: auto; z-index: 9; border: 0; background: var(--glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  padding: 8px 16px; margin: 0;
+}
+.j-tabs .in, #carnet .tabs .in {
+  display: flex; gap: 4px; padding: 4px; width: max-content; max-width: 100%; margin: 0 auto; min-height: 0;
+  background: var(--field); border-radius: 999px; overflow-x: auto; scrollbar-width: none;
+}
+.j-tabs .in::-webkit-scrollbar, #carnet .tabs .in::-webkit-scrollbar { display: none; }
+.j-tab, #carnet .tabs button {
+  flex: none; flex-direction: row; height: 38px; padding: 0 14px; gap: 7px; font: 600 13.5px var(--body); border-radius: 999px; white-space: nowrap;
+}
+.j-tab svg, #carnet .tabs button svg { width: 17px; height: 17px; }
+.j-tab[aria-current="page"], #carnet .tabs button[aria-current="page"], #carnet .tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
+#j-view { padding-bottom: 40px; }
+@media (max-width: 520px) { .j-tab, #carnet .tabs button { padding: 0 11px; font-size: 13px; } .j-tab svg, #carnet .tabs button svg { display: none; } }

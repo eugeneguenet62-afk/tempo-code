@@ -118,3 +118,30 @@
     }).observe(el, { childList: true });
   });
 })();
+
+/* Arrivée depuis un raccourci de l'accueil (…#ajouter) : le formulaire d'ajout s'ouvre directement */
+(function () {
+  if (location.hash !== "#ajouter") return;
+  const go = () => setTimeout(() => {
+    const b = document.querySelector('.j-app [data-a="add"]');
+    if (b) { b.click(); try { history.replaceState(null, "", location.pathname); } catch (_) {} }
+  }, 200);
+  if (document.readyState === "complete") go(); else window.addEventListener("load", go);
+})();
+
+/* Onglets d'une page (ex. Calories) : une seule section affichée à la fois, choisie aussi par l'adresse (#sport) */
+(function () {
+  const nav = document.querySelector(".ptabs"); if (!nav) return;
+  const links = Array.from(nav.querySelectorAll("a[href^='#']"));
+  const secs = links.map((a) => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  function show(id, scroll) {
+    if (!secs.some((s) => s.id === id)) id = secs[0].id;
+    secs.forEach((s) => (s.hidden = s.id !== id));
+    links.forEach((a) => (a.getAttribute("href") === "#" + id ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+    window.dispatchEvent(new Event("resize"));
+    if (scroll) { const y = nav.getBoundingClientRect().top + window.scrollY - 76; if (window.scrollY > y) window.scrollTo({ top: y }); }
+  }
+  nav.addEventListener("click", (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); const id = a.getAttribute("href").slice(1); try { history.replaceState(null, "", "#" + id); } catch (_) {} show(id, true); });
+  window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+})();

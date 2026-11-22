@@ -539,10 +539,10 @@
       }
       const demo = isDemo();
       const txt = demo
-        ? "<b>Exemple.</b> Vous voyez les carnets fictifs d'un sportif qui fait de la musculation, du rugby et de la course depuis 12 semaines. Explorez librement : tout s'efface quand vous fermez le site."
+        ? "<b>Exemple</b> : carnets fictifs, effacés quand vous fermez le site."
         : guestFlag()
-          ? "<b>Mode essai.</b> Les séances notées sur cet appareil avant la mise à jour seront effacées quand vous fermerez le site. Créez un compte gratuit maintenant pour les garder."
-          : "<b>Mode essai.</b> Testez librement : rien n'est gardé quand vous fermez le site. Pour enregistrer vos séances et votre progression, créez un compte gratuit.";
+          ? "<b>Mode essai</b> : vos anciennes séances seront effacées à la fermeture. Créez un compte pour les garder."
+          : "<b>Mode essai</b> : rien n'est gardé quand vous fermez le site.";
       const extra = demo ? '<button type="button" class="btn ghost" data-g="clear">Effacer l\'exemple</button>'
         : !hasData() ? '<button type="button" class="btn ghost" data-g="demo">Voir un exemple</button>' : "";
       const html = '<div class="wrap"><p>' + txt + '</p><div class="gb-act">' + extra + '<a class="btn" href="compte.html">Créer un compte</a></div></div>';
