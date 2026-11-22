@@ -892,6 +892,7 @@ function onboard(step){
   const lv=S.settings.level||"";
   if(step===1)sheet(`${dots}<div class="h2">Bienvenue dans votre carnet</div><div class="muted">Pour commencer, où en êtes-vous en musculation ? Tempo adapte les exercices proposés et les conseils. Vous pourrez changer plus tard.</div>
     <div class="ob-opts">${Object.entries(MG.LEVELS).map(([k,l])=>`<button class="ob-opt${lv===k?" sel":""}" data-a="ob-level" data-v="${k}"><b>${esc(l.label)}</b><span>${esc(l.desc)}</span></button>`).join("")}</div>
+    ${document.documentElement.classList.contains("guest")?'<button class="btn" data-a="ob-demo">Voir d\'abord un exemple guidé</button>':""}
     <button class="btn ghost" data-a="close">Plus tard</button>`);
   if(step===2){const L=S.settings.level||"int";const rec=MG.TEMPLATES.filter(t=>t.level===L).concat(MG.TEMPLATES.filter(t=>t.level!==L&&(L==="deb"?false:t.level==="deb"&&t.id==="maison")));
     sheet(`${dots}<div class="h2">Comment voulez-vous vous entraîner ?</div><div class="muted">Un programme prêt vous donne des séances complètes dès aujourd'hui. Vous pouvez aussi construire les vôtres.</div>
@@ -927,6 +928,7 @@ const A={
   "ob-level"(b){S.settings.level=b.dataset.v;saveProfile();onboard(2)},
   "ob-tpl"(b){applyTpl(b.dataset.id);onboard(3)},
   "ob-free"(){onboard(3)},
+  async "ob-demo"(b){b.disabled=true;try{await TempoStore.loadDemo();TempoStore.startTourNext();location.href="index.html"}catch(_){b.disabled=false;toast("L'exemple n'a pas pu être chargé. Vérifiez votre connexion.")}},
   "ob-done"(){closeSheet();UI.tab="seance";saveUI();render();window.scrollTo(0,0)},
   "start-last"(b){const d=dayById(b.dataset.id),ls=lastOfDay(b.dataset.id);if(!d||!ls)return;
     D={id:gid(),dayId:d.id,dayName:d.name,color:d.color,start:Date.now(),note:"",exercises:ls.exercises.map(x=>newDraftEx({id:x.exId||x.id||slug(x.name),name:x.name,muscle:x.muscle,sets:(x.sets||[]).length||3,reps:""}))};saveDraft();render();window.scrollTo(0,0);wake()},
