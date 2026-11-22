@@ -862,7 +862,8 @@ h2 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spac
 .guest-bar { background: rgba(255, 255, 255, .035); border-bottom: 1px solid var(--line); }
 /* Accueil */
 .h-title {
-  font: 800 clamp(40px, 5.5vw, 74px)/1.02 var(--display); letter-spacing: -.035em;
+  font: 800 clamp(40px, 4.6vw, 68px)/1.02 var(--display); letter-spacing: -.035em;
+  overflow-wrap: normal; word-break: keep-all;   /* jamais « Progresse / z. » : le mot reste entier */
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .h-lead, .h-small { color: var(--muted); }
@@ -979,3 +980,4 @@ select { text-overflow: ellipsis; }
 }
 @media (max-width: 560px) { .row.stack-m { display: grid; grid-template-columns: 1fr; } }
 #today-title { scroll-margin-top: 90px; }
+@media (max-width: 360px) { .h-title { font-size: 36px; } }
