@@ -41,7 +41,7 @@ Projet personnel d'**Eugène Guenet**, étudiant en 1re année du cycle ingénie
 
 **Nutrition**
 - Journal alimentaire par repas, comparé aux besoins calculés depuis le profil (calories, protéines, glucides, lipides).
-- Trois façons d'ajouter : recherche dans la table Ciqual de l'ANSES (sur l'appareil) et dans Open Food Facts, scan du code-barres (BarcodeDetector, ou ZXing sur iPhone), ou photo de l'assiette.
+- Trois façons d'ajouter : recherche dans la table Ciqual 2025 de l'ANSES (3 400 aliments, sur l'appareil, avec synonymes) et dans Open Food Facts, scan du code-barres (BarcodeDetector, ou ZXing sur iPhone), ou photo de l'assiette.
 - Analyse photo : au moins 2 angles obligatoires pour ne pas rater les aliments cachés, photos réduites sur l'appareil, envoyées à Claude Haiku par une fonction Cloudflare qui vérifie le compte Firebase (signature RS256) et garde la clé d'API secrète. Résultats modifiables avant d'être ajoutés.
 
 **Santé et partage**

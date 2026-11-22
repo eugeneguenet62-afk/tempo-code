@@ -450,3 +450,4 @@
 .n-wd.today b { color: var(--accent); }
 @media (max-width: 420px) { .n-shots { gap: 6px; } .n-shot { padding: 8px 6px 10px; } }
 .n-search input:focus, .n-search input:focus-visible { outline: none; box-shadow: none; border: 0; background: none; }
+.n-srcl { font-size: 12px !important; opacity: .8; }

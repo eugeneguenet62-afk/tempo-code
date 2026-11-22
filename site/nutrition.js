@@ -51,20 +51,40 @@
   async function ciqual() {
     if (CIQ) return CIQ;
     const r = await fetch("foods-ciqual.json"); const j = await r.json();
-    CIQ = j.f.map(([name, cat, kcal, p, c, f]) => ({ name, cat, kcal, p: p || 0, c: c || 0, f: f || 0, src: "ciqual", n: norm(name) }));
+    const mk = (est) => ([name, cat, kcal, p, c, f, fib, sug, salt]) => ({ name, cat, kcal, p: p || 0, c: c || 0, f: f || 0, fib, sug, salt, src: est ? "est" : "ciqual", n: norm(name), w: norm(name).split(" ") });
+    CIQ = j.f.map(mk(false)).concat((j.plus || []).map(mk(true)));
     return CIQ;
   }
+  // Mots du quotidien → vocabulaire de la table Ciqual
+  const SYN = [
+    ["lait d amande", "boisson a l amande"], ["lait d avoine", "boisson a l avoine"], ["lait de soja", "boisson au soja"], ["lait de riz", "boisson au riz"],
+    ["coca", "boisson gazeuse sucree"], ["soda", "boisson gazeuse"], ["nutella", "pate a tartiner chocolat noisette"], ["granola", "muesli croustillant"],
+    ["yaourt grec", "yaourt a la grecque"], ["proteine", "proteine"], ["prot", "proteine"], ["jambon beurre", "sandwich baguette jambon beurre"],
+    ["frite", "frites"], ["mcdo", "restauration rapide"], ["fast food", "restauration rapide"], ["oeufs", "oeuf"], ["patate", "pomme de terre"],
+    ["steak", "boeuf steak"], ["blanc de poulet", "poulet filet"], ["escalope", "escalope"], ["pdt", "pomme de terre"], ["poke", "poke bowl"],
+  ];
+  const expand = (q) => { let s = " " + norm(q) + " "; SYN.forEach(([a, b]) => { if (s.includes(" " + a + " ")) s = s.replace(" " + a + " ", " " + b + " "); }); return s.trim(); };
+  const STOP = new Set(["de", "du", "des", "la", "le", "les", "a", "au", "aux", "et", "en", "d", "l"]);
   function searchLocal(q) {
-    const words = norm(q).split(" ").filter(Boolean);
+    const words = expand(q).split(" ").filter((w) => w && !STOP.has(w));
     if (!words.length || !CIQ) return [];
     const out = [];
     for (const x of CIQ) {
-      if (!words.every((w) => x.n.includes(w))) continue;
-      // Les noms qui commencent par le mot cherché, et les plus courts, d'abord ; « cuit » avant « cru » pour les féculents
-      const score = (x.n.startsWith(words[0]) ? 0 : 10) + x.n.length / 40 + (/\bcru\b/.test(x.n) ? 1 : 0);
+      // Chaque mot cherché doit commencer un mot du nom (« cola » ne trouve pas « chocolat »)
+      if (!words.every((w) => x.w.some((y) => y.startsWith(w) || (w.length > 4 && y.startsWith(w.slice(0, -1)))))) continue;
+      // Le mot cherché en tête du nom, les noms courts, les aliments « moyens » et cuits d'abord ; le cru après
+      const head = norm(x.name.split(",")[0]);
+      const cooked = /viande|poisson|pate|riz|cereale|legumineuse|oeuf|pomme de terre|feculent/.test(norm(x.cat || ""));
+      const score = (x.w[0].startsWith(words[0]) ? 0 : 6) + x.n.length / 45
+        - (head === words.join(" ") ? 2.5 : 0)                                      // « Banane, … » pour « banane »
+        - (/\bcuit|\brot|\bgrill|\bvapeur/.test(x.n) && cooked ? 0.8 : 0)          // les féculents et viandes se notent cuits
+        + (cooked && /\bcru\b|\bcrue\b|\bcrues\b|\bcrus\b/.test(x.n) ? 1.2 : 0)
+        - (/aliment moyen|sans precision/.test(x.n) ? 1 : 0)
+        + (/preleve|martinique|guadeloupe|reunion|guyane|mayotte/.test(x.n) ? 2 : 0)
+        + (/preemball|surgel|appertis/.test(x.n) ? 0.4 : 0);
       out.push([score, x]);
     }
-    return out.sort((a, b) => a[0] - b[0]).slice(0, 25).map((x) => x[1]);
+    return out.sort((a, b) => a[0] - b[0]).slice(0, 30).map((x) => x[1]);
   }
   // Produits de marque : Open Food Facts (base collaborative, licence ODbL), appelée depuis le navigateur
   const OFF = "https://world.openfoodfacts.org";
@@ -184,12 +204,12 @@
     setTimeout(() => { const q = $("#n-q"); if (q && matchMedia("(hover: hover)").matches) q.focus(); }, 60);
   }
   let RES = [], offT = null;
-  const resRow = (x, i) => `<button class="n-r" data-a="pick" data-i="${i}"><span><b>${esc(x.name)}</b><small>${x.src === "off" ? esc(x.brand || "Produit de marque") : x.src === "recent" ? "Récent" : esc(x.cat || "")}</small></span><span>${r0(x.kcal)} <small>kcal/100 g</small></span></button>`;
+  const resRow = (x, i) => `<button class="n-r" data-a="pick" data-i="${i}"><span><b>${esc(x.name)}</b><small>${x.src === "off" ? esc(x.brand || "Produit de marque") : x.src === "recent" ? "Récent" : x.src === "est" ? "Valeur moyenne" : esc(x.cat || "")}</small></span><span>${r0(x.kcal)} <small>kcal/100 g</small></span></button>`;
   function drawResults(q) {
     const box = $("#n-res"); if (!box) return;
     if (!q.trim()) {
       RES = S.recents.slice(0, 15).map((x) => Object.assign({}, x, { src0: x.src, src: "recent" }));
-      box.innerHTML = RES.length ? `<p class="m-gl">Récents</p>${RES.map(resRow).join("")}` : `<p class="j-muted">Tapez le nom d'un aliment. Les aliments génériques viennent de la table Ciqual de l'ANSES, les produits de marque d'Open Food Facts.</p>`;
+      box.innerHTML = RES.length ? `<p class="m-gl">Récents</p>${RES.map(resRow).join("")}` : `<p class="j-muted">Tapez le nom d'un aliment : plus de 3 400 aliments courants (table Ciqual 2025 de l'ANSES) et des millions de produits de marque (Open Food Facts).</p>`;
       return;
     }
     const loc = searchLocal(q);
@@ -215,7 +235,8 @@
     const portions = [[50], [100], [150], [200], [250]];
     if (PICK.serving && !portions.some((p) => p[0] === PICK.serving)) portions.unshift([PICK.serving, "1 portion"]);
     sheet(`<div class="j-h2">${edit ? "Modifier" : "Quantité"}</div>
-      <div class="n-food"><b>${esc(PICK.name)}</b><small>${PICK.brand ? esc(PICK.brand) + " · " : ""}pour 100 g : ${r0(PICK.kcal)} kcal · P ${r1(PICK.p)} g · G ${r1(PICK.c)} g · L ${r1(PICK.f)} g</small></div>
+      <div class="n-food"><b>${esc(PICK.name)}</b><small>${PICK.brand ? esc(PICK.brand) + " · " : ""}pour 100 g : ${r0(PICK.kcal)} kcal · P ${r1(PICK.p)} g · G ${r1(PICK.c)} g · L ${r1(PICK.f)} g${PICK.fib != null ? " · fibres " + r1(PICK.fib) + " g" : ""}${PICK.sug != null ? " · sucres " + r1(PICK.sug) + " g" : ""}${PICK.salt != null ? " · sel " + r1(PICK.salt) + " g" : ""}</small>
+        <small class="n-srcl">${PICK.src === "off" ? "Source : Open Food Facts" : PICK.src === "est" ? "Valeur moyenne estimée par Tempo (aliment absent de la table Ciqual)" : PICK.src === "photo" ? "Estimation par photo" : PICK.src === "manual" ? "Saisie libre" : "Source : table Ciqual 2025 de l'ANSES"}</small></div>
       ${mealChips(edit ? edit.meal : UI.meal)}
       <div class="j-f"><span>Quantité</span><div class="m-q">${portions.map(([g, l]) => `<button type="button" class="j-chip" data-a="qty" data-v="${g}" aria-pressed="${g === g0}">${l || g + " g"}</button>`).join("")}</div>
         <input id="n-g" inputmode="decimal" value="${r0(g0)}" aria-label="Quantité en grammes"></div>
