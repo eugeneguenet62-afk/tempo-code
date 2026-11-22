@@ -847,7 +847,7 @@ body {
 }
 .bg { display: none; }
 ::selection { background: rgba(255, 107, 149, .35); }
-h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.08; letter-spacing: -.03em; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(26px, min(8vw, 4.4vw + 14px), 46px); line-height: 1.08; letter-spacing: -.03em; overflow-wrap: break-word; hyphens: auto; }
 h2 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -.02em; }
 /* En-tête : verre dépoli, toujours */
 .top, .top.scrolled { background: var(--glass); border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
@@ -960,3 +960,16 @@ html.ret .h-hero, html.ret .h-steps { display: none; }
 .guest-bar p { flex: 1 1 220px; font-size: 13.5px; }
 .guest-bar .btn { padding: 7px 12px; font-size: 13.5px; }
 html:not(.ret) body[data-bg="accueil"] .guest-bar { display: none; }
+
+/* Téléphone : listes déroulantes et tableaux sans texte coupé */
+select { text-overflow: ellipsis; }
+@media (max-width: 560px) {
+  .tablewrap { padding: 4px 8px; }
+  .tablewrap th, .tablewrap td { padding: 10px 3px; font-size: 14px; }
+  .tablewrap td.num, .tablewrap th { white-space: normal; }
+}
+@media (max-width: 400px) {
+  .ptabs { width: 100%; gap: 2px; }
+  .ptabs a { flex: 1 1 auto; min-width: 0; padding: 10px 6px; text-align: center; font-size: 13px; }
+}
+@media (max-width: 560px) { .row.stack-m { display: grid; grid-template-columns: 1fr; } }

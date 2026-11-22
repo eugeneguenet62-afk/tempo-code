@@ -372,6 +372,13 @@
 #carnet .tab { flex: none; flex-direction: row; height: 38px; padding: 0 14px; gap: 7px; font: 600 13.5px var(--body); border-radius: 999px; white-space: nowrap; }
 #carnet .tab svg { width: 17px; height: 17px; }
 #carnet .tab .pip { display: none; }
+.lastc { display: flex; align-items: center; gap: 12px; }
+@media (max-width: 560px) {
+  #carnet .tabs { padding: 8px 10px; }
+  #carnet .tabs .in { width: 100%; gap: 2px; overflow: visible; }
+  #carnet .tab { flex: 1 1 auto; min-width: 0; padding: 0 4px; justify-content: center; font-size: clamp(11px, 3.35vw, 13px); letter-spacing: -.01em; }
+  #carnet .tab svg { display: none; }
+}
 #carnet .tab[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 #carnet main { padding-bottom: 40px; }
 @media (max-width: 979px) { #carnet .rest { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); } }
@@ -593,7 +600,7 @@ function viewHome(){
       ${!next.exercises.length&&MG&&LV()!=="conf"?`<button class="btn primary big" data-a="start-suggest" data-id="${esc(next.id)}">Proposez-moi une séance ${esc(next.name)}</button><button class="btn" data-a="start" data-id="${esc(next.id)}">Choisir mes exercices moi-même</button>`:`<button class="btn primary big" data-a="start" data-id="${esc(next.id)}">Commencer ${esc(next.name)}</button>`}</div></section>`;
     html+=`<section><h3 class="h3">Autre séance</h3><div class="daygrid">${S.program.days.filter(d=>d.id!==next.id).map(d=>`<button class="daychip" style="--day:${dayColor(d.color)}" data-a="start" data-id="${esc(d.id)}">${esc(d.name)}</button>`).join("")}</div></section>`;
   }
-  if(last){const st=sStats(last);html+=`<section><h3 class="h3">Dernière séance</h3><div class="card row" style="--day:${dayColor(last.color)}"><div style="flex:2"><div style="font-weight:600">${esc(last.dayName)}</div><div class="muted small">${esc(dLong(last.date))}</div></div><div class="num small" style="text-align:right">${st.sets} séries<br>${kgs(st.vol)}</div></div></section>`}
+  if(last){const st=sStats(last);html+=`<section><h3 class="h3">Dernière séance</h3><div class="lastc" style="--day:${dayColor(last.color)}"><div style="flex:2"><div style="font-weight:600">${esc(last.dayName)}</div><div class="muted small">${esc(dLong(last.date))}</div></div><div class="num small" style="text-align:right">${st.sets} séries<br>${kgs(st.vol)}</div></div></section>`}
   else html+=`<section class="card muted small"><p style="margin:0">Votre historique, vos records et vos courbes apparaîtront ici au fil des séances. Commencez par la séance ci-dessus : pour chaque ${T("serie","série")}, notez la ${T("charge","charge")} et les ${T("rep","répétitions")}, puis cochez.</p></section>`;
   return html;
 }

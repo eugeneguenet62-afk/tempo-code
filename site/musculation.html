@@ -76,7 +76,7 @@
       <p class="hint">Prenez une série menée proche de l'échec, entre 2 et 10 répétitions : l'estimation est plus fiable.</p>
       <hr style="border:0;border-top:1px solid var(--line);margin:0;width:100%">
       <span class="label">Charger la barre</span>
-      <div class="row">
+      <div class="row stack-m">
         <div class="field"><label for="l-target">Charge visée (kg)</label><input id="l-target" type="number" inputmode="decimal" min="0" step="1.25"></div>
         <div class="field">
           <label for="l-bar">Barre</label>
@@ -84,24 +84,24 @@
             <optgroup label="Barres olympiques (disques Ø 50 mm)">
               <option value="20" selected data-desc="La barre standard des salles : 2,20 m, manchons Ø 50 mm, prise Ø 28 à 29 mm. Squat, développé couché, soulevé de terre.">Olympique homme · 20 kg</option>
               <option value="15" data-desc="2,01 m, prise plus fine (Ø 25 mm), plus agréable pour les petites mains. Norme des compétitions féminines.">Olympique femme · 15 kg</option>
-              <option value="10" data-desc="Barre d'apprentissage légère pour travailler la technique (souvent en aluminium). Vérifiez le poids gravé : 5 à 10 kg.">Technique / apprentissage · 10 kg</option>
-              <option value="25" data-desc="Barre de force rigide (powerlifting, prise Ø 29 mm, peu de flexion). Certaines barres de squat spécialisées pèsent 25 kg.">Barre de force lourde · 25 kg</option>
+              <option value="10" data-desc="Barre d'apprentissage légère pour travailler la technique (souvent en aluminium). Vérifiez le poids gravé : 5 à 10 kg.">Technique · 10 kg</option>
+              <option value="25" data-desc="Barre de force rigide (powerlifting, prise Ø 29 mm, peu de flexion). Certaines barres de squat spécialisées pèsent 25 kg.">Barre de force · 25 kg</option>
             </optgroup>
             <optgroup label="Barres spéciales">
-              <option value="25" data-desc="Barre hexagonale : on se place au centre. Plus facile pour le dos au soulevé de terre et aux shrugs. Selon le modèle : 20 à 30 kg.">Trap bar (hexagonale) · 25 kg</option>
+              <option value="25" data-desc="Barre hexagonale : on se place au centre. Plus facile pour le dos au soulevé de terre et aux shrugs. Selon le modèle : 20 à 30 kg.">Trap bar · 25 kg</option>
               <option value="30" data-desc="Barre de squat à poignées avant et coussin d'épaules. Buste plus droit, moins de contrainte aux épaules. Selon le modèle : 25 à 32 kg.">Safety squat bar · 30 kg</option>
               <option value="12" data-desc="Barre courbée en Z pour les curls et la barre au front. Ménage les poignets. Version olympique (manchons 50 mm).">EZ olympique · 12 kg</option>
-              <option value="10" data-desc="Barre à prises neutres (parallèles) pour développés et rowings, plus douce pour les épaules. 10 à 20 kg selon le modèle.">Swiss bar / multi-prises · 10 kg</option>
+              <option value="10" data-desc="Barre à prises neutres (parallèles) pour développés et rowings, plus douce pour les épaules. 10 à 20 kg selon le modèle.">Swiss bar · 10 kg</option>
               <option value="11" data-desc="La barre est guidée et souvent équilibrée par un contrepoids : son poids « ressenti » varie de 0 à 15 kg. Demandez à la salle ou utilisez 7 à 11 kg.">Smith machine · 11 kg</option>
             </optgroup>
             <optgroup label="Barres standard (disques Ø 25-30 mm)">
               <option value="7" data-desc="EZ standard à disques Ø 30 mm, courante à la maison. 6 à 8 kg selon le modèle.">EZ standard · 7 kg</option>
               <option value="10" data-desc="Barre droite courte de 1,5 à 1,8 m, fréquente dans les salles municipales et à la maison.">Barre droite courte · 10 kg</option>
-              <option value="5" data-desc="Barre fixe ou courte légère (cours collectifs type body pump : 2 à 5 kg).">Barre légère / cours collectifs · 5 kg</option>
+              <option value="5" data-desc="Barre fixe ou courte légère (cours collectifs type body pump : 2 à 5 kg).">Barre légère · 5 kg</option>
               <option value="2" data-desc="Barre d'haltère courte : indiquez la charge visée pour UN haltère.">Barre d'haltère courte · 2 kg</option>
             </optgroup>
             <optgroup label="Sans barre">
-              <option value="0" data-desc="Machine à disques (presse, hack squat…) ou ceinture de lest : calcul des disques sans barre. Le chariot de la machine a souvent son propre poids, à ajouter.">Machine à disques / lest · 0 kg</option>
+              <option value="0" data-desc="Machine à disques (presse, hack squat…) ou ceinture de lest : calcul des disques sans barre. Le chariot de la machine a souvent son propre poids, à ajouter.">Machine / lest · 0 kg</option>
             </optgroup>
           </select>
         </div>
@@ -112,7 +112,7 @@
           <option value="25,20,15,10,5,2.5,1.25" selected data-desc="Le jeu le plus courant en salle : 25, 20, 15, 10, 5, 2,5 et 1,25 kg.">Salle classique</option>
           <option value="25,20,15,10,5,2.5,1.25,0.5,0.25" data-desc="Avec micro-disques de 0,5 et 0,25 kg pour progresser de 0,5 kg à la fois (utile au développé militaire).">Salle + micro-disques</option>
           <option value="25,20,15,10,5,2.5,2,1.5,1,0.5" data-desc="Disques calibrés de compétition (couleurs : 25 rouge, 20 bleu, 15 jaune, 10 vert) et petits disques chromés.">Compétition (powerlifting)</option>
-          <option value="20,15,10,5,2.5,1.25" data-desc="Disques bumper en caoutchouc (lâchables) : en général pas de 25 kg.">Bumpers (haltérophilie, CrossFit)</option>
+          <option value="20,15,10,5,2.5,1.25" data-desc="Disques bumper en caoutchouc (lâchables) : en général pas de 25 kg.">Bumpers (caoutchouc)</option>
           <option value="20,10,5,2.5,1.25" data-desc="Kit maison typique : paires de 20, 10, 5, 2,5 et 1,25 kg.">Kit maison</option>
           <option value="10,5,2.5,1.25,0.5" data-desc="Petits disques Ø 30 mm pour barres et haltères standard.">Disques légers (Ø 30 mm)</option>
         </select>

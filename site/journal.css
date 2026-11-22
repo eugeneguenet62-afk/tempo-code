@@ -32,7 +32,7 @@
 .j-btn:active { transform: scale(.97); }
 .j-btn.primary { background: var(--accent); color: var(--accent-ink); }
 .j-btn.primary:hover { background: color-mix(in srgb, var(--accent) 75%, #000); }
-.j-btn.big { width: 100%; min-height: 54px; font-size: 16px; }
+.j-btn.big { width: 100%; min-height: 54px; font-size: 16px; display: flex; align-items: center; justify-content: center; text-align: center; }
 .j-btn.sm { min-height: 34px; padding: 8px 12px; font-size: 14px; border-radius: 10px; }
 .j-btn.danger { background: transparent; color: var(--z5); }
 .j-btn.danger.solid { background: var(--z5); color: var(--accent-ink); }
@@ -468,7 +468,13 @@
 .j-tab svg, #carnet .tabs button svg { width: 17px; height: 17px; }
 .j-tab[aria-current="page"], #carnet .tabs button[aria-current="page"], #carnet .tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
 #j-view { padding-bottom: 40px; }
-@media (max-width: 520px) { .j-tab, #carnet .tabs button { padding: 0 11px; font-size: 13px; } .j-tab svg, #carnet .tabs button svg { display: none; } }
+/* Téléphone : les onglets se partagent toute la largeur, aucun n'est coupé */
+@media (max-width: 560px) {
+  .j-tabs, #carnet .tabs { padding: 8px 10px; }
+  .j-tabs .in, #carnet .tabs .in { width: 100%; gap: 2px; overflow: visible; }
+  .j-tab, #carnet .tabs button { flex: 1 1 auto; min-width: 0; padding: 0 4px; justify-content: center; font-size: clamp(11px, 3.35vw, 13px); letter-spacing: -.01em; }
+  .j-tab svg, #carnet .tabs button svg { display: none; }
+}
 /* D'où vient l'objectif du jour */
 .n-burn { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 12px; font-size: 14px; color: var(--muted); }
 .n-burn span { display: inline-flex; align-items: center; gap: 7px; }
@@ -477,3 +483,6 @@
 .n-burn i.z-sport { background: var(--c-velo, #4fd19e); }
 .n-burn-t { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
 .n-burn-t a { color: var(--c-food, #ffc94d); }
+
+/* Carnet de séances : dernière séance */
+.lastc { display: flex; align-items: center; gap: 12px; }
