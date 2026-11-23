@@ -1,6 +1,8 @@
 /* Tempo : partager une séance ou une sortie sous forme d'image (format story 1080 × 1350). */
 (function () {
   "use strict";
+  // Logo de l'application, chargé à l'avance pour la signature de l'image
+  const LOGO = new Image(); LOGO.src = "icons/logo.png";
   const W = 1080, H = 1350;
   const ink = "#f1f2fa", muted = "#a3a8c3", bg = "#0d1024", card = "#181c3b";
   const D = "Unbounded, sans-serif", B = "Manrope, sans-serif";
@@ -85,8 +87,8 @@
     });
     if (lines.length > maxL && maxL > 0) { c.fillStyle = muted; c.font = "400 28px Manrope, sans-serif"; c.fillText(`et ${lines.length - maxL} de plus`, X, y + maxL * 56 + 30); }
     // Signature
-    c.fillStyle = grad; roundRect(c, X, H - 110, 56, 56, 16); c.fill();
-    c.strokeStyle = bg; c.lineWidth = 5; c.beginPath(); c.ellipse(X + 28, H - 82, 16, 11, 0, 0, 2 * Math.PI); c.stroke();
+    if (LOGO.complete && LOGO.naturalWidth) c.drawImage(LOGO, X - 6, H - 116, 68, 68);
+    else { c.fillStyle = grad; roundRect(c, X, H - 110, 56, 56, 16); c.fill(); }
     c.fillStyle = ink; c.font = "800 36px Unbounded, sans-serif"; c.fillText("Tempo", X + 76, H - 68);
     c.fillStyle = muted; c.font = "400 28px Manrope, sans-serif"; const u = "tempo-2er.pages.dev"; c.fillText(u, W - X - c.measureText(u).width, H - 70);
     return new Promise((res) => cv.toBlob(res, "image/png"));
