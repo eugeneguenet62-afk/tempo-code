@@ -1,11 +1,11 @@
 /* Tempo hors connexion : les pages et les fichiers de l'application sont gardés en cache.
    Les pages se mettent à jour dès que le réseau est là ; l'API (comptes, carnets) n'est jamais mise en cache. */
-const VERSION = "tempo-v14";
+const VERSION = "tempo-v15";
 const CORE = [
   "./", "index.html", "allure.html", "plan-entrainement.html", "carnet-course.html", "musculation.html", "carnet.html",
   "zones-cardiaques.html", "calories.html", "compte.html", "confidentialite.html", "mentions-legales.html", "apropos.html", "multisport.html", "404.html",
   "style.css", "journal.css", "app.js", "journal.js", "kcal.js", "exercices.js", "illustrations.js", "guides.js", "muscu-guide.js", "share.js", "gpx.js", "sport-icons.js", "sports.js", "charge.js", "multisport.js", "demo.js", "tour.js", "forme.js", "bilan.js", "rappels.js", "import.js", "tests.html", "tests.js", "nutrition.html", "nutrition.js", "foods-ciqual.json", "fx.js", "store.js", "firebase-config.js",
-  "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/favicon-48.png", "icons/logo.png", "fonts/unbounded-latin-600-normal.woff2", "fonts/unbounded-latin-800-normal.woff2", "fonts/manrope-latin-400-normal.woff2", "fonts/manrope-latin-600-normal.woff2", "fonts/manrope-latin-800-normal.woff2", "img/home/running-main.webp", "img/home/squat-peak.webp",
+  "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/favicon-48.png", "icons/favicon-32.png", "icons/logo.png", "favicon.ico", "fonts/unbounded-latin-600-normal.woff2", "fonts/unbounded-latin-800-normal.woff2", "fonts/manrope-latin-400-normal.woff2", "fonts/manrope-latin-600-normal.woff2", "fonts/manrope-latin-800-normal.woff2", "img/home/running-main.webp", "img/home/squat-peak.webp",
 ];
 
 self.addEventListener("install", (e) => {
