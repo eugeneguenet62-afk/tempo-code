@@ -7,7 +7,7 @@
   "use strict";
   // Nom de la page sans « .html » (Cloudflare Pages sert /carnet pour /carnet.html)
   const PAGE = (location.pathname.split("/").pop() || "index").replace(/\.html$/, "") || "index";
-  const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1", "tempo-multi-v1", "tempo-food-v1"];
+  const SYNCED = ["tempo-course-v1", "tempo-day-v1", "tempo-steps-v1", "tempo-profile-v1", "carnet-fonte-v1", "carnet-fonte-draft", "tempo-plan-v1", "tempo-multi-v1", "tempo-food-v1", "tempo-forme-v1", "tempo-tests-v1"];
   const DIRTY = "tempo-dirty", ACCOUNT = "tempo-account";
   const SDK = "https://www.gstatic.com/firebasejs/11.0.2/";
   const MAX_DOC = 900000;    // limite Firestore : 1 Mo par document (marge pour les champs)
@@ -51,6 +51,8 @@
       if (v == null) return;
       if (demo) {   // l'exemple n'entre jamais dans un compte : on ne garde que ce que la personne a saisi
         if (k === "tempo-profile-v1" && demoProf) return;
+        if (v && v.demo) return;   // forme du jour de l'exemple
+        if (v && Array.isArray(v.results)) { v.results = v.results.filter((r) => !String(r.id).startsWith("demo-")); if (!v.results.length) return; }
         if (v && Array.isArray(v.sessions)) {
           v.sessions = v.sessions.filter((s) => !String(s.id).startsWith("demo-"));
           if (!v.sessions.length) return;
@@ -524,7 +526,7 @@
   try { if (sessionStorage.getItem("tempo-tour") != null) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => loadTour()); else loadTour(); } } catch (_) {}
 
   /* ---------- Bandeau « mode essai » sur l'accueil et les pages qui enregistrent des séances ---------- */
-  const GUEST_PAGES = new Set(["index", "carnet", "carnet-course", "multisport", "calories", "plan-entrainement", "nutrition"]);
+  const GUEST_PAGES = new Set(["index", "carnet", "carnet-course", "multisport", "calories", "plan-entrainement", "nutrition", "tests"]);
   const hasData = () => ["carnet-fonte-v1", "tempo-course-v1", "tempo-multi-v1"].some((k) => { const v = get(k); return v && v.sessions && v.sessions.length; });
   function guestBar() {
     if (!GUEST_PAGES.has(PAGE)) return;

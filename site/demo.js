@@ -100,6 +100,8 @@
       "tempo-course-v1": { sessions: course.sort(byDate), gear: [{ id: "demo-shoe", name: "Chaussures de l'exemple", limit: 700, retired: false }], settings: { demo: 1 } },
       "tempo-multi-v1": { sessions: multi.sort(byDate), settings: { demo: 1 } },
       "tempo-food-v1": { sessions: food(today), recents: [] },
+      "tempo-forme-v1": forme(today),
+      "tempo-tests-v1": tests(today),
       "tempo-profile-v1": { "n-sex": "h", "n-age": "20", "n-cm": "182", "n-kg": "84", "n-act": "1.725", "n-goal": "keep" },
     };
   }
@@ -121,6 +123,30 @@
       }));
     }
     return out;
+  }
+
+  // Forme du jour : 3 semaines notées, un creux après le match du samedi ; aujourd'hui pas encore rempli
+  function forme(today) {
+    const days = {};
+    for (let i = 1; i <= 21; i++) {
+      const d = new Date(today); d.setDate(d.getDate() - i);
+      if (rnd() < 0.15) continue;   // quelques oublis
+      const wd = d.getDay(), afterMatch = wd === 0 || wd === 1;
+      const b = afterMatch ? 2 : 3 + Math.round(rnd());
+      days[dk(d)] = { sleep: Math.min(5, b + Math.round(rnd())), energy: Math.max(1, b - (afterMatch ? 0 : Math.round(rnd()) - 1)), sore: afterMatch ? 2 : Math.min(5, b + 1), mood: Math.min(5, b + 1) };
+    }
+    return { days, demo: 1 };
+  }
+  // Tests physiques : trois campagnes (il y a 4 mois, 2 mois, la semaine dernière)
+  function tests(today) {
+    const at = (m) => { const d = new Date(today); d.setDate(d.getDate() - Math.round(m * 30.4) - 3); return dk(d); };
+    const R = [];
+    [[4, 0], [2, 1], [0.1, 2]].forEach(([m, k]) => {
+      const date = at(m);
+      [["s10", [1.86, 1.83, 1.80]], ["s40", [5.62, 5.55, 5.46]], ["bronco", [328, 316, 305]], ["cmj", [44, 46, 48]], ["yoyo", [1240, 1360, 1480]], ["pullup", [9, 11, 12]], ["sq1rm", [125, 132.5, 140]], ["bp1rm", [92.5, 95, 100]]]
+        .forEach(([t, v]) => R.push({ id: id(), test: t, date, v: v[k] }));
+    });
+    return { results: R, group: "fwd", settings: { demo: 1 } };
   }
 
   window.TempoDemo = { build };

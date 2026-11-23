@@ -126,6 +126,8 @@
 
   /* ---------- Programmes prêts ---------- */
   const day = (id, name, color, lv, names, over) => ({ id, name, color, exercises: names.map((n) => item(n, lv, over)).filter(Boolean) });
+  // Variante où chaque exercice a sa propre dose : [nom, séries, répétitions]
+  const dayx = (id, name, color, lv, rows) => ({ id, name, color, exercises: rows.map(([n, sets, reps]) => item(n, lv, { sets, reps })).filter(Boolean) });
   const TEMPLATES = [
     {
       id: "debut", name: "Débuter en salle", level: "deb", per: 3, rest: 90,
@@ -169,6 +171,23 @@
         day("force-a", "Force A", "red", "conf", ["Squat", "Développé couché", "Rowing barre"], { sets: 5, reps: "5" }),
         day("force-b", "Force B", "blue", "conf", ["Squat", "Développé militaire"], { sets: 5, reps: "5" }),
       ].map((d) => { if (d.id === "force-b") { const dl = item("Soulevé de terre", "conf", { sets: 1, reps: "5" }); if (dl) d.exercises.push(dl); } return d; }),
+    },
+    {
+      id: "rugby-pre", name: "Rugby : pré-saison", level: "int", per: 3, rest: 150, rugby: 1,
+      desc: "Trois séances pour préparer la saison : force maximale, puissance (sauts, épaulé) et solidité des zones qui se blessent au rugby (ischios, adducteurs, épaules, tronc). Gardez 48 h entre la séance Puissance et un entraînement de contact.",
+      days: () => [
+        dayx("rg-force", "Force", "red", "int", [["Squat", 4, "4-6"], ["Développé couché", 4, "4-6"], ["Tractions lestées", 4, "5-6"], ["Nordic curl", 3, "4-6"], ["Pallof press", 3, "10-12"]]),
+        dayx("rg-puiss", "Puissance", "blue", "int", [["Épaulé", 5, "3"], ["Squat sauté", 4, "5"], ["Push press", 4, "4-5"], ["Hip thrust", 3, "6-8"], ["Copenhague", 3, "20-30 s/côté"]]),
+        dayx("rg-solid", "Solidité", "yellow", "int", [["Soulevé de terre", 3, "4-5"], ["Fentes bulgares", 3, "6-8"], ["Rowing barre", 4, "6-8"], ["Développé militaire", 3, "6-8"], ["Shrugs trap bar", 3, "10-12"], ["Gainage latéral", 3, "30-45 s"]]),
+      ],
+    },
+    {
+      id: "rugby-saison", name: "Rugby : en saison", level: "int", per: 2, rest: 150, rugby: 1,
+      desc: "Deux séances courtes (45 min) pour garder sa force pendant la saison sans arriver fatigué au match. Lourd mais peu de séries : arrêtez une ou deux répétitions avant l'échec. Pas de séance jambes la veille d'un match.",
+      days: () => [
+        dayx("rs-force", "Force", "red", "int", [["Squat", 3, "3-5"], ["Développé couché", 3, "3-5"], ["Tractions lestées", 3, "4-6"], ["Nordic curl", 2, "4-6"], ["Copenhague", 2, "20-30 s/côté"]]),
+        dayx("rs-puiss", "Puissance", "blue", "int", [["Épaulé", 4, "3"], ["Squat sauté", 3, "5"], ["Push press", 3, "4"], ["Rowing barre", 3, "6"], ["Pallof press", 2, "10"]]),
+      ],
     },
   ];
 

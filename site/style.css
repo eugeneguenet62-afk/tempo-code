@@ -1035,3 +1035,51 @@ select { text-overflow: ellipsis; }
   .ptabs a { font-size: 13px; padding: 9px 12px; }
 }
 @media (max-width: 360px) { .h-title { font-size: 30px; } }
+
+/* ================= Forme du jour ================= */
+.h-forme { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; display: grid; gap: 12px; }
+.fm-head { display: flex; align-items: baseline; gap: 10px; }
+.fm-head h3 { margin: 0; font: 800 17px/1.2 var(--display); flex: 1; }
+.fm-link { background: none; border: 0; color: var(--accent); font: 700 14px var(--body); cursor: pointer; padding: 4px 0; }
+.fm-sub { margin: -4px 0 0; color: var(--muted); font-size: 14px; }
+.fm-q { border: 0; margin: 0; padding: 0; display: grid; gap: 5px; }
+.fm-q legend { font-weight: 700; font-size: 14.5px; padding: 0; margin-bottom: 5px; }
+.fm-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.fm-scale button { height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--field); color: var(--ink); font: 700 15px var(--body); cursor: pointer; }
+.fm-scale button[aria-pressed="true"] { background: var(--grad); color: #0d1024; border-color: transparent; }
+.fm-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.fm-res { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 16px; background: var(--field); border-left: 4px solid var(--fm, #ffcf5c); }
+.fm-res.fm-go { --fm: #4fd19e; } .fm-res.fm-easy { --fm: #ffcf5c; } .fm-res.fm-rest { --fm: #ff6b7d; }
+.fm-score { display: grid; justify-items: center; line-height: 1; }
+.fm-score b { font: 800 30px/1 var(--display); color: var(--fm); font-variant-numeric: tabular-nums; }
+.fm-score small { color: var(--muted); font-size: 11.5px; margin-top: 3px; }
+.fm-res strong { display: block; font-size: 15.5px; margin-bottom: 2px; }
+.fm-res p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.fm-bars { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; height: 46px; align-items: end; }
+.fm-bars i { border-radius: 4px 4px 2px 2px; background: #ffcf5c; }
+.fm-bars i.hi { background: #4fd19e; } .fm-bars i.lo { background: #ff6b7d; } .fm-bars i.none { background: var(--line); }
+.fm-foot { margin: 0; font-size: 13px; color: var(--muted); }
+@media (max-width: 560px) {
+  .h-forme { padding: 14px 16px; gap: 10px; border-radius: 18px; }
+  .fm-scale button { height: 38px; font-size: 14px; }
+  .fm-score b { font-size: 26px; }
+  .fm-res p { font-size: 13px; }
+}
+
+/* ================= Bilan de la semaine ================= */
+.h-bilan { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; display: grid; gap: 12px; }
+.bl-head { display: flex; align-items: baseline; gap: 10px; } .bl-head h3 { margin: 0; flex: 1; font: 800 17px/1.25 var(--display); }
+.bl-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.bl-tiles div { background: var(--field); border-radius: 14px; padding: 10px 12px; display: grid; gap: 2px; }
+.bl-tiles b { font: 800 20px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.bl-tiles span { font-size: 12.5px; color: var(--muted); }
+.bl-tiles em, .bl-lines em { font-style: normal; font-weight: 700; margin-left: 4px; }
+.bl-up { color: #4fd19e; } .bl-down { color: #ff8f9d; } .bl-eq { color: var(--muted); }
+.bl-lines { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.bl-lines .bl-pr::marker { color: #ffcf5c; }
+.bl-tip { margin: 0; font-size: 14px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, #9a83ff 14%, transparent); }
+.bl-cmp, .bl-empty { margin: 0; font-size: 12.5px; color: var(--muted); }
+.h-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.h-tool { border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 600 13.5px var(--body); padding: 9px 14px; border-radius: 999px; cursor: pointer; text-decoration: none; }
+.h-tool:hover { border-color: var(--accent); }
+@media (max-width: 560px) { .h-bilan { padding: 14px 16px; border-radius: 18px; } .bl-tiles b { font-size: 18px; } .h-tool { font-size: 12.5px; padding: 8px 12px; } }
