@@ -3,7 +3,7 @@
    Paramètres : d = jours d'entraînement (MO,TU,…), t = heure de la séance (HH:MM), a = avance du rappel en minutes,
                 f = heure du rappel « forme du jour », r = heure du rappel « repas ». Tous facultatifs. */
 const DAYS = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"];
-const SITE = "https://tempo-2er.pages.dev";
+const SITE = "https://tempo-training.com";
 const hhmm = (v) => { const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(v || ""); return m ? [m[1], m[2]] : null; };
 const pad = (n) => String(n).padStart(2, "0");
 const ymd = (d) => d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
@@ -23,7 +23,7 @@ export function buildICS(q, now = new Date()) {
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Tempo//Rappels//FR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:Tempo"];
   const ev = (uid, start, dur, rrule, title, desc, url, trigger) => {
-    L.push("BEGIN:VEVENT", `UID:${uid}@tempo-2er.pages.dev`, `DTSTAMP:${stamp}`, `DTSTART:${start}`, `DURATION:${dur}`, `RRULE:${rrule}`,
+    L.push("BEGIN:VEVENT", `UID:${uid}@tempo-training.com`, `DTSTAMP:${stamp}`, `DTSTART:${start}`, `DURATION:${dur}`, `RRULE:${rrule}`,
       `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(desc + "\n" + url)}`, `URL:${url}`, "TRANSP:TRANSPARENT",
       "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, `TRIGGER:${trigger}`, "END:VALARM", "END:VEVENT");
   };

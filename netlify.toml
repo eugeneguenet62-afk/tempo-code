@@ -6,6 +6,6 @@
 
 [[redirects]]
   from = "/*"
-  to = "https://tempo-2er.pages.dev/:splat"
+  to = "https://tempo-training.com/:splat"
   status = 301
   force = true

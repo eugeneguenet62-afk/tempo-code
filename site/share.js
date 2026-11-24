@@ -90,7 +90,7 @@
     if (LOGO.complete && LOGO.naturalWidth) c.drawImage(LOGO, X - 6, H - 116, 68, 68);
     else { c.fillStyle = grad; roundRect(c, X, H - 110, 56, 56, 16); c.fill(); }
     c.fillStyle = ink; c.font = "800 36px Unbounded, sans-serif"; c.fillText("Tempo", X + 76, H - 68);
-    c.fillStyle = muted; c.font = "400 28px Manrope, sans-serif"; const u = "tempo-2er.pages.dev"; c.fillText(u, W - X - c.measureText(u).width, H - 70);
+    c.fillStyle = muted; c.font = "400 28px Manrope, sans-serif"; const u = "tempo-training.com"; c.fillText(u, W - X - c.measureText(u).width, H - 70);
     return new Promise((res) => cv.toBlob(res, "image/png"));
   }
 
