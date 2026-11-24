@@ -5,6 +5,7 @@
 import { PixelCanvas } from "./pixel/canvas";
 import { drawAthlete, type ExerciseId } from "./pixel/athlete";
 import { drawPlate } from "./pixel/food";
+import { EX_SIZE, drawMove, moveFor, stillOf, type MoveId, type Work } from "./pixel/moves";
 
 type Kind = ExerciseId | "plate";
 
@@ -118,6 +119,113 @@ function mountQuick() {
   }
 }
 
+/* ---------- Exercices du carnet : athlètes en pixels à la place des photos ---------- */
+
+type Live = { draw: (t: number) => void; el: Element; on: boolean };
+const live = new Map<Element, Live>();
+let exRaf = 0;
+const exTick = (now: number) => {
+  let any = false;
+  for (const [el, l] of live) {
+    if (!el.isConnected) { live.delete(el); exIO?.unobserve(el); continue; }
+    if (l.on) { l.draw(now / 1000); any = true; }
+  }
+  exRaf = any && !document.hidden ? requestAnimationFrame(exTick) : 0;
+};
+const exWake = () => { if (!exRaf && !reduce) exRaf = requestAnimationFrame(exTick); };
+const exIO = "IntersectionObserver" in window
+  ? new IntersectionObserver((es) => { for (const e of es) { const l = live.get(e.target); if (l) l.on = e.isIntersecting; } exWake(); })
+  : null;
+document.addEventListener("visibilitychange", exWake);
+
+type ExInfo = { name: string; muscle?: string; sec?: string; img?: string[] };
+let bySrc: Map<string, ExInfo> | null = null;
+function exBySrc(src: string): ExInfo | undefined {
+  if (!bySrc) {
+    bySrc = new Map();
+    const lib = (window as unknown as { TempoExercices?: { list: ExInfo[] } }).TempoExercices;
+    for (const e of lib?.list ?? []) for (const f of e.img ?? []) bySrc.set(f.split("/").pop()!, e);
+  }
+  return bySrc.get(decodeURIComponent(src.split("/").pop() || ""));
+}
+
+/** Petit décalage propre à chaque exercice, pour que la liste ne bouge pas d'un bloc. */
+const phase = (s: string) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return (h >>> 0) % 997 / 997; };
+
+const workOf = (muscle = "", sec = ""): Work => ({ main: muscle ? [muscle] : [], sec: sec.split(/,\s*/).filter(Boolean) });
+
+function exCanvas(host: Element, id: MoveId, key: string, cls: string, work: Work) {
+  const c = document.createElement("canvas");
+  c.className = cls;
+  c.setAttribute("aria-hidden", "true");
+  host.append(c);
+  const pc = new PixelCanvas(c, EX_SIZE, EX_SIZE);
+  const off = phase(key) * 3;
+  const draw = (t: number) => { drawMove(pc, id, t + off, work); pc.flush(); };
+  draw(stillOf(id));
+  if (reduce || !exIO) return c;
+  live.set(c, { draw, el: c, on: false });
+  exIO.observe(c);
+  return c;
+}
+
+function mountExercises(root: ParentNode = document) {
+  // vignettes (liste de choix, cartes de séance)
+  for (const box of root.querySelectorAll<HTMLElement>("#carnet .xp-thumb:not(.lb-px), #carnet .exthumb:not(.lb-px)")) {
+    const img = box.querySelector("img");
+    let info = img ? exBySrc(img.getAttribute("src") || "") : undefined;
+    if (!info) {
+      const item = box.closest(".xp-item, .excard");
+      const name = item?.querySelector(".xp-txt b, h3 .exlink")?.textContent?.replace(/\s*ⓘ\s*$/, "").trim();
+      if (!name) continue;
+      info = { name, muscle: item?.querySelector(".xp-txt small")?.textContent?.split("·")[0] ?? "" };
+    }
+    box.classList.add("lb-px");
+    exCanvas(box, moveFor(info.name, info.muscle), info.name, "lb-ex", workOf(info.muscle, info.sec));
+  }
+  // fiche d'un exercice : grande animation, photos sur demande
+  for (const fig of root.querySelectorAll<HTMLElement>("#carnet .xf-photo:not(.lb-done), #carnet .xf-anim:not(.lb-done)")) {
+    fig.classList.add("lb-done");
+    const sheet = fig.closest(".j-sheet, .sheet, [role=dialog]") ?? document;
+    const name = sheet.querySelector(".xf-top .h2")?.textContent?.trim() || fig.querySelector("img")?.getAttribute("alt")?.split(" : ")[0] || "";
+    const muscle = sheet.querySelector(".xf-m1")?.textContent ?? "";
+    const sec = [...sheet.querySelectorAll(".xf-m2")].map((x) => x.textContent ?? "").join(", ");
+    const wrap = document.createElement("div");
+    wrap.className = "lb-exfig";
+    fig.before(wrap);
+    exCanvas(wrap, moveFor(name, muscle), name, "lb-ex", workOf(muscle, sec));
+    fig.classList.add("lb-hide");
+    const bar = document.createElement("div");
+    bar.className = "lb-exbar";
+    bar.innerHTML = `<span class="lb-exkey"><i class="k1"></i>Travaille surtout</span>${sec ? `<span class="lb-exkey"><i class="k2"></i>Aide</span>` : ""}`;
+    wrap.after(bar);
+    if (fig.matches(".xf-photo")) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "lb-exphotos";
+      b.textContent = "Voir les photos";
+      b.setAttribute("aria-expanded", "false");
+      b.onclick = () => {
+        const open = fig.classList.toggle("lb-hide") === false;
+        b.textContent = open ? "Masquer les photos" : "Voir les photos";
+        b.setAttribute("aria-expanded", String(open));
+      };
+      bar.append(b);
+    }
+  }
+}
+
+function watchExercises() {
+  if (!document.getElementById("carnet")) return;
+  mountExercises();
+  let queued = false;
+  new MutationObserver(() => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; mountExercises(); });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
 const SPARK = ".btn, .j-btn.primary, .j-fab, #carnet .btn.primary, .gnav a";
 const colors = ["var(--accent)", "#ffffff", "#ffa557", "#9a83ff"];
 
@@ -145,6 +253,7 @@ function init() {
   mountBadge();
   mountHomeTiles();
   mountQuick();
+  watchExercises();
   document.addEventListener("pointerdown", sparks, { passive: true });
 }
 

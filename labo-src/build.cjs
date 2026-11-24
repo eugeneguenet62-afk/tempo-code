@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const ts = require(process.argv[2] || "typescript");
 const dir = __dirname;
-const order = ["pixel/canvas", "pixel/athlete", "pixel/food", "labo"];
+const order = ["pixel/canvas", "pixel/athlete", "pixel/moves", "pixel/food", "labo"];
 const varName = (m) => "M_" + m.replace(/\W/g, "_");
 let out = "/* Tempo Labo : généré par labo-src/build.cjs, ne pas modifier à la main. */\n(function(){\"use strict\";\n";
 for (const m of order) {

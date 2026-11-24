@@ -286,6 +286,34 @@ html #carnet .chrono, html #carnet .h2 .num { font-family: var(--pixel); letter-
 html #carnet .chrono { font-size: 22px; color: var(--accent); }
 html #carnet .exthumb { border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), 0 0 0 1px var(--line-strong); }
 html #carnet .xf-photo { border-radius: 14px; box-shadow: 0 0 0 1px var(--line-strong); }
+/* Exercices : un athlète en pixels remplace la photo (labo.js) ; les photos restent dans la fiche, sur demande. */
+html #carnet .xp-thumb.lb-px, html #carnet .exthumb.lb-px {
+  position: relative; background: color-mix(in srgb, var(--accent) 6%, var(--field)) !important;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+html #carnet .lb-px > img, html #carnet .lb-px > svg { display: none; }
+html #carnet .lb-px .lb-ex { position: absolute; inset: 0; margin: auto; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+html #carnet .xp-thumb.lb-px .lb-ex { width: 52px; height: 52px; }
+html #carnet .lb-exfig {
+  position: relative; width: 100%; max-width: 280px; align-self: center; margin: 0 auto; aspect-ratio: 1;
+  background: radial-gradient(70% 60% at 50% 30%, color-mix(in srgb, var(--accent) 10%, transparent), transparent), var(--field);
+  border: 1px solid var(--line); border-radius: 14px;
+}
+html #carnet .lb-exfig .lb-ex { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+html #carnet .lb-exbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; margin-top: -4px; }
+/* Muscles qui travaillent : rouge demandé par Eugène, réservé aux athlètes en pixels (les disques sont en acier). */
+html #carnet .lb-exkey { display: inline-flex; align-items: center; gap: 6px; font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+html #carnet .lb-exkey i { width: 9px; height: 9px; border-radius: 2px; background: #ff3b3b; }
+html #carnet .lb-exkey i.k2 { background: #ff8a80; }
+html #carnet .lb-exphotos {
+  padding: 7px 12px; border-radius: 8px;
+  font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+  background: transparent; border: 1px solid var(--line-strong); cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+html #carnet .lb-exphotos:hover { color: var(--ink); border-color: var(--accent); }
+html #carnet .lb-exphotos:active { transform: scale(.95); }
+html #carnet .xf-photo.lb-hide, html #carnet .xf-anim.lb-hide { display: none; }
 html #carnet .excard { border-top-color: var(--line); }
 html #carnet .excard h3 { font-weight: 600; letter-spacing: -.02em; }
 /* Barre de repos : un instrument sombre, le compte à rebours en pixels, la barre dans la teinte. */

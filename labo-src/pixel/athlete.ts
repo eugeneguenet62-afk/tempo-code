@@ -2,8 +2,8 @@
 // Chaque exercice = deux poses clés (articulations) interpolées en boucle.
 import { PixelCanvas, clamp, ease, hex, lerp, noise } from "./canvas";
 
-type P = readonly [number, number];
-type Pose = {
+export type P = readonly [number, number];
+export type Pose = {
   head: P;
   sh: P;
   el: P;
@@ -16,7 +16,7 @@ type Pose = {
 
 export type ExerciseId = "squat" | "bench" | "deadlift" | "pullup" | "ohp" | "curl" | "hipthrust" | "run" | "rugby";
 
-const C = {
+export const C = {
   skin: hex("#f0b48a"),
   skinD: hex("#c4805c"),
   hair: hex("#2b1d1a"),
@@ -89,7 +89,7 @@ const POSES: Record<Exclude<ExerciseId, "run" | "rugby">, { a: Pose; b: Pose; pe
   },
 };
 
-const mixP = (a: P, b: P, t: number): P => [lerp(a[0], b[0], t), lerp(a[1], b[1], t)];
+export const mixP = (a: P, b: P, t: number): P => [lerp(a[0], b[0], t), lerp(a[1], b[1], t)];
 function mixPose(a: Pose, b: Pose, t: number): Pose {
   return {
     head: mixP(a.head, b.head, t),
@@ -104,14 +104,14 @@ function mixPose(a: Pose, b: Pose, t: number): Pose {
 }
 
 /** Phase aller-retour : monte, tient, redescend, tient. */
-function cycle(u: number) {
+export function cycle(u: number) {
   if (u < 0.36) return ease(u / 0.36);
   if (u < 0.5) return 1;
   if (u < 0.86) return 1 - ease((u - 0.5) / 0.36);
   return 0;
 }
 
-function leg(pc: PixelCanvas, p: Pose, far: boolean) {
+export function leg(pc: PixelCanvas, p: Pose, far: boolean) {
   const o = far ? -1.2 : 0;
   const skin = far ? C.skinD : C.skin;
   pc.capsule(p.hip[0] + o, p.hip[1], p.kn[0] + o, p.kn[1], 2, skin);
@@ -122,14 +122,14 @@ function leg(pc: PixelCanvas, p: Pose, far: boolean) {
   pc.rect(p.an[0] + o - 1, p.an[1], 5, 2, far ? C.shoeD : C.shoe);
 }
 
-function arm(pc: PixelCanvas, p: Pose, far: boolean) {
+export function arm(pc: PixelCanvas, p: Pose, far: boolean) {
   const o = far ? -1 : 0;
   pc.capsule(p.sh[0] + o, p.sh[1], p.el[0] + o, p.el[1], 1.5, far ? C.skinD : C.skin);
   pc.capsule(p.el[0] + o, p.el[1], p.wr[0] + o, p.wr[1], 1.2, far ? C.skinD : C.skin);
   pc.capsule(p.sh[0] + o, p.sh[1], lerp(p.sh[0], p.el[0], 0.4) + o, lerp(p.sh[1], p.el[1], 0.4), 1.8, far ? C.shirtD : C.shirt);
 }
 
-function body(pc: PixelCanvas, p: Pose) {
+export function body(pc: PixelCanvas, p: Pose) {
   pc.capsule(p.hip[0], p.hip[1], p.sh[0], p.sh[1], 2.6, C.shirt);
   pc.capsule(p.hip[0], p.hip[1], lerp(p.hip[0], p.sh[0], 0.18), lerp(p.hip[1], p.sh[1], 0.18), 2.8, C.short);
   // cou + tête
@@ -139,7 +139,7 @@ function body(pc: PixelCanvas, p: Pose) {
   pc.px(p.head[0] + 2, p.head[1], C.eye);
 }
 
-function plate(pc: PixelCanvas, at: P, r: number) {
+export function plate(pc: PixelCanvas, at: P, r: number) {
   if (!r) return;
   pc.disc(at[0], at[1], r, C.plateD);
   pc.disc(at[0], at[1], r - 1, C.plate);
@@ -147,11 +147,11 @@ function plate(pc: PixelCanvas, at: P, r: number) {
   pc.px(at[0] - 1, at[1] - Math.round(r) + 2, C.plateHub);
 }
 
-function shadow(pc: PixelCanvas, x: number, w: number) {
+export function shadow(pc: PixelCanvas, x: number, w: number) {
   pc.ellipse(x, 45, w, 1, C.shadow);
 }
 
-function floor(pc: PixelCanvas) {
+export function floor(pc: PixelCanvas) {
   pc.rect(0, 46, pc.w, 1, C.floor);
 }
 

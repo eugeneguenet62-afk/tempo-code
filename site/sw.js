@@ -1,6 +1,6 @@
 /* Tempo hors connexion : les pages et les fichiers de l'application sont gardés en cache.
    Les pages se mettent à jour dès que le réseau est là ; l'API (comptes, carnets) n'est jamais mise en cache. */
-const VERSION = "tempo-v15-labo";
+const VERSION = "tempo-v17-labo-px2";
 const CORE = [
   "./", "index.html", "allure.html", "plan-entrainement.html", "carnet-course.html", "musculation.html", "carnet.html",
   "zones-cardiaques.html", "calories.html", "compte.html", "confidentialite.html", "mentions-legales.html", "apropos.html", "multisport.html", "404.html",
