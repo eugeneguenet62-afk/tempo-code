@@ -7,7 +7,7 @@
 <title>Tempo : outils gratuits de course à pied, musculation et santé</title>
 <meta name="description" content="Calculateur d'allure, plan d'entraînement, carnets de course et de musculation, 1RM, zones cardiaques et calories. Des outils gratuits, rapides, installables sur téléphone.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1024">
+<meta name="theme-color" content="#07080c">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=4">
@@ -16,12 +16,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tempo">
-<link rel="preload" href="fonts/unbounded-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-pixel-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*.html"},{"not":{"href_matches":"/compte.html*"}}]},"eagerness":"moderate"}]}</script>
 <script>try{var r=0,K=["carnet-fonte-v1","tempo-course-v1","tempo-multi-v1","tempo-food-v1"],a=localStorage.getItem("tempo-account");if(a&&a!=="null"){r=1;document.documentElement.classList.add("signed-in")}K.forEach(function(k){var v=sessionStorage.getItem(k)||localStorage.getItem(k);if(v&&v.indexOf('"id"')>-1)r=1});if(r)document.documentElement.classList.add("ret")}catch(e){}</script>
+<link rel="stylesheet" href="labo.css">
 </head>
 <body data-bg="accueil">
 <header class="top"><div class="wrap">
@@ -262,5 +263,6 @@
   <div class="wrap foot-legal"><span>© 2026 Tempo</span><span>Résultats indicatifs, sans valeur médicale.</span><span><a href="compte.html">Compte</a> · <a href="confidentialite.html">Confidentialité</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="apropos.html">À propos</a></span><span>Illustrations : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a></span></div>
 </footer>
 <script src="fx.js"></script>
+<script src="labo.js" defer></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <title>Tests physiques rugby : sprint, Bronco, yo-yo, saut | Tempo</title>
 <meta name="description" content="Notez vos tests physiques (sprint 10 et 40 m, Bronco, yo-yo, saut vertical, tractions, 1RM) et suivez vos progrès, avec des repères pour les avants et les arrières.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1024">
+<meta name="theme-color" content="#07080c">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=4">
@@ -16,12 +16,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tempo">
-<link rel="preload" href="fonts/unbounded-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-pixel-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="journal.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*.html"},{"not":{"href_matches":"/compte.html*"}}]},"eagerness":"moderate"}]}</script>
+<link rel="stylesheet" href="labo.css">
 </head>
 <body data-bg="jauge">
 <header class="top"><div class="wrap">
@@ -78,5 +79,6 @@
 <script src="store.js"></script>
 <script src="tests.js"></script>
 <script src="fx.js"></script>
+<script src="labo.js" defer></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <title>Calories : dépense du jour, pas et besoins | Tempo</title>
 <meta name="description" content="Calculez les calories brûlées en course, vélo, musculation, natation ou marche, et vos besoins caloriques journaliers avec la répartition protéines, glucides, lipides. Gratuit.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1024">
+<meta name="theme-color" content="#07080c">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=4">
@@ -16,8 +16,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tempo">
-<link rel="preload" href="fonts/unbounded-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-pixel-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 <script type="application/ld+json">
@@ -29,6 +29,7 @@
 ]}]}
 </script>
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*.html"},{"not":{"href_matches":"/compte.html*"}}]},"eagerness":"moderate"}]}</script>
+<link rel="stylesheet" href="labo.css">
 </head>
 <body data-bg="jauge">
 <header class="top"><div class="wrap">
@@ -228,5 +229,6 @@
 <script src="charge.js"></script>
 <script src="app.js"></script>
 <script src="fx.js"></script>
+<script src="labo.js" defer></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <title>À propos | Tempo</title>
 <meta name="description" content="Qui a créé Tempo, pourquoi, et comment le site est construit.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1024">
+<meta name="theme-color" content="#07080c">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=4">
@@ -16,12 +16,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tempo">
-<link rel="preload" href="fonts/unbounded-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-pixel-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add('js');try{var a=localStorage.getItem('tempo-account');if(!a||a==='null')document.documentElement.classList.add('guest')}catch(e){}</script>
 
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*.html"},{"not":{"href_matches":"/compte.html*"}}]},"eagerness":"moderate"}]}</script>
+<link rel="stylesheet" href="labo.css">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -88,7 +89,7 @@
       <ul class="about-tech">
         <li><b>Application installable</b><span>Tempo s'installe sur l'écran d'accueil comme une application et fonctionne sans connexion, grâce à un service worker qui garde les pages en cache.</span></li>
         <li><b>Synchronisation entre appareils</b><span>Sans compte, mode essai : rien n'est gardé après la visite (sessionStorage), pratique sur un appareil partagé. Avec un compte (Firebase Authentication et Firestore), les carnets sont découpés par mois et chaque écriture passe par une transaction qui fusionne les séances : deux appareils peuvent enregistrer en même temps sans rien perdre.</span></li>
-        <li><b>Sécurité et vie privée</b><span>Chaque utilisateur ne peut lire et écrire que ses propres données (règles de sécurité Firestore), aucun cookie publicitaire, aucune mesure d'audience.</span></li>
+        <li><b>Sécurité et vie privée</b><span>Chaque utilisateur ne peut lire et écrire que ses propres données (règles de sécurité Firestore), aucun cookie publicitaire ; seule une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) compte les visites.</span></li>
         <li><b>Accessibilité et rapidité</b><span>Contrastes vérifiés, navigation au clavier, textes lisibles par les lecteurs d'écran, mode sombre automatique. Audité avec Lighthouse.</span></li>
         <li><b>Mise en ligne continue</b><span>Le code est versionné sur GitHub ; chaque modification est testée puis publiée automatiquement sur Cloudflare Pages.</span></li>
       </ul>
@@ -97,7 +98,7 @@
     </section>
     <section>
       <h2>Crédits</h2>
-      <p>Illustrations et données d'origine des exercices : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a>. Polices Unbounded et Manrope sous licence SIL Open Font License. Informations légales : <a href="mentions-legales.html">mentions légales</a> et <a href="confidentialite.html">confidentialité</a>.</p>
+      <p>Illustrations et données d'origine des exercices : <a href="https://repdb.co" target="_blank" rel="noopener">Exercise data by RepDB (repdb.co)</a>. Polices Geist, Geist Mono et Geist Pixel (Vercel), Unbounded et Manrope sous licence SIL Open Font License. Informations légales : <a href="mentions-legales.html">mentions légales</a> et <a href="confidentialite.html">confidentialité</a>.</p>
     </section>
   </article>
 </main>
@@ -114,5 +115,6 @@
 <script src="firebase-config.js"></script>
 <script src="store.js"></script>
 <script src="fx.js"></script>
+<script src="labo.js" defer></script>
 </body>
 </html>
